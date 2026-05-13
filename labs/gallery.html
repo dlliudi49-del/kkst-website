@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>画廊展厅 · KKST 建设方案</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#070d1a;--bg2:#0e1829;--card:#111e33;--card2:#162340;
+  --border:#1e3a5f;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --a1:#00d4ff;--a2:#0090cc;--gold:#f0a500;--green:#10b981;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.6}
+body.ru{font-family:'Segoe UI','Arial',sans-serif}
+#topbar{position:sticky;top:0;z-index:100;background:rgba(7,13,26,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;gap:16px}
+#topbar .back{color:var(--a1);text-decoration:none;font-size:13px;
+  font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap}
+#topbar .back:hover{opacity:.8}
+#topbar .crumb{font-size:13px;color:var(--text3)}
+#topbar .crumb span{color:var(--text2)}
+#lang-btn{background:var(--card2);border:1px solid var(--border);
+  color:var(--text);padding:5px 14px;border-radius:20px;cursor:pointer;
+  font-size:13px;white-space:nowrap;transition:all .2s}
+#lang-btn:hover{border-color:var(--a1);color:var(--a1)}
+#hero{position:relative;height:480px;overflow:hidden;background:var(--bg2)}
+#hero-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.65)}
+#hero-overlay{position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(7,13,26,.85) 35%,rgba(7,13,26,.2) 100%)}
+#hero-content{position:absolute;inset:0;display:flex;align-items:center;
+  padding:0 64px;max-width:700px}
+.hero-inner .floor-badge{display:inline-block;background:rgba(255,255,255,.1);
+  border:1px solid var(--a1);color:var(--a1);font-size:12px;padding:3px 14px;
+  border-radius:20px;margin-bottom:18px;letter-spacing:1px}
+.hero-inner h1{font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.2;margin-bottom:8px}
+.hero-inner .ru-name{font-size:clamp(14px,2vw,20px);color:rgba(255,255,255,.6);font-style:italic;margin-bottom:20px}
+.hero-inner .tag-row{display:flex;gap:10px;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:var(--text2);font-size:12px;padding:4px 12px;border-radius:8px}
+.tag b{color:#fff}
+.page-wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+section{padding:56px 0}
+section+section{padding-top:0}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
+.ov-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 20px;text-align:center;position:relative;overflow:hidden}
+.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--a1),var(--a2))}
+.ov-card .val{font-size:32px;font-weight:800;color:var(--a1);font-family:'Courier New',monospace}
+.ov-card .lbl{font-size:12px;color:var(--text3);margin-top:4px}
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.desc-card{background:var(--card);border-radius:14px;padding:28px;
+  border-left:4px solid var(--a1);margin-bottom:32px}
+.desc-card p{font-size:15px;color:var(--text2);line-height:1.9}
+.budget-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:40px}
+@media(max-width:600px){.budget-grid{grid-template-columns:1fr}}
+.bud-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center}
+.bud-card.total{border-color:var(--a1)}
+.bud-card .bval{font-size:24px;font-weight:800;margin-bottom:4px;font-family:'Courier New',monospace}
+.bud-card.total .bval{color:var(--a1)}
+.bud-card.reno  .bval{color:var(--gold)}
+.bud-card.equip .bval{color:var(--green)}
+.bud-card .bpct{font-size:13px;color:var(--text3);margin-top:2px}
+.bud-card .blbl{font-size:12px;color:var(--text3);margin-top:6px}
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:40px}
+@media(max-width:700px){.chart-row{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px}
+.chart-card h3{font-size:14px;color:var(--text2);margin-bottom:16px}
+.chart-wrap{position:relative;height:160px}
+.plan-img{border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:40px}
+.plan-img img{width:100%;display:block}
+.eq-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--card2);color:var(--a1);font-weight:600;padding:12px 14px;
+  text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:1px solid rgba(30,58,95,.4);color:var(--text2);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(0,212,255,.04);color:var(--text)}
+.idx{color:var(--text3);text-align:center;width:36px}
+.name-col{min-width:180px}
+.eq-name{color:var(--text);font-weight:500}
+.eq-spec{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5}
+.brand-col{color:var(--a1);white-space:nowrap}
+.num-col{text-align:center;white-space:nowrap}
+.price-col{text-align:right;font-family:monospace;white-space:nowrap}
+.total-price{color:var(--gold);font-weight:600}
+.eq-total-row td{background:var(--card2);font-weight:700;border-top:2px solid var(--border)}
+.eq-total-row .total-price{color:var(--a1);font-size:15px}
+#bottom-nav{padding:40px 0;border-top:1px solid var(--border)}
+.bottom-nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px}
+.nav-arrow{color:var(--a1);text-decoration:none;font-size:14px;
+  font-weight:600;padding:10px 20px;border:1px solid var(--border);
+  border-radius:10px;transition:all .2s;display:block}
+.nav-arrow:hover{border-color:var(--a1);background:rgba(0,212,255,.08)}
+.ru-text{display:none}
+body.ru .zh{display:none}
+body.ru .ru-text{display:revert}
+
+.drawings-section{margin-bottom:40px}
+.drawings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+.draw-img{width:100%;border-radius:12px;border:1px solid var(--border);display:block;
+  transition:transform .3s;cursor:zoom-in}
+.draw-img:hover{transform:scale(1.02)}
+.draw-caption{font-size:12px;color:var(--text3);text-align:center;margin-top:8px}
+.img-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;
+  align-items:center;justify-content:center;cursor:zoom-out}
+.img-modal.open{display:flex}
+.img-modal img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px}
+</style>
+</head>
+<body>
+<div id="topbar">
+  <a class="back" href="../index.html">← <span class="zh">返回总览</span><span class="ru-text">На главную</span></a>
+  <span class="crumb zh">一层 / <span>画廊展厅</span></span>
+  <span class="crumb ru-text">1-й эт. / <span>Галерея-выставка</span></span>
+  <button id="lang-btn" onclick="toggleLang()">РУС / 中文</button>
+</div>
+
+<section id="hero">
+  <img id="hero-img" src="../assets/images/render_gallery.jpg" alt="画廊展厅"
+       onerror="this.style.display='none';document.getElementById('hero').style.background='linear-gradient(135deg,#0e1829,#162340)'">
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <div class="hero-inner">
+      <div class="floor-badge">
+        <span class="zh">一层 · 第1楼</span>
+        <span class="ru-text">1-й этаж</span>
+      </div>
+      <h1 class="zh">画廊展厅</h1>
+      <h1 class="ru-text">Галерея-выставка</h1>
+      <p class="ru-name zh">Галерея-выставка</p>
+      <p class="ru-name ru-text">画廊展厅</p>
+      <div class="tag-row">
+        <span class="tag"><b class="zh">面积</b><b class="ru-text">S</b> 约70㎡</span>
+        
+        <span class="tag zh"><b>设备</b> 13 种</span>
+        <span class="tag ru-text"><b>Обор.</b> 13 поз.</span>
+        <span class="tag"><b>₸</b> 25.94M ₸</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrap">
+  <section>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="val">25.94M ₸</div>
+        <div class="lbl zh">总建设预算</div><div class="lbl ru-text">Общий бюджет</div>
+      </div>
+      <div class="ov-card"><div class="val">约70㎡</div><div class="lbl zh">建筑面积</div><div class="lbl ru-text">Площадь</div></div>
+      
+      <div class="ov-card">
+        <div class="val">13</div>
+        <div class="lbl zh">设备种类</div><div class="lbl ru-text">Видов оборуд.</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">1F</div>
+        <div class="lbl zh">所在楼层</div><div class="lbl ru-text">Этаж</div>
+      </div>
+    </div>
+
+    <h2 class="sec-title zh">功能定位</h2>
+    <h2 class="sec-title ru-text">Назначение</h2>
+    <div class="desc-card">
+      <p class="zh">作为中心的门面展示区，融合技术展示、互动体验与品牌形象于一体。设有VR/AR体验区、3D模型展区、初创项目展示窗口及品牌荣誉墙，打造「活的技术生态系统」。</p>
+      <p class="ru-text">Витрина центра, объединяющая технологические экспозиции, интерактивные зоны и брендинг. Включает VR/AR-зону, экспозицию 3D-моделей, витрину стартапов и стену почёта.</p>
+    </div>
+
+    <h2 class="sec-title zh">预算构成</h2>
+    <h2 class="sec-title ru-text">Структура бюджета</h2>
+    <div class="budget-grid">
+      <div class="bud-card total">
+        <div class="bval">25.94M ₸</div>
+        <div class="blbl zh">总建设预算</div><div class="blbl ru-text">Итого</div>
+      </div>
+      <div class="bud-card equip">
+        <div class="bval">15.84M ₸</div>
+        <div class="bpct">61%</div>
+        <div class="blbl zh">设备购置费</div><div class="blbl ru-text">Оборудование</div>
+      </div>
+      <div class="bud-card reno">
+        <div class="bval">10.11M ₸</div>
+        <div class="bpct">39%</div>
+        <div class="blbl zh">室内装修改造费</div><div class="blbl ru-text">Ремонт и отделка</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3 class="zh">预算构成可视化</h3><h3 class="ru-text">Визуализация бюджета</h3>
+        <div class="chart-wrap"><canvas id="barC"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 class="zh">装修 vs 设备</h3><h3 class="ru-text">Ремонт vs Оборуд.</h3>
+        <div class="chart-wrap"><canvas id="donutC"></canvas></div>
+      </div>
+    </div>
+
+    <h2 class="sec-title zh">楼层平面图</h2>
+    <h2 class="sec-title ru-text">План этажа</h2>
+    <div class="plan-img"><img src="../assets/images/plan_floor1_cad.jpg" alt="floor plan"></div>
+
+    
+    <h2 class="sec-title zh">室内设计图纸</h2>
+    <h2 class="sec-title ru-text">Дизайн-чертежи интерьера</h2>
+    <div class="drawings-section">
+      <div class="drawings-grid">
+    <div>
+      <img src="../assets/images/draw_gallery_1.jpg" alt="展厅画廊立面图" class="draw-img" onclick="openModal(this.src)">
+      <p class="draw-caption zh">展厅画廊立面图 — 立面图 A</p><p class="draw-caption ru-text">Чертежи галереи-выставки — Чертёж A</p>
+    </div>
+    <div>
+      <img src="../assets/images/draw_gallery_2.jpg" alt="展厅画廊立面图" class="draw-img" onclick="openModal(this.src)">
+      <p class="draw-caption zh">展厅画廊立面图 — 立面图 B</p><p class="draw-caption ru-text">Чертежи галереи-выставки — Чертёж B</p>
+    </div>
+      </div>
+    </div>
+<h2 class="sec-title zh">完整设备清单</h2>
+    <h2 class="sec-title ru-text">Полный перечень оборудования</h2>
+    <div class="eq-table-wrap">
+      <table>
+        <thead><tr>
+          <th class="idx">#</th>
+          <th class="zh">设备名称</th><th class="ru-text">Наименование</th>
+          <th class="zh">品牌</th><th class="ru-text">Бренд</th>
+          <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+          <th class="zh">单价(₸)</th><th class="ru-text">Цена/ед.(₸)</th>
+          <th class="zh">合计(₸)</th><th class="ru-text">Итого(₸)</th>
+        </tr></thead>
+        <tbody>
+                  <tr>
+          <td class="idx">1</td>
+          <td class="name-col">
+            <div class="eq-name zh">高端荣誉展示台（含LED灯光）</div><div class="eq-name ru-text">Высококачественный выставочный стенд (включая светодиодное освещение)</div>
+            <div class="eq-spec zh">结构分区 — 按图拆解了8个主要区域，包括学校logo、双层玻璃展架、城市天际线底衬、三联展板等，每区注明了建议尺寸、材质和工艺。
+材料与工艺 — 背板用18mm多层板+石膏板，面层蓝色铝塑板，文字用亚克力立体字，层板用12mm钢化玻璃，并…</div><div class="eq-spec ru-text">Структурное зонирование - согласно схеме демонтировано 8 основных зон, включая логотип школы, стеллаж из двухслойного стекла, облицовку городского горизонта, панели-триптих и т. д. На каждой зоне отмечены рекомендуемые размеры, материал и качество изготовления.
+Материалы и мастерство - Щит изготовлен из многослойной плиты толщиной 18 мм + гипсокартон, поверхностный слой - синяя алюминиево-пластиковая плита, текст выполнен из акриловых трехмерных символов, многослойная доска изготовлена ​​из закаленного стекла толщиной 12 мм и...</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">3.92M ₸</td>
+          <td class="price-col total-price">3.92M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">2</td>
+          <td class="name-col">
+            <div class="eq-name zh">显示电视（75寸）</div><div class="eq-name ru-text">Телевизор с дисплеем (75 дюймов)</div>
+            <div class="eq-spec zh">核心技术与外观要求
+产品定位：艺术壁纸电视，可无缝贴墙安装。
+屏幕技术：Mini LED背光。
+外观设计：
+整机最薄处厚度 ≤ 3.9厘米。
+标配超薄挂架，支持无缝贴墙安装。
+显示参数：
+屏幕尺寸：75英寸。
+推荐观看距离：2.3米。
+功能…</div><div class="eq-spec ru-text">Основные технологические требования и требования к внешнему виду
+Позиционирование продукта: Арт-обои под телевизор, которые можно легко установить на стену.
+Технология экрана: Мини-светодиодная подсветка.
+Дизайн внешнего вида:
+Толщина самой тонкой части всей машины составляет ≤ 3,9 см.
+Стандартный ультратонкий подвесной кронштейн обеспечивает бесшовную установку на стену.
+Параметры дисплея:
+Размер экрана: 75 дюймов.
+Рекомендуемое расстояние просмотра: 2,3 метра.
+Функция…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">784,000 ₸</td>
+          <td class="price-col total-price">784,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">3</td>
+          <td class="name-col">
+            <div class="eq-name">ipad Air</div>
+            <div class="eq-spec zh">iPad Air 平板电脑，配备 11 英寸或 13 英寸 Liquid Retina 高清触控显示屏，分辨率不低于 2360×1640，搭载 Apple M3 或以上性能处理器，内存不低于 8GB，存储容量不低于 128GB，支持 Wi-…</div><div class="eq-spec ru-text">Планшетный компьютер iPad Air, оснащенный 11-дюймовым или 13-дюймовым сенсорным дисплеем Liquid Retina высокого разрешения, разрешением не менее 2360×1640, оснащенным процессором Apple M3 или выше, оперативной памятью не менее 8 ГБ, емкостью не менее 128 ГБ, поддержкой Wi-…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">361,200 ₸</td>
+          <td class="price-col total-price">361,200 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">4</td>
+          <td class="name-col">
+            <div class="eq-name zh">功能展示墙</div><div class="eq-name ru-text">Функциональная демонстрационная стена</div>
+            <div class="eq-spec zh">整体设计风格需体现“科技、创新、数字化、国际化”理念，结合人工智能（AI）、工业机器人、无人机（UAV）、物联网（IoT）、智能制造、VR/AR 等主题元素，采用现代科技展厅设计语言。展示墙主体结构应采用环保型高密度板材、金属型材、钢化玻璃…</div><div class="eq-spec ru-text">Общий стиль дизайна должен отражать концепцию «технологий, инноваций, цифровизации и интернационализации», сочетать искусственный интеллект (ИИ), промышленных роботов, беспилотные летательные аппараты (БПЛА), Интернет вещей (IoT), интеллектуальное производство, VR/AR и другие тематические элементы, а также использовать язык дизайна выставочных залов современных технологий. Основная конструкция витрины должна быть изготовлена ​​из экологически чистых плит высокой плотности, металлических профилей, закаленного стекла...</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">2.52M ₸</td>
+          <td class="price-col total-price">2.52M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">5</td>
+          <td class="name-col">
+            <div class="eq-name zh">各个区域功能的3D模型展示</div><div class="eq-name ru-text">3D-модель отображения функций в каждой области</div>
+            <div class="eq-spec zh">采用FDM/SLA/SLS等主流3D打印技术，按各功能区实际场景定制打印对应的微缩模型（比例建议1:20~1:50）。
+
+★ 关键要求：
+- 打印材质：PLA+/ABS/树脂，表面经打磨、上色及UV防护处理
+- 精度要求：层厚 ≤ 0.2m…</div><div class="eq-spec ru-text">Используя распространенные технологии 3D-печати, такие как FDM/SLA/SLS, соответствующие миниатюрные модели настраиваются и печатаются в соответствии с реальными сценами каждой функциональной области (рекомендуется соотношение 1:20–1:50).
+
+★ Ключевые требования:
+- Материал для печати: PLA+/ABS/смола, поверхность полированная, окрашенная и защищенная от ультрафиолета.
+- Требования к точности: толщина слоя ≤ 0,2 м…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">16</td>
+          <td class="price-col">—</td>
+          <td class="price-col total-price">—</td>
+        </tr>
+        <tr>
+          <td class="idx">6</td>
+          <td class="name-col">
+            <div class="eq-name zh">产品原型互动体验台（多触屏）</div><div class="eq-name ru-text">Платформа интерактивного опыта прототипа продукта (мультитач-экран)</div>
+            <div class="eq-spec zh">硬件规格要求
+模块	技术参数要求
+显示屏幕	尺寸：≥55英寸，4K超高清显示（3840×2160）；亮度：≥350cd/m²；可视角度：≥178°；支持10点以上红外触摸，响应时间≤8ms。
+核心配置	CPU：不低于四核Cortex-A55…</div><div class="eq-spec ru-text">Требования к спецификации оборудования
+Требования к техническим параметрам модуля
+Размер экрана дисплея: ≥55 дюймов, дисплей сверхвысокой четкости 4K (3840×2160); яркость: ≥350 кд/м²; угол обзора: ≥178°; поддерживает более 10 точек инфракрасного касания, время отклика ≤8 мс.
+Конфигурация ядра ЦП: не менее четырехъядерного Cortex-A55…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">980,000 ₸</td>
+          <td class="price-col total-price">980,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">7</td>
+          <td class="name-col">
+            <div class="eq-name zh">VR一体机</div><div class="eq-name ru-text">Универсальная машина виртуальной реальности</div>
+            <div class="eq-spec zh">Apple Vision Pro 空间计算设备，采用不少于 23 百万像素的双 Micro-OLED 显示屏，单眼分辨率不低于 4K，支持 3D 空间显示与眼动追踪功能；搭载 Apple M2 及以上性能处理器，并配备专用 R1 芯片，用于…</div><div class="eq-spec ru-text">Устройство пространственных вычислений Apple Vision Pro использует двойной дисплей Micro-OLED с разрешением не менее 23 миллионов пикселей, разрешением для одного глаза не менее 4K и поддерживает функции пространственного 3D-отображения и отслеживания глаз; оснащен процессорами Apple M2 и выше и оснащен специальным чипом R1 для...</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">3.43M ₸</td>
+          <td class="price-col total-price">3.43M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">8</td>
+          <td class="name-col">
+            <div class="eq-name zh">显示电视（75寸）</div><div class="eq-name ru-text">Телевизор с дисплеем (75 дюймов)</div>
+            <div class="eq-spec zh">核心技术与外观要求
+产品定位：艺术壁纸电视，可无缝贴墙安装。
+屏幕技术：Mini LED背光。
+外观设计：
+整机最薄处厚度 ≤ 3.9厘米。
+标配超薄挂架，支持无缝贴墙安装。
+显示参数：
+屏幕尺寸：75英寸。
+推荐观看距离：2.3米。
+功能…</div><div class="eq-spec ru-text">Основные технологические требования и требования к внешнему виду
+Позиционирование продукта: Арт-обои под телевизор, которые можно легко установить на стену.
+Технология экрана: Мини-светодиодная подсветка.
+Дизайн внешнего вида:
+Толщина самой тонкой части всей машины составляет ≤ 3,9 см.
+Стандартный ультратонкий подвесной кронштейн обеспечивает бесшовную установку на стену.
+Параметры дисплея:
+Размер экрана: 75 дюймов.
+Рекомендуемое расстояние просмотра: 2,3 метра.
+Функция…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">784,000 ₸</td>
+          <td class="price-col total-price">784,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">9</td>
+          <td class="name-col">
+            <div class="eq-name zh">模块化创业项目展示房（标准展位）</div><div class="eq-name ru-text">Модульный демонстрационный зал предпринимательских проектов (стандартный стенд)</div>
+            <div class="eq-spec zh">模块化创业项目展示房（标准展位）
+
+★ 关键参数（不低于以下标准）：
+- 单展位尺寸：不小于 400mm × 600mm
+- 结构设计：支持快速拆装重组，展位可灵活拼合扩展
+- 内置走线槽：隐藏式线管，整洁美观
+- 氛围照明：内置 RGB …</div><div class="eq-spec ru-text">Модульный демонстрационный зал предпринимательских проектов (стандартный стенд)
+
+★ Ключевые параметры (не ниже следующих стандартов):
+-Размер одного стенда: не менее 400×600 мм.
+- Структурная конструкция: поддерживает быструю разборку, сборку и реорганизацию, а стенд можно гибко собирать и расширять.
+- Встроенный проволочный лоток: скрытый проводной канал, аккуратный и красивый.
+- Окружающее освещение: встроенное RGB…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">5</td>
+          <td class="price-col">49,000 ₸</td>
+          <td class="price-col total-price">245,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">10</td>
+          <td class="name-col">
+            <div class="eq-name zh">显示电视（86寸）</div><div class="eq-name ru-text">Телевизор с дисплеем (86 дюймов)</div>
+            <div class="eq-spec zh">核心技术与外观要求
+产品定位：艺术壁纸电视，可无缝贴墙安装。
+屏幕技术：Mini LED背光。
+整机最薄处厚度 ≤ 3.9厘米。
+标配超薄挂架，支持无缝贴墙安装。
+显示参数：
+屏幕尺寸：86英寸。
+推荐观看距离：2.3米。
+功能与服务要求
+…</div><div class="eq-spec ru-text">Основные технологические требования и требования к внешнему виду
+Позиционирование продукта: Арт-обои под телевизор, которые можно легко установить на стену.
+Технология экрана: Мини-светодиодная подсветка.
+Толщина самой тонкой части всей машины составляет ≤ 3,9 см.
+Стандартный ультратонкий подвесной кронштейн обеспечивает бесшовную установку на стену.
+Параметры дисплея:
+Размер экрана: 86 дюймов.
+Рекомендуемое расстояние просмотра: 2,3 метра.
+Требования к функциям и обслуживанию
+…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">882,000 ₸</td>
+          <td class="price-col total-price">882,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">11</td>
+          <td class="name-col">
+            <div class="eq-name">ipad Air</div>
+            <div class="eq-spec zh">iPad Air 平板电脑，配备 11 英寸或 13 英寸 Liquid Retina 高清触控显示屏，分辨率不低于 2360×1640，搭载 Apple M3 或以上性能处理器，内存不低于 8GB，存储容量不低于 128GB，支持 Wi-…</div><div class="eq-spec ru-text">Планшетный компьютер iPad Air, оснащенный 11-дюймовым или 13-дюймовым сенсорным дисплеем Liquid Retina высокого разрешения, разрешением не менее 2360×1640, оснащенным процессором Apple M3 или выше, оперативной памятью не менее 8 ГБ, емкостью не менее 128 ГБ, поддержкой Wi-…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">361,200 ₸</td>
+          <td class="price-col total-price">361,200 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">12</td>
+          <td class="name-col">
+            <div class="eq-name zh">异型展示台</div><div class="eq-name ru-text">Стенд специальной формы.</div>
+            <div class="eq-spec zh">采用现代科技感一体化设计，整体造型流畅圆润，以白色高光烤漆材质为主体，搭配蓝色LED氛围灯带，突出未来感与数字化展示效果。展台整体尺寸约为长3200mm × 宽2800mm × 高1100mm，结构采用环保高密度板材与钢结构骨架结合，表面耐…</div><div class="eq-spec ru-text">Он имеет интегрированный дизайн с современными технологиями, а общая форма гладкая и округлая. Он изготовлен из белого глянцевого лакокрасочного материала в качестве основного корпуса и дополнен синими светодиодными полосами рассеянного освещения, чтобы подчеркнуть футуристический и цифровой эффект дисплея. Габаритные размеры стенда составляют примерно 3200 мм в длину × 2800 мм в ширину × 1100 мм в высоту. Конструкция изготовлена ​​из экологически чистых плит высокой плотности в сочетании со стальным каркасом, поверхность устойчива...</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">294,000 ₸</td>
+          <td class="price-col total-price">294,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">13</td>
+          <td class="name-col">
+            <div class="eq-name zh">86 寸纳米触控智慧黑板</div><div class="eq-name ru-text">Умная доска с экраном Nano Touch 86 дюймов</div>
+            <div class="eq-spec zh">4K 分辨率 (3840×2160)，20 点触控，安卓 11.0+Windows 双系统，内置教学白板软件，支持 4K 投屏/分屏，防蓝光护眼认证，带推拉绿板。
+
+★关键参数（不低于以下标准）：
+- 屏幕尺寸：不低于 86 寸
+- 分辨率…</div><div class="eq-spec ru-text">Разрешение 4K (3840×2160), 20-точечное касание, двойная система Android 11.0+Windows, встроенное программное обеспечение для обучающей доски, поддержка проецирования экрана 4K/разделенного экрана, сертификация защиты глаз от синего света, выдвижная зеленая доска.
+
+★Основные параметры (не ниже следующих стандартов):
+-Размер экрана: не менее 86 дюймов
+- Разрешение…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">1.27M ₸</td>
+          <td class="price-col total-price">1.27M ₸</td>
+        </tr>
+          <tr class="eq-total-row">
+            <td colspan="5" class="zh" style="color:var(--text2)">设备合计</td>
+            <td colspan="5" class="ru-text" style="color:var(--text2)">Итого по оборудованию</td>
+            <td class="total-price price-col">15.84M ₸</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <span></span>
+    <a class="nav-arrow" href="../index.html" style="text-align:center">
+      <span class="zh">🏠 返回总览</span><span class="ru-text">🏠 На главную</span>
+    </a>
+    <a class="nav-arrow next" href="conference.html"><span class="zh">会议厅</span><span class="ru-text">Конференц-зал</span> →</a>
+  </div>
+</div>
+
+<script>
+let lang='zh';
+
+function openModal(src){
+  document.getElementById('modalImg').src = src;
+  document.getElementById('imgModal').classList.add('open');
+}
+
+function toggleLang(){
+  lang=lang==='zh'?'ru':'zh';
+  document.body.classList.toggle('ru',lang==='ru');
+  document.getElementById('lang-btn').textContent=lang==='zh'?'РУС / 中文':'中文 / РУС';
+  if(window.barChart){
+    window.barChart.data.labels=lang==='ru'?['Оборудование','Ремонт']:['设备费','装修费'];
+    window.barChart.update();
+  }
+}
+window.barChart=new Chart(document.getElementById('barC'),{
+  type:'bar',
+  data:{labels: document.body.classList.contains('ru') ? ['Оборудование','Ремонт'] : ['设备费','装修费'],
+    datasets:[
+      {label:'设备 / Оборудование',data:[15.84,0],backgroundColor:'#10b981',borderRadius:6},
+      {label:'装修 / Ремонт',data:[0,10.11],backgroundColor:'#f0a500',borderRadius:6},
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#94a3b8',font:{size:12}}},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label.split('/')[0].trim()}: ${c.parsed.y.toFixed(2)}M ₸`}}},
+    scales:{x:{grid:{display:false},ticks:{color:'#94a3b8'}},
+      y:{grid:{color:'rgba(30,58,95,.4)'},ticks:{color:'#64748b',callback:v=>v+'M'}}}}
+});
+new Chart(document.getElementById('donutC'),{
+  type:'doughnut',
+  data:{labels:['设备 / Оборудование','装修 / Ремонт'],
+    datasets:[{data:[61,39],backgroundColor:['#10b981','#f0a500'],borderWidth:0,hoverOffset:6}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+    plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:12}}}}}
+});
+</script>
+</body>
+</html>

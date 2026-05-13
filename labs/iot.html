@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IOT技术中心 · KKST 建设方案</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#070d1a;--bg2:#0e1829;--card:#111e33;--card2:#162340;
+  --border:#1e3a5f;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --a1:#00d4ff;--a2:#0066aa;--gold:#f0a500;--green:#10b981;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.6}
+body.ru{font-family:'Segoe UI','Arial',sans-serif}
+#topbar{position:sticky;top:0;z-index:100;background:rgba(7,13,26,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;gap:16px}
+#topbar .back{color:var(--a1);text-decoration:none;font-size:13px;
+  font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap}
+#topbar .back:hover{opacity:.8}
+#topbar .crumb{font-size:13px;color:var(--text3)}
+#topbar .crumb span{color:var(--text2)}
+#lang-btn{background:var(--card2);border:1px solid var(--border);
+  color:var(--text);padding:5px 14px;border-radius:20px;cursor:pointer;
+  font-size:13px;white-space:nowrap;transition:all .2s}
+#lang-btn:hover{border-color:var(--a1);color:var(--a1)}
+#hero{position:relative;height:480px;overflow:hidden;background:var(--bg2)}
+#hero-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.65)}
+#hero-overlay{position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(7,13,26,.85) 35%,rgba(7,13,26,.2) 100%)}
+#hero-content{position:absolute;inset:0;display:flex;align-items:center;
+  padding:0 64px;max-width:700px}
+.hero-inner .floor-badge{display:inline-block;background:rgba(255,255,255,.1);
+  border:1px solid var(--a1);color:var(--a1);font-size:12px;padding:3px 14px;
+  border-radius:20px;margin-bottom:18px;letter-spacing:1px}
+.hero-inner h1{font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.2;margin-bottom:8px}
+.hero-inner .ru-name{font-size:clamp(14px,2vw,20px);color:rgba(255,255,255,.6);font-style:italic;margin-bottom:20px}
+.hero-inner .tag-row{display:flex;gap:10px;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:var(--text2);font-size:12px;padding:4px 12px;border-radius:8px}
+.tag b{color:#fff}
+.page-wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+section{padding:56px 0}
+section+section{padding-top:0}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
+.ov-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 20px;text-align:center;position:relative;overflow:hidden}
+.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--a1),var(--a2))}
+.ov-card .val{font-size:32px;font-weight:800;color:var(--a1);font-family:'Courier New',monospace}
+.ov-card .lbl{font-size:12px;color:var(--text3);margin-top:4px}
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.desc-card{background:var(--card);border-radius:14px;padding:28px;
+  border-left:4px solid var(--a1);margin-bottom:32px}
+.desc-card p{font-size:15px;color:var(--text2);line-height:1.9}
+.budget-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:40px}
+@media(max-width:600px){.budget-grid{grid-template-columns:1fr}}
+.bud-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center}
+.bud-card.total{border-color:var(--a1)}
+.bud-card .bval{font-size:24px;font-weight:800;margin-bottom:4px;font-family:'Courier New',monospace}
+.bud-card.total .bval{color:var(--a1)}
+.bud-card.reno  .bval{color:var(--gold)}
+.bud-card.equip .bval{color:var(--green)}
+.bud-card .bpct{font-size:13px;color:var(--text3);margin-top:2px}
+.bud-card .blbl{font-size:12px;color:var(--text3);margin-top:6px}
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:40px}
+@media(max-width:700px){.chart-row{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px}
+.chart-card h3{font-size:14px;color:var(--text2);margin-bottom:16px}
+.chart-wrap{position:relative;height:160px}
+.plan-img{border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:40px}
+.plan-img img{width:100%;display:block}
+.eq-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--card2);color:var(--a1);font-weight:600;padding:12px 14px;
+  text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:1px solid rgba(30,58,95,.4);color:var(--text2);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(0,212,255,.04);color:var(--text)}
+.idx{color:var(--text3);text-align:center;width:36px}
+.name-col{min-width:180px}
+.eq-name{color:var(--text);font-weight:500}
+.eq-spec{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5}
+.brand-col{color:var(--a1);white-space:nowrap}
+.num-col{text-align:center;white-space:nowrap}
+.price-col{text-align:right;font-family:monospace;white-space:nowrap}
+.total-price{color:var(--gold);font-weight:600}
+.eq-total-row td{background:var(--card2);font-weight:700;border-top:2px solid var(--border)}
+.eq-total-row .total-price{color:var(--a1);font-size:15px}
+#bottom-nav{padding:40px 0;border-top:1px solid var(--border)}
+.bottom-nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px}
+.nav-arrow{color:var(--a1);text-decoration:none;font-size:14px;
+  font-weight:600;padding:10px 20px;border:1px solid var(--border);
+  border-radius:10px;transition:all .2s;display:block}
+.nav-arrow:hover{border-color:var(--a1);background:rgba(0,212,255,.08)}
+.ru-text{display:none}
+body.ru .zh{display:none}
+body.ru .ru-text{display:revert}
+
+.drawings-section{margin-bottom:40px}
+.drawings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+.draw-img{width:100%;border-radius:12px;border:1px solid var(--border);display:block;
+  transition:transform .3s;cursor:zoom-in}
+.draw-img:hover{transform:scale(1.02)}
+.draw-caption{font-size:12px;color:var(--text3);text-align:center;margin-top:8px}
+.img-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;
+  align-items:center;justify-content:center;cursor:zoom-out}
+.img-modal.open{display:flex}
+.img-modal img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px}
+</style>
+</head>
+<body>
+<div id="topbar">
+  <a class="back" href="../index.html">← <span class="zh">返回总览</span><span class="ru-text">На главную</span></a>
+  <span class="crumb zh">二层 / <span>IOT技术中心</span></span>
+  <span class="crumb ru-text">2-й эт. / <span>Центр IoT-технологий</span></span>
+  <button id="lang-btn" onclick="toggleLang()">РУС / 中文</button>
+</div>
+
+<section id="hero">
+  <img id="hero-img" src="../assets/images/render_iot_center.jpg" alt="IOT技术中心"
+       onerror="this.style.display='none';document.getElementById('hero').style.background='linear-gradient(135deg,#0e1829,#162340)'">
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <div class="hero-inner">
+      <div class="floor-badge">
+        <span class="zh">二层 · 第2楼</span>
+        <span class="ru-text">2-й этаж</span>
+      </div>
+      <h1 class="zh">IOT技术中心</h1>
+      <h1 class="ru-text">Центр IoT-технологий</h1>
+      <p class="ru-name zh">Центр IoT-технологий</p>
+      <p class="ru-name ru-text">IOT技术中心</p>
+      <div class="tag-row">
+        <span class="tag"><b class="zh">面积</b><b class="ru-text">S</b> 70㎡</span>
+        <span class="tag zh"><b>座位</b> 20 位</span><span class="tag ru-text"><b>Мест</b> 20</span>
+        <span class="tag zh"><b>设备</b> 14 种</span>
+        <span class="tag ru-text"><b>Обор.</b> 14 поз.</span>
+        <span class="tag"><b>₸</b> 33.93M ₸</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrap">
+  <section>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="val">33.93M ₸</div>
+        <div class="lbl zh">总建设预算</div><div class="lbl ru-text">Общий бюджет</div>
+      </div>
+      <div class="ov-card"><div class="val">70㎡</div><div class="lbl zh">建筑面积</div><div class="lbl ru-text">Площадь</div></div>
+      <div class="ov-card"><div class="val">20</div><div class="lbl zh">座位数</div><div class="lbl ru-text">Мест</div></div>
+      <div class="ov-card">
+        <div class="val">14</div>
+        <div class="lbl zh">设备种类</div><div class="lbl ru-text">Видов оборуд.</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">2F</div>
+        <div class="lbl zh">所在楼层</div><div class="lbl ru-text">Этаж</div>
+      </div>
+    </div>
+
+    <h2 class="sec-title zh">功能定位</h2>
+    <h2 class="sec-title ru-text">Назначение</h2>
+    <div class="desc-card">
+      <p class="zh">物联网全栈实训空间，涵盖传感器、通信协议、边缘计算及云平台。配备树莓派、Arduino开发板、NEWLab实验平台及Zigbee/蓝牙/WiFi通信套件，支持5个工位同步实训。</p>
+      <p class="ru-text">Полный стек IoT: датчики, протоколы связи, граничные вычисления, облачные платформы. Raspberry Pi, Arduino, Zigbee/BT/WiFi-наборы, 5 рабочих мест.</p>
+    </div>
+
+    <h2 class="sec-title zh">预算构成</h2>
+    <h2 class="sec-title ru-text">Структура бюджета</h2>
+    <div class="budget-grid">
+      <div class="bud-card total">
+        <div class="bval">33.93M ₸</div>
+        <div class="blbl zh">总建设预算</div><div class="blbl ru-text">Итого</div>
+      </div>
+      <div class="bud-card equip">
+        <div class="bval">27.32M ₸</div>
+        <div class="bpct">81%</div>
+        <div class="blbl zh">设备购置费</div><div class="blbl ru-text">Оборудование</div>
+      </div>
+      <div class="bud-card reno">
+        <div class="bval">6.62M ₸</div>
+        <div class="bpct">19%</div>
+        <div class="blbl zh">室内装修改造费</div><div class="blbl ru-text">Ремонт и отделка</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3 class="zh">预算构成可视化</h3><h3 class="ru-text">Визуализация бюджета</h3>
+        <div class="chart-wrap"><canvas id="barC"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 class="zh">装修 vs 设备</h3><h3 class="ru-text">Ремонт vs Оборуд.</h3>
+        <div class="chart-wrap"><canvas id="donutC"></canvas></div>
+      </div>
+    </div>
+
+    <h2 class="sec-title zh">楼层平面图</h2>
+    <h2 class="sec-title ru-text">План этажа</h2>
+    <div class="plan-img"><img src="../assets/images/plan_floor2_cad.jpg" alt="floor plan"></div>
+
+    
+    <h2 class="sec-title zh">室内设计图纸</h2>
+    <h2 class="sec-title ru-text">Дизайн-чертежи интерьера</h2>
+    <div class="drawings-section">
+      <div class="drawings-grid">
+    <div>
+      <img src="../assets/images/draw_iot_center.jpg" alt="IoT创新中心立面图" class="draw-img" onclick="openModal(this.src)">
+      <p class="draw-caption zh">IoT创新中心立面图 — 立面图 A</p><p class="draw-caption ru-text">Чертежи IoT-центра — Чертёж A</p>
+    </div>
+      </div>
+    </div>
+<h2 class="sec-title zh">完整设备清单</h2>
+    <h2 class="sec-title ru-text">Полный перечень оборудования</h2>
+    <div class="eq-table-wrap">
+      <table>
+        <thead><tr>
+          <th class="idx">#</th>
+          <th class="zh">设备名称</th><th class="ru-text">Наименование</th>
+          <th class="zh">品牌</th><th class="ru-text">Бренд</th>
+          <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+          <th class="zh">单价(₸)</th><th class="ru-text">Цена/ед.(₸)</th>
+          <th class="zh">合计(₸)</th><th class="ru-text">Итого(₸)</th>
+        </tr></thead>
+        <tbody>
+                  <tr>
+          <td class="idx">1</td>
+          <td class="name-col">
+            <div class="eq-name">Raspberry Pi Camera Module 3</div>
+            <div class="eq-spec">Сенсор: Sony IMX708 (12 МП).
+Главная фишка: Автофокус (PDAF). Камера сама наводится на резкость, что идеально для демонс…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">2</td>
+          <td class="price-col">24,500 ₸</td>
+          <td class="price-col total-price">49,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">2</td>
+          <td class="name-col">
+            <div class="eq-name">Raspberry Pi AI Camera</div>
+            <div class="eq-spec">на базе сенсора Sony IMX500.
+Главная фишка: В камеру встроен ИИ-акселератор. Она сама умеет распознавать объекты, считат…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">61,740 ₸</td>
+          <td class="price-col total-price">61,740 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">3</td>
+          <td class="name-col">
+            <div class="eq-name">Raspberry Pi Global Shutter Camera (Для производства и робот</div>
+            <div class="eq-spec">Главная фишка: Global Shutter. В отличие от обычных камер, она считывает весь кадр мгновенно. Это исключает эффект «желе…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">71,834 ₸</td>
+          <td class="price-col total-price">71,834 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">4</td>
+          <td class="name-col">
+            <div class="eq-name">Raspberry Pi 27W USB-C PD Power Supply</div>
+            <div class="eq-spec">Входное напряжение: 100–240 В (переменный ток).
+Выходные характеристики:
+5.1 В / 5.0 А (именно этот профиль нужен для Pi…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">5</td>
+          <td class="price-col">64,680 ₸</td>
+          <td class="price-col total-price">323,400 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">5</td>
+          <td class="name-col">
+            <div class="eq-name zh">NEWLab物联网实验平台</div><div class="eq-name ru-text">NEWLab Экспериментальная платформа Интернета вещей</div>
+            <div class="eq-spec zh">由实验平台、实验模块、实验软件、实验开发工具等部分所组成。可连接对应模块完成单片机技术、ARM嵌入式系统、RFID技术、二维码技术、无线通讯技术、传感器技术、数据采集、无线传感器网络、物联网应用程序开发、智能终端开发、电路设计等物联网、电子…</div><div class="eq-spec ru-text">Он состоит из экспериментальной платформы, экспериментального модуля, экспериментального программного обеспечения, инструментов экспериментальной разработки и других частей. Соответствующие модули могут быть подключены к полной микроконтроллерной технологии, встроенным системам ARM, технологии RFID, технологии QR-кода, технологии беспроводной связи, сенсорной технологии, сбору данных, беспроводным сенсорным сетям, разработке приложений Интернета вещей, разработке интеллектуальных терминалов, проектированию схем и другому Интернету вещей, электронике...</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">5</td>
+          <td class="price-col">413,000 ₸</td>
+          <td class="price-col total-price">2.06M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">6</td>
+          <td class="name-col">
+            <div class="eq-name zh">传感器系列套件</div><div class="eq-name ru-text">Комплект датчиков</div>
+            <div class="eq-spec zh">模块包含：温度/光照传感模块、红外传感模块、声音传感模块、霍尔传感模块、称重传感模块、湿度传感模块、压电传感模块、气体传感模块、DIY板模块、DIY测试模块、位移传感模块、热电偶传感模块、超声波传感模块、微机电传感模块
+
+★关键参数（不低于…</div><div class="eq-spec ru-text">Модули включают в себя: модуль измерения температуры/освещения, модуль инфракрасного датчика, модуль измерения звука, модуль измерения Холла, модуль измерения веса, модуль измерения влажности, модуль пьезоэлектрического датчика, модуль измерения газа, модуль платы DIY, тестовый модуль DIY, модуль измерения смещения, модуль измерения термопары, модуль ультразвукового датчика, модуль микроэлектромеханического датчика.
+
+★Основные параметры (не менее...</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">5</td>
+          <td class="price-col">602,000 ₸</td>
+          <td class="price-col total-price">3.01M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">7</td>
+          <td class="name-col">
+            <div class="eq-name zh">执行器件系列套件</div><div class="eq-name ru-text">Комплект привода серии</div>
+            <div class="eq-spec zh">模块包含：继电器模块、指示灯模块、风扇模块、步进电机模块、直流电机模块各1个。
+
+★关键参数（不低于以下标准）：
+- 执行器种类：不低于5种（继电器、指示灯、风扇、步进电机、直流电机）
+- 继电器额定电流：不低于 5A
+- 步进电机细分数：…</div><div class="eq-spec ru-text">Модуль включает в себя: один модуль реле, один модуль индикаторной лампы, один модуль вентилятора, один модуль шагового двигателя и один модуль двигателя постоянного тока.
+
+★Основные параметры (не ниже следующих стандартов):
+- Типы исполнительных механизмов: не менее 5 типов (реле, световой индикатор, вентилятор, шаговый двигатель, двигатель постоянного тока)
+- Номинальный ток реле: не менее 5А
+- Подразделение шагового двигателя:…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">5</td>
+          <td class="price-col">77,000 ₸</td>
+          <td class="price-col total-price">385,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">8</td>
+          <td class="name-col">
+            <div class="eq-name zh">通讯系列套件</div><div class="eq-name ru-text">Серия коммуникаций</div>
+            <div class="eq-spec zh">系列不拆分销售，此价格包含：zigbee模块3个、 蓝牙通讯模块2个、Wi-Fi通讯模块2个、ZigBee协调器、4G模块、DIY测试模块、传感器配件包（含人体红外传感器、心率传感器、温湿度光敏传感器），
+
+★关键参数（不低于以下标准）：
+…</div><div class="eq-spec ru-text">Отдельно серия не продается. В эту цену входит: 3 модуля zigbee, 2 модуля связи Bluetooth, 2 модуля связи Wi-Fi, координатор ZigBee, модуль 4G, тестовый модуль DIY, пакет аксессуаров для датчиков (включая инфракрасный датчик человека, датчик сердечного ритма, светочувствительный датчик температуры и влажности),
+
+★Основные параметры (не ниже следующих стандартов):
+…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">5</td>
+          <td class="price-col">417,200 ₸</td>
+          <td class="price-col total-price">2.09M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">9</td>
+          <td class="name-col">
+            <div class="eq-name zh">自动识别系列套件</div><div class="eq-name ru-text">Комплект серии автоматической идентификации</div>
+            <div class="eq-spec zh">模块包含：HF射频开发模块、NFC射频模块、LF射频模块、UHF射频模块、有源RFID模块、有源RFID标签、
+条码识读模块、射频天线、M3核心模块
+
+★关键参数（不低于以下标准）：
+- RFID频段覆盖：不低于 3 种（LF 低频、HF …</div><div class="eq-spec ru-text">Модули включают в себя: модуль разработки радиочастот ВЧ, радиочастотный модуль NFC, радиочастотный модуль НЧ, радиочастотный модуль УВЧ, активный модуль RFID, активную метку RFID,
+Модуль считывания штрих-кода, радиочастотная антенна, базовый модуль M3
+
+★Основные параметры (не ниже следующих стандартов):
+- Покрытие диапазонов частот RFID: не менее 3-х типов (НЧ низкочастотный, ВЧ...</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">5</td>
+          <td class="price-col">693,000 ₸</td>
+          <td class="price-col total-price">3.46M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">10</td>
+          <td class="name-col">
+            <div class="eq-name zh">嵌入式开发套件</div><div class="eq-name ru-text">Встроенный комплект разработки</div>
+            <div class="eq-spec zh">模块包含：M3核心模块、显示模块、键盘模块、LCD模块、温度/光照传感器、功能扩展模块、有线-无线
+收发模块2个
+
+★关键参数（不低于以下标准）：
+- 核心模块：ARM Cortex-M3 或同等架构
+- 显示模块：支持 LCD 显示
+- …</div><div class="eq-spec ru-text">Модули включают в себя: основной модуль M3, модуль дисплея, модуль клавиатуры, модуль ЖК-дисплея, датчик температуры/освещенности, модуль расширения функций, проводной и беспроводной интерфейс.
+2 модуля трансивера
+
+★Основные параметры (не ниже следующих стандартов):
+- Основной модуль: ARM Cortex-M3 или эквивалентная архитектура.
+- Модуль дисплея: поддерживает ЖК-дисплей
+-…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">5</td>
+          <td class="price-col">358,400 ₸</td>
+          <td class="price-col total-price">1.79M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">11</td>
+          <td class="name-col">
+            <div class="eq-name zh">IoT 多协议通信套装</div><div class="eq-name ru-text">Пакет многопротокольной связи IoT</div>
+            <div class="eq-spec zh">千兆双频路由器（支持 2.4G/5G，带 USB 接口）×1；工业以太网交换机（5 口，100Mbps，冗余供电）×1；ZigBee 网关（兼容 CC2530 模块）×1；供电模块（8 路输出）×1
+
+★关键参数（不低于以下标准）：
+- 路…</div><div class="eq-spec ru-text">Гигабитный двухдиапазонный маршрутизатор (поддерживает 2,4G/5G, с интерфейсом USB) × 1; промышленный коммутатор Ethernet (5 портов, 100 Мбит/с, резервный источник питания) × 1; Шлюз ZigBee (совместим с модулем CC2530) × 1; модуль питания (8 выходов) × 1
+
+★Основные параметры (не ниже следующих стандартов):
+- Дорога…</div>
+          </td>
+          <td class="brand-col">1500</td>
+          <td class="num-col">1</td>
+          <td class="price-col">147,000 ₸</td>
+          <td class="price-col total-price">147,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">12</td>
+          <td class="name-col">
+            <div class="eq-name zh">86 寸纳米触控智慧黑板</div><div class="eq-name ru-text">Умная доска с экраном Nano Touch 86 дюймов</div>
+            <div class="eq-spec zh">4K 分辨率 (3840×2160)，20 点触控，安卓 11.0+Windows 双系统，内置教学白板软件，支持 4K 投屏/分屏，防蓝光护眼认证，带推拉绿板。
+
+★关键参数（不低于以下标准）：
+- 屏幕尺寸：不低于 86 寸
+- 分辨率…</div><div class="eq-spec ru-text">Разрешение 4K (3840×2160), 20-точечное касание, двойная система Android 11.0+Windows, встроенное программное обеспечение для обучающей доски, поддержка проецирования экрана 4K/разделенного экрана, сертификация защиты глаз от синего света, выдвижная зеленая доска.
+
+★Основные параметры (не ниже следующих стандартов):
+-Размер экрана: не менее 86 дюймов
+- Разрешение…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">12.74M ₸</td>
+          <td class="price-col total-price">12.74M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">13</td>
+          <td class="name-col">
+            <div class="eq-name zh">电子测量与接线工具套件</div><div class="eq-name ru-text">Набор инструментов для электронных измерений и электромонтажа</div>
+            <div class="eq-spec zh">数字万用表（胜利 VC890D，交直流电压 / 电流 / 电阻测量）×2；：剥线钳 / 烙铁 / 吸锡器 / 螺丝刀套装各 1；> 线缆套件：杜邦线（100 根）/ 网线（5m）/USB 线（2m）/ 传感器延长线（各 10 根）；收纳箱 …</div><div class="eq-spec ru-text">Цифровой мультиметр (Victory VC890D, измерение постоянного/переменного напряжения/тока/сопротивления)</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">5</td>
+          <td class="price-col">98,000 ₸</td>
+          <td class="price-col total-price">490,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">14</td>
+          <td class="name-col">
+            <div class="eq-name">ПЛК FX3U</div>
+            <div class="eq-spec">Управление	       ПЛК FX3U-24MR (клон Mitsubishi) на DIN-рейку             1 шт
+Визуализация	   HMI Панель Kinco или Wei…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">4</td>
+          <td class="price-col">157,500 ₸</td>
+          <td class="price-col total-price">630,000 ₸</td>
+        </tr>
+          <tr class="eq-total-row">
+            <td colspan="5" class="zh" style="color:var(--text2)">设备合计</td>
+            <td colspan="5" class="ru-text" style="color:var(--text2)">Итого по оборудованию</td>
+            <td class="total-price price-col">27.32M ₸</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="nav-arrow prev" href="printing.html">← <span class="zh">印刷中心</span><span class="ru-text">Центр печати</span></a>
+    <a class="nav-arrow" href="../index.html" style="text-align:center">
+      <span class="zh">🏠 返回总览</span><span class="ru-text">🏠 На главную</span>
+    </a>
+    <a class="nav-arrow next" href="smart_home.html"><span class="zh">智能家居</span><span class="ru-text">Умный дом</span> →</a>
+  </div>
+</div>
+
+<script>
+let lang='zh';
+
+function openModal(src){
+  document.getElementById('modalImg').src = src;
+  document.getElementById('imgModal').classList.add('open');
+}
+
+function toggleLang(){
+  lang=lang==='zh'?'ru':'zh';
+  document.body.classList.toggle('ru',lang==='ru');
+  document.getElementById('lang-btn').textContent=lang==='zh'?'РУС / 中文':'中文 / РУС';
+  if(window.barChart){
+    window.barChart.data.labels=lang==='ru'?['Оборудование','Ремонт']:['设备费','装修费'];
+    window.barChart.update();
+  }
+}
+window.barChart=new Chart(document.getElementById('barC'),{
+  type:'bar',
+  data:{labels: document.body.classList.contains('ru') ? ['Оборудование','Ремонт'] : ['设备费','装修费'],
+    datasets:[
+      {label:'设备 / Оборудование',data:[27.32,0],backgroundColor:'#10b981',borderRadius:6},
+      {label:'装修 / Ремонт',data:[0,6.62],backgroundColor:'#f0a500',borderRadius:6},
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#94a3b8',font:{size:12}}},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label.split('/')[0].trim()}: ${c.parsed.y.toFixed(2)}M ₸`}}},
+    scales:{x:{grid:{display:false},ticks:{color:'#94a3b8'}},
+      y:{grid:{color:'rgba(30,58,95,.4)'},ticks:{color:'#64748b',callback:v=>v+'M'}}}}
+});
+new Chart(document.getElementById('donutC'),{
+  type:'doughnut',
+  data:{labels:['设备 / Оборудование','装修 / Ремонт'],
+    datasets:[{data:[81,19],backgroundColor:['#10b981','#f0a500'],borderWidth:0,hoverOffset:6}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+    plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:12}}}}}
+});
+</script>
+</body>
+</html>

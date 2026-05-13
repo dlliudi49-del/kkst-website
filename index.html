@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>哈萨克斯坦创新科技中心 | Инновационный технологический центр Казахстана</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #070d1a;
+  --bg2: #0e1829;
+  --card: #111e33;
+  --card2: #162340;
+  --border: #1e3a5f;
+  --accent: #00d4ff;
+  --accent2: #0090cc;
+  --gold: #f0a500;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --green: #10b981;
+  --purple: #8b5cf6;
+  --font-zh: 'PingFang SC','Microsoft YaHei','SimHei',sans-serif;
+  --font-ru: 'Segoe UI','Arial',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-zh);line-height:1.6}
+body.ru{font-family:var(--font-ru)}
+
+/* ── NAV ─────────────────────────────────────── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(7,13,26,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);padding:0 24px;height:56px;
+  display:flex;align-items:center;justify-content:space-between}
+#nav .logo{font-size:15px;font-weight:700;color:var(--accent);white-space:nowrap;
+  letter-spacing:.5px}
+#nav .nav-links{display:flex;gap:24px;align-items:center}
+#nav .nav-links a{color:var(--text2);text-decoration:none;font-size:13px;
+  transition:color .2s}
+#nav .nav-links a:hover{color:var(--accent)}
+#lang-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);
+  padding:5px 14px;border-radius:20px;cursor:pointer;font-size:13px;
+  transition:all .2s;white-space:nowrap}
+#lang-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── HERO ─────────────────────────────────────── */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;
+  justify-content:center;overflow:hidden;padding-top:56px}
+#hero-bg{position:absolute;inset:0;background-image:url('assets/images/cover.jpg');
+  background-size:cover;background-position:center;filter:brightness(.35)}
+#hero-overlay{position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,60,120,.6) 0%,rgba(0,0,0,.3) 100%)}
+#hero-content{position:relative;z-index:1;text-align:center;padding:40px 20px;
+  max-width:900px}
+#hero-tag{display:inline-block;background:rgba(0,212,255,.15);
+  border:1px solid var(--accent);color:var(--accent);padding:4px 16px;
+  border-radius:20px;font-size:12px;letter-spacing:2px;margin-bottom:24px}
+#hero h1{font-size:clamp(28px,5vw,56px);font-weight:800;line-height:1.2;
+  margin-bottom:12px;text-shadow:0 2px 20px rgba(0,0,0,.8)}
+#hero .subtitle{font-size:clamp(14px,2vw,20px);color:rgba(255,255,255,.75);
+  margin-bottom:40px;letter-spacing:1px}
+.stats-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+  margin-bottom:48px}
+.stat-box{background:rgba(255,255,255,.08);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.15);border-radius:12px;
+  padding:20px 28px;text-align:center;min-width:130px}
+.stat-box .num{font-size:36px;font-weight:800;color:var(--accent);
+  line-height:1;font-family:'Courier New',monospace}
+.stat-box .label{font-size:12px;color:var(--text2);margin-top:4px}
+.scroll-hint{color:rgba(255,255,255,.4);font-size:13px;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ── SECTION TITLES ────────────────────────────── */
+.section{padding:80px 0}
+.section-inner{max-width:1200px;margin:0 auto;padding:0 24px}
+.section-title{text-align:center;margin-bottom:60px}
+.section-title h2{font-size:clamp(22px,3vw,36px);font-weight:700;
+  background:linear-gradient(135deg,#fff 0%,var(--accent) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:10px}
+.section-title p{color:var(--text2);font-size:15px;max-width:600px;margin:0 auto}
+.divider{width:60px;height:3px;background:linear-gradient(90deg,var(--accent),var(--purple));
+  border-radius:2px;margin:16px auto 0}
+
+/* ── PHILOSOPHY ────────────────────────────────── */
+#philosophy{background:var(--bg2)}
+.philosophy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:20px}
+.phil-card{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:28px;position:relative;overflow:hidden;transition:all .3s}
+.phil-card:hover{border-color:var(--accent);transform:translateY(-4px);
+  box-shadow:0 12px 40px rgba(0,212,255,.15)}
+.phil-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--grad)}
+.phil-card .icon{font-size:36px;margin-bottom:16px}
+.phil-card h3{font-size:17px;font-weight:700;color:var(--accent);margin-bottom:10px}
+.phil-card p{font-size:13.5px;color:var(--text2);line-height:1.7}
+
+/* ── FLOOR NAV ─────────────────────────────────── */
+#floors{background:var(--bg)}
+.floor-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+  margin-bottom:48px}
+.floor-tab{background:var(--card);border:1px solid var(--border);color:var(--text2);
+  padding:10px 28px;border-radius:30px;cursor:pointer;font-size:14px;
+  font-weight:600;transition:all .25s}
+.floor-tab:hover{border-color:var(--accent);color:var(--accent)}
+.floor-tab.active{background:linear-gradient(135deg,var(--accent2),var(--accent));
+  border-color:var(--accent);color:#000;font-weight:700}
+
+.floor-section{display:none}
+.floor-section.active{display:block}
+.floor-header{display:flex;align-items:center;gap:16px;margin-bottom:32px;
+  padding:20px 24px;background:var(--card2);border-radius:12px;
+  border-left:4px solid var(--accent)}
+.floor-badge{background:var(--accent);color:#000;font-weight:800;font-size:18px;
+  width:48px;height:48px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0}
+.floor-header h3{font-size:20px;font-weight:700;margin-bottom:4px}
+.floor-header p{font-size:13px;color:var(--text2)}
+
+.labs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+  gap:24px}
+
+/* ── LAB CARD ──────────────────────────────────── */
+.lab-card{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;transition:all .3s;cursor:pointer}
+.lab-card:hover{border-color:var(--accent);box-shadow:0 8px 40px rgba(0,212,255,.12)}
+.lab-card-img{position:relative;height:200px;overflow:hidden;background:#0a1528}
+.lab-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.lab-card:hover .lab-card-img img{transform:scale(1.05)}
+.lab-floor-badge{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(4px);border:1px solid var(--border);color:var(--accent);
+  font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600}
+.lab-budget-badge{position:absolute;top:12px;right:12px;background:rgba(0,212,255,.15);
+  backdrop-filter:blur(4px);border:1px solid var(--accent);color:var(--accent);
+  font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600}
+.lab-card-body{padding:20px}
+.lab-card-body h3{font-size:18px;font-weight:700;margin-bottom:6px;color:#fff}
+.lab-card-body .lab-ru{font-size:13px;color:var(--text3);margin-bottom:12px;
+  font-style:italic}
+.lab-meta-row{display:flex;gap:16px;margin-bottom:14px}
+.lab-meta{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2)}
+.lab-meta span{color:var(--text)}
+.lab-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.expand-btn{display:flex;align-items:center;gap:6px;color:var(--accent);
+  font-size:13px;font-weight:600;background:none;border:none;cursor:pointer;
+  padding:0;transition:opacity .2s}
+.expand-btn:hover{opacity:.8}
+.detail-link{display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  color:#000;font-size:13px;font-weight:700;padding:9px 18px;
+  border-radius:8px;text-decoration:none;transition:opacity .2s;margin-top:4px}
+.detail-link:hover{opacity:.85}
+
+
+.infra-tab{border-color:#7c3aed !important;color:#a855f7 !important}
+.infra-tab:hover{background:rgba(168,85,247,.1) !important}
+.infra-tab.active{background:linear-gradient(135deg,#7c3aed,#a855f7) !important;
+  border-color:#a855f7 !important;color:#fff !important}
+@media(max-width:600px){
+  #card-infrastructure{flex-direction:column !important}
+  #card-infrastructure .lab-card-img{width:100% !important;min-width:0 !important;height:200px}
+}
+
+/* ── INVESTMENT SECTION ─────────────────────────── */
+#investment{background:var(--bg2)}
+.chart-grid{display:grid;grid-template-columns:2fr 1fr;gap:32px}
+@media(max-width:800px){.chart-grid{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:28px}
+.chart-card h3{font-size:16px;font-weight:700;color:#fff;margin-bottom:20px;
+  padding-bottom:12px;border-bottom:1px solid var(--border)}
+.chart-wrap{position:relative;height:380px}
+.chart-wrap-sm{position:relative;height:220px}
+.total-summary{display:grid;grid-template-columns:1fr;gap:14px;margin-top:24px}
+.sum-item{display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;background:var(--bg2);border-radius:10px;
+  border:1px solid var(--border)}
+.sum-item .lbl{font-size:13px;color:var(--text2)}
+.sum-item .val{font-size:15px;font-weight:700}
+
+/* ── FOOTER ─────────────────────────────────────── */
+footer{background:var(--bg2);border-top:1px solid var(--border);
+  padding:40px 24px;text-align:center}
+footer p{color:var(--text3);font-size:13px;line-height:2}
+footer strong{color:var(--accent)}
+
+/* ── UTILS ───────────────────────────────────────── */
+.zh{display:inherit}.ru-text{display:none}
+body.ru .zh{display:none}
+body.ru .ru-text{display:inherit}
+.tag{display:inline-block;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);
+  color:var(--accent);font-size:11px;padding:2px 8px;border-radius:6px;margin-right:4px}
+</style>
+</head>
+<body>
+
+<!-- ══ NAVIGATION ══════════════════════════════════════ -->
+<nav id="nav">
+  <div class="logo">
+    <span class="zh">哈萨克斯坦创新科技中心</span>
+    <span class="ru-text">ИТЦ Казахстана</span>
+  </div>
+  <div class="nav-links">
+    <a href="#philosophy" class="zh">设计理念</a>
+    <a href="#philosophy" class="ru-text">Концепция</a>
+    <a href="#floors" class="zh">实训室导览</a>
+    <a href="#floors" class="ru-text">Лаборатории</a>
+    <a href="#investment" class="zh">投资概览</a>
+    <a href="#investment" class="ru-text">Инвестиции</a>
+    <button id="lang-btn" onclick="toggleLang()">РУС / 中文</button>
+  </div>
+</nav>
+
+<!-- ══ HERO ════════════════════════════════════════════ -->
+<section id="hero">
+  <div id="hero-bg"></div>
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <div id="hero-tag">
+      <span class="zh">室内设计方案汇报</span>
+      <span class="ru-text">ПРЕЗЕНТАЦИЯ ДИЗАЙН-ПРОЕКТА</span>
+    </div>
+    <h1>
+      <span class="zh">哈萨克斯坦<br>创新科技中心</span>
+      <span class="ru-text">Инновационный<br>технологический центр<br>Казахстана</span>
+    </h1>
+    <p class="subtitle">
+      <span class="zh">数字赋能 · 中哈共筑 · 青春创新</span>
+      <span class="ru-text">Цифровые технологии · Казахстанско-китайское сотрудничество · Молодёжные инновации</span>
+    </p>
+    <div class="stats-row" id="stats-row"></div>
+    <p class="scroll-hint">
+      <span class="zh">▼ 向下滚动探索全部实训室</span>
+      <span class="ru-text">▼ Прокрутите вниз для просмотра всех лабораторий</span>
+    </p>
+  </div>
+</section>
+
+<!-- ══ PHILOSOPHY ══════════════════════════════════════ -->
+<section id="philosophy" class="section">
+  <div class="section-inner">
+    <div class="section-title">
+      <h2>
+        <span class="zh">设计理念与功能定位</span>
+        <span class="ru-text">Концепция дизайна и функциональное назначение</span>
+      </h2>
+      <p>
+        <span class="zh">将静态展示空间转化为「活的技术与创意生态系统」——强调参与、互动、学习与创新</span>
+        <span class="ru-text">Превращение статичного выставочного пространства в «живую технологическую и творческую экосистему» — участие, взаимодействие, обучение и инновации</span>
+      </p>
+      <div class="divider"></div>
+    </div>
+    <div class="philosophy-grid" id="phil-grid"></div>
+  </div>
+</section>
+
+<!-- ══ FLOOR NAVIGATOR ════════════════════════════════ -->
+<section id="floors" class="section">
+  <div class="section-inner">
+    <div class="section-title">
+      <h2>
+        <span class="zh">16个实训室 + 基础设施 · 逐层导览</span>
+        <span class="ru-text">16 лабораторий + инфраструктура · Навигация</span>
+      </h2>
+      <p>
+        <span class="zh">点击楼层标签切换，查看每个实训室的效果图、设备清单与建设预算；另设基础设施专项</span>
+        <span class="ru-text">Выберите этаж для просмотра визуализаций, оборудования и бюджета; отдельная вкладка — инфраструктура</span>
+      </p>
+      <div class="divider"></div>
+    </div>
+    <div class="floor-tabs" id="floor-tabs"></div>
+    <div id="floor-panels"></div>
+  </div>
+</section>
+
+<!-- ══ INVESTMENT OVERVIEW ════════════════════════════ -->
+<section id="investment" class="section">
+  <div class="section-inner">
+    <div class="section-title">
+      <h2>
+        <span class="zh">总投资概览</span>
+        <span class="ru-text">Обзор общих инвестиций</span>
+      </h2>
+      <p>
+        <span class="zh">16个实训室建设预算 + 全楼弱电基础设施费用，总投资 563.35M ₸</span>
+        <span class="ru-text">Бюджет 16 лабораторий + слаботочная инфраструктура всего здания; итого 563,35M ₸</span>
+      </p>
+      <div class="divider"></div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>
+          <span class="zh">各实训室预算对比（万坚戈）</span>
+          <span class="ru-text">Бюджет по лабораториям (млн. тенге)</span>
+        </h3>
+        <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>
+          <span class="zh">装修 vs 设备占比</span>
+          <span class="ru-text">Ремонт vs Оборудование</span>
+        </h3>
+        <div class="chart-wrap-sm"><canvas id="donutChart"></canvas></div>
+        <div class="total-summary" id="total-summary"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══════════════════════════════════════════ -->
+<footer>
+  <p>
+    <strong>哈萨克斯坦创新科技中心 · Инновационный технологический центр Казахстана</strong><br>
+    <span class="zh">室内设计方案 · 数字赋能 · 中哈共筑 · 青春创新</span>
+    <span class="ru-text">Проект интерьера · Цифровые технологии · КZ-CN сотрудничество</span>
+  </p>
+</footer>
+
+<script src="data.js"></script>
+<script>
+// ── LANG TOGGLE ─────────────────────────────────
+const INFRA_TOTAL_KZT = 108986282;
+let lang = 'zh';
+function toggleLang() {
+  lang = lang === 'zh' ? 'ru' : 'zh';
+  document.body.classList.toggle('ru', lang === 'ru');
+  document.getElementById('lang-btn').textContent = lang === 'zh' ? 'РУС / 中文' : '中文 / РУС';
+  // Re-render dynamic content
+  renderAllCharts();
+}
+
+// ── HELPERS ──────────────────────────────────────
+function fmtM(v) { return (v/1000000).toFixed(1) + 'M ₸'; }
+
+// ── PHILOSOPHY DATA ──────────────────────────────
+const PHIL_DATA = [
+  { icon:'🖥️', grad:'linear-gradient(135deg,#00d4ff,#0090cc)', zh_title:'技术与项目展示区', ru_title:'Зона техники и проектов',
+    zh:'展示原型机（机器人、设备、小工具）、VR/AR体验站、交互式技术展台、初创企业模型展示', ru:'Прототипы (роботы, гаджеты), VR/AR-стойки, интерактивные экспонаты, модели стартапов' },
+  { icon:'🎮', grad:'linear-gradient(135deg,#8b5cf6,#6d28d9)', zh_title:'交互式体验区', ru_title:'Интерактивная зона',
+    zh:'传感器面板、智能城市/智能制造模拟器、数字屏幕展示案例，让参观者亲身体验科技', ru:'Сенсорные панели, симуляторы умного города и производства, цифровые демонстрации' },
+  { icon:'🚀', grad:'linear-gradient(135deg,#f0a500,#e05c00)', zh_title:'初创企业展示窗口', ru_title:'Витрина стартапов',
+    zh:'驻园区企业项目展示、团队介绍、产品路演与成功案例分享', ru:'Проекты резидентов, представление команд, питчинг и истории успеха' },
+  { icon:'📚', grad:'linear-gradient(135deg,#10b981,#059669)', zh_title:'教育内容区', ru_title:'Образовательный контент',
+    zh:'技术工作原理信息图、视频讲座、创新实施案例，打造可持续学习生态', ru:'Инфографика о технологиях, видеолекции, кейсы внедрения инноваций' },
+  { icon:'🎤', grad:'linear-gradient(135deg,#ef4444,#dc2626)', zh_title:'活动与演讲区', ru_title:'Зона мероприятий',
+    zh:'小型舞台/演示区、项目路演与演示、展览临时空间，支持各类科技活动', ru:'Мини-сцена, зона для питчинга и демонстраций, пространство для временных экспозиций' },
+  { icon:'🏆', grad:'linear-gradient(135deg,#f0a500,#fbbf24)', zh_title:'品牌形象展示区', ru_title:'Брендинг центра',
+    zh:'中心使命与目标、合作伙伴和投资方信息、中心发展历史与成就展示', ru:'Миссия и цели центра, партнёры и инвесторы, история и достижения' },
+  { icon:'☕', grad:'linear-gradient(135deg,#64748b,#475569)', zh_title:'休闲与交流区', ru_title:'Лаундж и нетворкинг',
+    zh:'酒廊/休息区、创意空间、社交交流场所，促进非正式创新碰撞', ru:'Лаундж-зона, креативное пространство, место для неформального общения и нетворкинга' },
+];
+
+// ── FLOOR DATA ───────────────────────────────────
+const FLOOR_INFO = {
+  1: { zh: '一层 · 展示与服务', ru: '1-й этаж · Экспозиция и сервис', img: 'assets/images/floor1_plan.jpg' },
+  2: { zh: '二层 · 智能技术实训', ru: '2-й этаж · Умные технологии', img: 'assets/images/floor2_plan.jpg' },
+  3: { zh: '三层 · 机器人实训', ru: '3-й этаж · Робототехника', img: 'assets/images/floor3_plan.jpg' },
+  4: { zh: '四层 · AI与创意设计', ru: '4-й этаж · ИИ и дизайн', img: 'assets/images/floor4_plan.jpg' },
+  5: { zh: '五层 · 网络与系统', ru: '5-й этаж · Сети и системы', img: 'assets/images/floor5_plan.jpg' },
+};
+
+// ── RENDER PHILOSOPHY ─────────────────────────────
+function renderPhilosophy() {
+  const grid = document.getElementById('phil-grid');
+  grid.innerHTML = PHIL_DATA.map(p => `
+    <div class="phil-card" style="--grad:${p.grad}">
+      <div class="icon">${p.icon}</div>
+      <h3 class="zh">${p.zh_title}</h3>
+      <h3 class="ru-text">${p.ru_title}</h3>
+      <p class="zh">${p.zh}</p>
+      <p class="ru-text">${p.ru}</p>
+    </div>`).join('');
+}
+
+// ── RENDER STATS ──────────────────────────────────
+function renderStats() {
+  const s = window.KKST_DATA.summary;
+  const items = [
+    { num: s.labs_count, zh: '个实训室', ru: 'Лабораторий' },
+    { num: s.floors, zh: '层楼', ru: 'Этажей' },
+    { num: fmtM(s.total_kzt + INFRA_TOTAL_KZT), zh: '总投资预算', ru: 'Общий бюджет' },
+    { num: '4', zh: '基础设施子系统', ru: 'Подсистемы' },
+  ];
+  document.getElementById('stats-row').innerHTML = items.map(i => `
+    <div class="stat-box">
+      <div class="num">${i.num}</div>
+      <div class="label zh">${i.zh}</div>
+      <div class="label ru-text">${i.ru}</div>
+    </div>`).join('');
+}
+
+// ── RENDER FLOORS ────────────────────────────────
+function renderFloors() {
+  const labs = window.KKST_DATA.labs;
+  const tabs = document.getElementById('floor-tabs');
+  const panels = document.getElementById('floor-panels');
+
+  // Group by floor
+  const byFloor = {};
+  labs.forEach(lab => {
+    if (!byFloor[lab.floor]) byFloor[lab.floor] = [];
+    byFloor[lab.floor].push(lab);
+  });
+
+  // Tabs
+  tabs.innerHTML = [1,2,3,4,5].map((f,i) => `
+    <button class="floor-tab ${i===0?'active':''}" onclick="switchFloor(${f})" id="tab-${f}">
+      <span class="zh">${['一','二','三','四','五'][f-1]}层</span>
+      <span class="ru-text">${f}-й эт.</span>
+    </button>`).join('') +
+    `<button class="floor-tab infra-tab" onclick="switchFloor('infra')" id="tab-infra">
+      <span class="zh">⚡ 基础设施</span>
+      <span class="ru-text">⚡ Инфраструктура</span>
+    </button>`;
+
+  // Panels
+  panels.innerHTML = [1,2,3,4,5].map((f,i) => {
+    const floorLabs = byFloor[f] || [];
+    const info = FLOOR_INFO[f];
+    return `
+    <div class="floor-section ${i===0?'active':''}" id="floor-${f}">
+      <div class="floor-header">
+        <div class="floor-badge">${f}F</div>
+        <div>
+          <h3 class="zh">${info.zh}</h3>
+          <h3 class="ru-text">${info.ru}</h3>
+          <p class="zh">共 ${floorLabs.length} 个功能室 · 点击卡片查看详细建设方案</p>
+          <p class="ru-text">${floorLabs.length} функциональных помещений · Нажмите на карточку для деталей</p>
+        </div>
+      </div>
+      <div class="labs-grid">${floorLabs.map(lab => renderLabCard(lab)).join('')}</div>
+    </div>`;
+  }).join('') +
+  `<div class="floor-section" id="floor-infra">
+    <div class="floor-header" style="border-left-color:#a855f7">
+      <div class="floor-badge" style="background:#a855f7;font-size:22px;width:52px;height:52px">⚡</div>
+      <div>
+        <h3 class="zh">弱电基础设施系统</h3>
+        <h3 class="ru-text">Слаботочные инфраструктурные системы</h3>
+        <p class="zh">覆盖全楼 1–5 层 · 基础网络 / Wi-Fi / 视频监控 / 机房工程 · 共 4 大子系统</p>
+        <p class="ru-text">Весь корпус 1–5 этажей · Сеть / Wi-Fi / Видеонаблюдение / Серверная · 4 подсистемы</p>
+      </div>
+    </div>
+    <div class="labs-grid" style="grid-template-columns:1fr">
+      <div class="lab-card" style="display:flex;flex-direction:row" id="card-infrastructure">
+        <div class="lab-card-img" style="width:320px;min-width:280px;flex-shrink:0">
+          <img src="assets/images/render_exterior.jpg" alt="基础设施系统" loading="lazy"
+               onerror="this.src='assets/images/render_corridor_45a.jpg';this.onerror=function(){this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#0e1829,#162340)'}">
+          <span class="lab-floor-badge zh">全楼</span>
+          <span class="lab-floor-badge ru-text">Весь корпус</span>
+          <span class="lab-budget-badge">108.99M ₸</span>
+        </div>
+        <div class="lab-card-body" style="flex:1">
+          <h3 class="zh" style="color:#a855f7">基础设施系统</h3>
+          <h3 class="ru-text" style="color:#a855f7">Инфраструктурные системы</h3>
+          <p class="lab-ru zh">Слаботочные системы · 弱电系统</p>
+          <p class="lab-ru ru-text">弱电基础设施 · Слаботочные системы</p>
+          <div class="lab-meta-row">
+            <div class="lab-meta">🏢 <span class="zh">1–5 层全覆盖</span><span class="ru-text">1–5 этажи</span></div>
+            <div class="lab-meta">📡 <span class="zh">4 大子系统</span><span class="ru-text">4 подсистемы</span></div>
+            <div class="lab-meta">📷 <span class="zh">55 路监控</span><span class="ru-text">55 камер</span></div>
+            <div class="lab-meta">📶 <span class="zh">27 AP</span><span class="ru-text">27 точек Wi-Fi</span></div>
+          </div>
+          <p class="lab-desc zh">千兆有线网络（OLT/ONU光纤到层）· 全覆盖 Wi-Fi（27个AP）· 55路高清视频监控 · 模块化 UPS 机房工程，为 16 个实训室提供完整的网络与安防保障。</p>
+          <p class="lab-desc ru-text">Гигабитная сеть OLT/ONU · Wi-Fi 27 AP · 55 камер HD · Модульный UPS и инженерия серверной. Полная инфраструктура для 16 лабораторий.</p>
+          <a class="detail-link" href="labs/infrastructure.html" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff">
+            <span class="zh">查看基础设施方案 →</span>
+            <span class="ru-text">Просмотр инфраструктуры →</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function switchFloor(f) {
+  document.querySelectorAll('.floor-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.floor-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-'+f).classList.add('active');
+  document.getElementById('floor-'+f).classList.add('active');
+}
+
+// ── RENDER LAB CARD ───────────────────────────────
+function renderLabCard(lab) {
+  const bgt = lab.budget.total_kzt;
+  const floorZh = ['一','二','三','四','五'][lab.floor-1] + '层';
+  const floorRu = lab.floor + '-й эт.';
+  return `
+  <div class="lab-card" id="card-${lab.id}">
+    <div class="lab-card-img">
+      <img src="${lab.image}" alt="${lab.name.zh}" loading="lazy"
+           onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#0e1829,#162340)'">
+      <span class="lab-floor-badge zh">${floorZh}</span>
+      <span class="lab-floor-badge ru-text">${floorRu}</span>
+      <span class="lab-budget-badge">${(bgt/1000000).toFixed(1)}M ₸</span>
+    </div>
+    <div class="lab-card-body">
+      <h3 class="zh">${lab.name.zh}</h3>
+      <h3 class="ru-text">${lab.name.ru}</h3>
+      <p class="lab-ru zh">${lab.name.ru}</p>
+      <p class="lab-ru ru-text">${lab.name.zh}</p>
+      <div class="lab-meta-row">
+        ${lab.area ? `<div class="lab-meta">📐 <span>${lab.area}</span></div>` : ''}
+        ${lab.seating > 0 ? `<div class="lab-meta">🪑 <span class="zh">${lab.seating}座</span><span class="ru-text">${lab.seating} мест</span></div>` : ''}
+        <div class="lab-meta">🛠️ <span class="zh">${lab.equipment.length}件设备</span><span class="ru-text">${lab.equipment.length} ед. оборуд.</span></div>
+      </div>
+      <p class="lab-desc zh">${lab.desc.zh}</p>
+      <p class="lab-desc ru-text">${lab.desc.ru}</p>
+      <a class="detail-link" href="labs/${lab.id}.html">
+        <span class="zh">查看完整建设方案 →</span>
+        <span class="ru-text">Полный план строительства →</span>
+      </a>
+    </div>
+  </div>`;
+}
+
+
+// ── CHARTS ───────────────────────────────────────
+let barChartInst = null, donutChartInst = null;
+
+function renderAllCharts() {
+  renderBarChart();
+  renderDonutChart();
+  renderTotalSummary();
+}
+
+function renderBarChart() {
+  const labs = window.KKST_DATA.labs;
+  const sorted = [...labs].sort((a,b) => b.budget.total_kzt - a.budget.total_kzt);
+  const infraM = +(INFRA_TOTAL_KZT/1000000).toFixed(2);
+
+  const infraLabel = lang==='zh' ? '⚡ 基础设施' : '⚡ Инфраструктура';
+  const labels = [infraLabel, ...sorted.map(l => l.name[lang])];
+  const eqData  = [0,        ...sorted.map(l => +(l.budget.equipment_kzt/1000000).toFixed(2))];
+  const rData   = [0,        ...sorted.map(l => +(l.budget.renovation_kzt/1000000).toFixed(2))];
+  const infraData = [infraM, ...sorted.map(() => 0)];
+
+  const ctx = document.getElementById('barChart').getContext('2d');
+  if (barChartInst) barChartInst.destroy();
+  barChartInst = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: lang==='zh' ? '设备费' : 'Оборудование', data: eqData,
+          backgroundColor: '#10b981', borderRadius: 4, stack: 'a' },
+        { label: lang==='zh' ? '装修费' : 'Ремонт', data: rData,
+          backgroundColor: '#f0a500', borderRadius: 4, stack: 'a' },
+        { label: lang==='zh' ? '基础设施' : 'Инфраструктура', data: infraData,
+          backgroundColor: '#a855f7', borderRadius: 4, stack: 'a' },
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#94a3b8', font:{size:12} } },
+                 tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.x.toFixed(1)}M ₸` } } },
+      scales: {
+        x: { stacked: true, grid: { color: 'rgba(30,58,95,.4)' },
+             ticks: { color: '#64748b', callback: v => v+'M' } },
+        y: { stacked: true, grid: { display: false },
+             ticks: { color: '#94a3b8', font:{size:11} } }
+      }
+    }
+  });
+}
+
+function renderDonutChart() {
+  const s = window.KKST_DATA.summary;
+  const ctx = document.getElementById('donutChart').getContext('2d');
+  if (donutChartInst) donutChartInst.destroy();
+  donutChartInst = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: [
+        lang==='zh'?'实训室设备':'Оборудование лаб.',
+        lang==='zh'?'实训室装修':'Ремонт лаб.',
+        lang==='zh'?'基础设施':'Инфраструктура'
+      ],
+      datasets: [{
+        data: [s.equipment_kzt, s.renovation_kzt, INFRA_TOTAL_KZT],
+        backgroundColor: ['#10b981','#f0a500','#a855f7'],
+        borderWidth: 0, hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '65%',
+      plugins: { legend: { position: 'bottom', labels: { color:'#94a3b8', padding:16, font:{size:12} } } }
+    }
+  });
+}
+
+function renderTotalSummary() {
+  const s = window.KKST_DATA.summary;
+  const items = [
+    { zh:'总投资额（含基础设施）', ru:'Общий бюджет (с инфр.)', val: fmtM(s.total_kzt + INFRA_TOTAL_KZT), color:'var(--accent)' },
+    { zh:'实训室设备购置费', ru:'Оборудование лабораторий', val: fmtM(s.equipment_kzt), color:'var(--green)' },
+    { zh:'实训室装修改造费', ru:'Ремонт лабораторий', val: fmtM(s.renovation_kzt), color:'var(--gold)' },
+    { zh:'弱电基础设施', ru:'Слаботочная инфраструктура', val: fmtM(INFRA_TOTAL_KZT), color:'#a855f7' },
+  ];
+  document.getElementById('total-summary').innerHTML = items.map(i => `
+    <div class="sum-item">
+      <div class="lbl"><span class="zh">${i.zh}</span><span class="ru-text">${i.ru}</span></div>
+      <div class="val" style="color:${i.color}">${i.val}</div>
+    </div>`).join('');
+}
+
+// ── INIT ─────────────────────────────────────────
+renderStats();
+renderPhilosophy();
+renderFloors();
+renderAllCharts();
+</script>
+</body>
+</html>

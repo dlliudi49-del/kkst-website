@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>基础设施系统 · KKST 建设方案</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#070d1a;--bg2:#0e1829;--card:#111e33;--card2:#162340;
+  --border:#1e3a5f;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --a1:#00d4ff;--a2:#0066aa;--gold:#f0a500;--green:#10b981;--violet:#a855f7;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.6}
+body.ru{font-family:'Segoe UI','Arial',sans-serif}
+#topbar{position:sticky;top:0;z-index:100;background:rgba(7,13,26,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;gap:16px}
+#topbar .back{color:var(--a1);text-decoration:none;font-size:13px;
+  font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap}
+#topbar .back:hover{opacity:.8}
+#topbar .crumb{font-size:13px;color:var(--text3)}
+#topbar .crumb span{color:var(--text2)}
+#lang-btn{background:var(--card2);border:1px solid var(--border);
+  color:var(--text);padding:5px 14px;border-radius:20px;cursor:pointer;
+  font-size:13px;white-space:nowrap;transition:all .2s}
+#lang-btn:hover{border-color:var(--a1);color:var(--a1)}
+#hero{position:relative;height:480px;overflow:hidden;background:var(--bg2)}
+#hero-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.65)}
+#hero-overlay{position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(7,13,26,.85) 35%,rgba(7,13,26,.2) 100%)}
+#hero-content{position:absolute;inset:0;display:flex;align-items:center;
+  padding:0 64px;max-width:700px}
+.hero-inner .floor-badge{display:inline-block;background:rgba(255,255,255,.1);
+  border:1px solid var(--a1);color:var(--a1);font-size:12px;padding:3px 14px;
+  border-radius:20px;margin-bottom:18px;letter-spacing:1px}
+.hero-inner h1{font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.2;margin-bottom:8px}
+.hero-inner .ru-name{font-size:clamp(14px,2vw,20px);color:rgba(255,255,255,.6);font-style:italic;margin-bottom:20px}
+.hero-inner .tag-row{display:flex;gap:10px;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:var(--text2);font-size:12px;padding:4px 12px;border-radius:8px}
+.tag b{color:#fff}
+.page-wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+section{padding:56px 0}
+section+section{padding-top:0}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
+.ov-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 20px;text-align:center;position:relative;overflow:hidden}
+.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--a1),var(--a2))}
+.ov-card .val{font-size:32px;font-weight:800;color:var(--a1);font-family:'Courier New',monospace}
+.ov-card .lbl{font-size:12px;color:var(--text3);margin-top:4px}
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.desc-card{background:var(--card);border-radius:14px;padding:28px;
+  border-left:4px solid var(--a1);margin-bottom:32px}
+.desc-card p{font-size:15px;color:var(--text2);line-height:1.9}
+/* 5-column budget grid */
+.budget-grid-5{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr;gap:14px;margin-bottom:40px}
+@media(max-width:900px){.budget-grid-5{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.budget-grid-5{grid-template-columns:1fr}}
+.bud-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center}
+.bud-card.total{border-color:var(--a1)}
+.bud-card .bval{font-size:22px;font-weight:800;margin-bottom:4px;font-family:'Courier New',monospace}
+.bud-card.total .bval{color:var(--a1);font-size:24px}
+.bud-card.net   .bval{color:var(--a1)}
+.bud-card.wifi  .bval{color:var(--green)}
+.bud-card.cctv  .bval{color:var(--gold)}
+.bud-card.server .bval{color:var(--violet)}
+.bud-card.net  {border-color:var(--a1)}
+.bud-card.wifi {border-color:var(--green)}
+.bud-card.cctv {border-color:var(--gold)}
+.bud-card.server{border-color:var(--violet)}
+.bud-card .bpct{font-size:13px;color:var(--text3);margin-top:2px}
+.bud-card .blbl{font-size:12px;color:var(--text3);margin-top:6px}
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:40px}
+@media(max-width:700px){.chart-row{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px}
+.chart-card h3{font-size:14px;color:var(--text2);margin-bottom:16px}
+.chart-wrap{position:relative;height:180px}
+/* System section headers */
+.sys-section{margin-bottom:48px}
+.sys-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.sys-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.sys-dot.net   {background:var(--a1)}
+.sys-dot.wifi  {background:var(--green)}
+.sys-dot.cctv  {background:var(--gold)}
+.sys-dot.server{background:var(--violet)}
+.sys-title{font-size:18px;font-weight:700;color:#fff}
+.sys-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.sys-amount{font-size:13px;color:var(--text3);white-space:nowrap}
+.eq-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--card2);color:var(--a1);font-weight:600;padding:12px 14px;
+  text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:1px solid rgba(30,58,95,.4);color:var(--text2);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(0,212,255,.04);color:var(--text)}
+.idx{color:var(--text3);text-align:center;width:36px}
+.name-col{min-width:200px}
+.eq-name{color:var(--text);font-weight:500}
+.eq-spec{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5}
+.unit-col{color:var(--text3);white-space:nowrap;font-size:12px}
+.num-col{text-align:center;white-space:nowrap}
+.price-col{text-align:right;font-family:monospace;white-space:nowrap}
+.total-price{color:var(--gold);font-weight:600}
+.eq-total-row td{background:var(--card2);font-weight:700;border-top:2px solid var(--border)}
+.eq-total-row .total-price{color:var(--a1);font-size:15px}
+.section-group-row td{background:rgba(0,212,255,.05);color:var(--a1);
+  font-weight:700;font-size:12px;letter-spacing:.5px;padding:8px 14px;
+  border-bottom:1px solid rgba(0,212,255,.15)}
+.section-group-row:hover td{background:rgba(0,212,255,.05) !important}
+#bottom-nav{padding:40px 0;border-top:1px solid var(--border)}
+.bottom-nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;
+  display:flex;justify-content:center;align-items:center}
+.nav-arrow{color:var(--a1);text-decoration:none;font-size:14px;
+  font-weight:600;padding:10px 28px;border:1px solid var(--border);
+  border-radius:10px;transition:all .2s;display:block}
+.nav-arrow:hover{border-color:var(--a1);background:rgba(0,212,255,.08)}
+.ru-text{display:none}
+body.ru .zh{display:none}
+body.ru .ru-text{display:revert}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <a class="back" href="../index.html">← <span class="zh">返回总览</span><span class="ru-text">На главную</span></a>
+  <span class="crumb zh">全楼 / <span>基础设施系统</span></span>
+  <span class="crumb ru-text">Весь корпус / <span>Инфраструктурные системы</span></span>
+  <button id="lang-btn" onclick="toggleLang()">РУС / 中文</button>
+</div>
+
+<section id="hero">
+  <img id="hero-img" src="../assets/images/render_exterior.jpg" alt="基础设施系统"
+       onerror="this.src='../assets/images/render_corridor_45a.jpg';this.onerror=function(){this.style.display='none';document.getElementById('hero').style.background='linear-gradient(135deg,#0e1829,#162340)'}">
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <div class="hero-inner">
+      <div class="floor-badge">
+        <span class="zh">全楼覆盖 · 1–5层</span>
+        <span class="ru-text">Весь корпус · 1–5 этаж</span>
+      </div>
+      <h1 class="zh">基础设施系统</h1>
+      <h1 class="ru-text">Инфраструктурные системы</h1>
+      <p class="ru-name zh">Слаботочные системы</p>
+      <p class="ru-name ru-text">弱电基础设施</p>
+      <div class="tag-row">
+        <span class="tag zh"><b>覆盖</b> 5 层</span>
+        <span class="tag ru-text"><b>Этажей</b> 5</span>
+        <span class="tag zh"><b>子系统</b> 4 套</span>
+        <span class="tag ru-text"><b>Подсистем</b> 4</span>
+        <span class="tag zh"><b>监控</b> 55 路</span>
+        <span class="tag ru-text"><b>Камер</b> 55</span>
+        <span class="tag zh"><b>Wi-Fi</b> 27 AP</span>
+        <span class="tag ru-text"><b>Wi-Fi AP</b> 27</span>
+        <span class="tag"><b>₸</b> 108.99M ₸</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrap">
+  <section>
+
+    <!-- Overview cards -->
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="val">108.99M ₸</div>
+        <div class="lbl zh">弱电系统总预算</div><div class="lbl ru-text">Общий бюджет</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">4</div>
+        <div class="lbl zh">子系统</div><div class="lbl ru-text">Подсистемы</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">55</div>
+        <div class="lbl zh">监控摄像头</div><div class="lbl ru-text">Камер видеонаблюдения</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">27</div>
+        <div class="lbl zh">Wi-Fi 接入点</div><div class="lbl ru-text">Точек доступа Wi-Fi</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">5F</div>
+        <div class="lbl zh">楼层覆盖</div><div class="lbl ru-text">Охват этажей</div>
+      </div>
+    </div>
+
+    <!-- Function description -->
+    <h2 class="sec-title zh">系统概述</h2>
+    <h2 class="sec-title ru-text">Описание системы</h2>
+    <div class="desc-card">
+      <p class="zh">覆盖 KKST 哈萨克斯坦创新科技中心全楼（1–5层）的弱电基础设施方案，包含千兆有线网络、全覆盖 Wi-Fi 无线网络、全楼视频监控及智能化机房工程四大子系统。方案采用 OLT/ONU 光纤到楼层架构，L3 核心交换实现全楼高速互联，为 16 个实训室提供稳定、安全、高速的网络与安防保障。</p>
+      <p class="ru-text">Комплексная слаботочная инфраструктура всего здания ККСТ (1–5 этажи): гигабитная проводная сеть, сплошное покрытие Wi-Fi, система видеонаблюдения и инженерия серверного помещения. Архитектура OLT/ONU с волокном до каждого этажа, L3-коммутация ядра, надёжная защита всех 16 учебных лабораторий.</p>
+    </div>
+
+    <!-- Budget structure -->
+    <h2 class="sec-title zh">预算构成</h2>
+    <h2 class="sec-title ru-text">Структура бюджета</h2>
+    <div class="budget-grid-5">
+      <div class="bud-card total">
+        <div class="bval">108.99M ₸</div>
+        <div class="blbl zh">弱电系统总预算</div><div class="blbl ru-text">Итого</div>
+      </div>
+      <div class="bud-card net">
+        <div class="bval">31.52M ₸</div>
+        <div class="bpct">28.9%</div>
+        <div class="blbl zh">基础网络</div><div class="blbl ru-text">Базовая сеть</div>
+      </div>
+      <div class="bud-card wifi">
+        <div class="bval">2.72M ₸</div>
+        <div class="bpct">2.5%</div>
+        <div class="blbl zh">Wi-Fi 系统</div><div class="blbl ru-text">Система Wi-Fi</div>
+      </div>
+      <div class="bud-card cctv">
+        <div class="bval">39.89M ₸</div>
+        <div class="bpct">36.6%</div>
+        <div class="blbl zh">视频监控</div><div class="blbl ru-text">Видеонаблюдение</div>
+      </div>
+      <div class="bud-card server">
+        <div class="bval">34.86M ₸</div>
+        <div class="bpct">32.0%</div>
+        <div class="blbl zh">机房工程</div><div class="blbl ru-text">Серверная</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3 class="zh">各子系统预算对比</h3><h3 class="ru-text">Сравнение бюджетов подсистем</h3>
+        <div class="chart-wrap"><canvas id="barC"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 class="zh">预算占比分布</h3><h3 class="ru-text">Доли бюджета</h3>
+        <div class="chart-wrap"><canvas id="donutC"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ===== SYSTEM 1: 基础网络 ===== -->
+    <div class="sys-section">
+      <h2 class="sec-title zh"><span class="sys-dot net" style="display:inline-block"></span>一、基础网络系统</h2>
+      <h2 class="sec-title ru-text"><span class="sys-dot net" style="display:inline-block"></span>I. Базовая сетевая связь</h2>
+      <div class="eq-table-wrap">
+        <table>
+          <thead><tr>
+            <th class="idx">#</th>
+            <th class="zh">名称</th><th class="ru-text">Наименование</th>
+            <th class="zh">单位</th><th class="ru-text">Ед.</th>
+            <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+            <th class="zh">单价(₸)</th><th class="ru-text">Цена/ед.(₸)</th>
+            <th class="zh">合计(₸)</th><th class="ru-text">Итого(₸)</th>
+          </tr></thead>
+          <tbody>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">一、前端设备</td>
+              <td colspan="5" class="ru-text">I. Фронтальное оборудование</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">1</td>
+              <td class="name-col">
+                <div class="eq-name zh">信息插座（单口）</div>
+                <div class="eq-name ru-text">Информационная розетка (одинарная)</div>
+                <div class="eq-spec zh">86型 / 防火PVC / 壁装</div>
+                <div class="eq-spec ru-text">PVC огнестойкий, 86H, настенный монтаж</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">21</td>
+              <td class="price-col">1,070 ₸</td>
+              <td class="price-col total-price">22,476 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">2</td>
+              <td class="name-col">
+                <div class="eq-name zh">信息插座（双口）</div>
+                <div class="eq-name ru-text">Информационная розетка (двойная)</div>
+                <div class="eq-spec zh">86型 / 防火PVC / 壁装</div>
+                <div class="eq-spec ru-text">PVC огнестойкий, 86H, настенный монтаж</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">110</td>
+              <td class="price-col">1,606 ₸</td>
+              <td class="price-col total-price">176,638 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">3</td>
+              <td class="name-col">
+                <div class="eq-name zh">PVC 底盒（86型）</div>
+                <div class="eq-name ru-text">Монтажная коробка PVC 86</div>
+                <div class="eq-spec zh">86型暗装PVC底盒</div>
+                <div class="eq-spec ru-text">PVC огнестойкий, 86H, скрытый монтаж</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">131</td>
+              <td class="price-col">642 ₸</td>
+              <td class="price-col total-price">84,089 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">4</td>
+              <td class="name-col">
+                <div class="eq-name zh">Cat6 RJ45 无工具模块</div>
+                <div class="eq-name ru-text">Модуль RJ45 Cat6 Gigabit</div>
+                <div class="eq-spec zh">千兆Cat6 / 无工具打线 / 适用线径0.45–0.6mm</div>
+                <div class="eq-spec ru-text">Cat6 Gigabit, безударный монтаж, 0,45–0,6 мм</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">241</td>
+              <td class="price-col">1,606 ₸</td>
+              <td class="price-col total-price">386,998 ₸</td>
+            </tr>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">二、服务器设备</td>
+              <td colspan="5" class="ru-text">II. Серверное оборудование</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">5</td>
+              <td class="name-col">
+                <div class="eq-name zh">L3 核心交换机（24口）</div>
+                <div class="eq-name ru-text">Коммутатор ядра L3 (24-порт)</div>
+                <div class="eq-spec zh">交换容量758G/7.58T / 转发222Mpps / 24×GE+4×SFP+</div>
+                <div class="eq-spec ru-text">758 Gbps/7,58 Tbps; 222 Mpps; 24×GE + 4×SFP+</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">2,461,774 ₸</td>
+              <td class="price-col total-price">4,923,548 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">6</td>
+              <td class="name-col">
+                <div class="eq-name zh">OLT 光线路终端</div>
+                <div class="eq-name ru-text">OLT (оптический линейный терминал)</div>
+                <div class="eq-spec zh">含AC控制板 / ≥5个PON口 / 2个GE上行光口</div>
+                <div class="eq-spec ru-text">С платой управления AC; ≥5 PON-портов; 2 GE uplink</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">8,562,691 ₸</td>
+              <td class="price-col total-price">17,125,382 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">7</td>
+              <td class="name-col">
+                <div class="eq-name zh">ONU（8口）</div>
+                <div class="eq-name ru-text">ONU (8-портовый)</div>
+                <div class="eq-spec zh">8口ONU / 按楼层分配：1F×7、2F×8、3F×8、4F×9、5F×10</div>
+                <div class="eq-spec ru-text">8-портовый ONU; по этажам: 1эт×7, 2эт×8, 3эт×8, 4эт×9, 5эт×10</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">42</td>
+              <td class="price-col">121,697 ₸</td>
+              <td class="price-col total-price">5,111,278 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">8</td>
+              <td class="name-col">
+                <div class="eq-name zh">光分路器（2进16出）</div>
+                <div class="eq-name ru-text">Оптический сплиттер (2×16)</div>
+                <div class="eq-spec zh">每层1台，备用1台，共6台</div>
+                <div class="eq-spec ru-text">По 1 шт. на этаж + 1 резерв; итого 6 шт.</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">6</td>
+              <td class="price-col">12,844 ₸</td>
+              <td class="price-col total-price">77,066 ₸</td>
+            </tr>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">三、辅材</td>
+              <td colspan="5" class="ru-text">III. Вспомогательные материалы</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">9</td>
+              <td class="name-col">
+                <div class="eq-name zh">9U 壁挂弱电箱</div>
+                <div class="eq-name ru-text">Настенный сетевой шкаф 9U</div>
+                <div class="eq-spec zh">450×500×400mm / SPCC钢 / 玻璃门 / 2–4层各1台</div>
+                <div class="eq-spec ru-text">450×500×400 мм, SPCC, стеклянная дверь; по 1 шт. на 2–4 этажах</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">4</td>
+              <td class="price-col">42,813 ₸</td>
+              <td class="price-col total-price">171,254 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">10</td>
+              <td class="name-col">
+                <div class="eq-name zh">Cat6 网线</div>
+                <div class="eq-name ru-text">Сетевой кабель Cat6</div>
+                <div class="eq-spec zh">非屏蔽Cat6 / 按每信息点30m计算</div>
+                <div class="eq-spec ru-text">UTP Cat6; расчёт: 30 м на точку</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">7,230</td>
+              <td class="price-col">321 ₸</td>
+              <td class="price-col total-price">2,322,999 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">11</td>
+              <td class="name-col">
+                <div class="eq-name zh">2芯蝶形皮线光缆</div>
+                <div class="eq-name ru-text">Плоский оптический кабель (2 жилы)</div>
+                <div class="eq-spec zh">室内引入型 / 每ONU按50m计算</div>
+                <div class="eq-spec ru-text">Дроп-кабель; расчёт: 50 м на ONU</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">2,100</td>
+              <td class="price-col">38 ₸</td>
+              <td class="price-col total-price">79,380 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">12</td>
+              <td class="name-col">
+                <div class="eq-name zh">8芯单模光缆</div>
+                <div class="eq-name ru-text">Оптический кабель связи (8 жил)</div>
+                <div class="eq-spec zh">单模OS2 / PE外护套 / 暗敷</div>
+                <div class="eq-spec ru-text">Одномодовый OS2, PE-оболочка, скрытая прокладка</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">300</td>
+              <td class="price-col">246 ₸</td>
+              <td class="price-col total-price">73,920 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">13</td>
+              <td class="name-col">
+                <div class="eq-name zh">FC 光纤尾纤（10m）</div>
+                <div class="eq-name ru-text">Оптический патч-корд FC (10 м)</div>
+                <div class="eq-spec"></div>
+              </td>
+              <td class="unit-col zh">条</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">8</td>
+              <td class="price-col">1,070 ₸</td>
+              <td class="price-col total-price">8,562 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">14</td>
+              <td class="name-col">
+                <div class="eq-name zh">电源线 RVV2×1.0</div>
+                <div class="eq-name ru-text">Кабель питания RVV2×1.0</div>
+                <div class="eq-spec zh">每信息箱按10m计算</div>
+                <div class="eq-spec ru-text">Расчёт: 10 м на каждый бокс</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">50</td>
+              <td class="price-col">536 ₸</td>
+              <td class="price-col total-price">26,775 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">15</td>
+              <td class="name-col">
+                <div class="eq-name zh">接地线 BV 6mm²</div>
+                <div class="eq-name ru-text">Заземляющий провод BV 6 мм²</div>
+                <div class="eq-spec zh">双色接地线 / 无氧铜</div>
+                <div class="eq-spec ru-text">Двухцветный, бескислородная медь</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">50</td>
+              <td class="price-col">536 ₸</td>
+              <td class="price-col total-price">26,775 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">16</td>
+              <td class="name-col">
+                <div class="eq-name zh">金属线槽 100×100mm</div>
+                <div class="eq-name ru-text">Металлический кабельный лоток 100×100</div>
+                <div class="eq-spec zh">镀锌钢板 / 含盖板、连接件 / 每层28m</div>
+                <div class="eq-spec ru-text">Оцинкованная сталь, с крышкой; 28 м на этаж</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">140</td>
+              <td class="price-col">5,352 ₸</td>
+              <td class="price-col total-price">749,210 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">17</td>
+              <td class="name-col">
+                <div class="eq-name zh">PVC 穿线管 DN20</div>
+                <div class="eq-name ru-text">Труба PVC DN20</div>
+                <div class="eq-spec zh">阻燃PVC / 暗敷</div>
+                <div class="eq-spec ru-text">Огнестойкий PVC, скрытый монтаж</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">660</td>
+              <td class="price-col">214 ₸</td>
+              <td class="price-col total-price">141,372 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">18</td>
+              <td class="name-col">
+                <div class="eq-name zh">PE 波纹管 DN20</div>
+                <div class="eq-name ru-text">Гофрированная труба PE DN20</div>
+                <div class="eq-spec"></div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">50</td>
+              <td class="price-col">214 ₸</td>
+              <td class="price-col total-price">10,710 ₸</td>
+            </tr>
+            <tr class="eq-total-row">
+              <td colspan="5" class="zh">系统合计</td>
+              <td colspan="5" class="ru-text">Итого по системе</td>
+              <td class="total-price price-col">31,518,432 ₸</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== SYSTEM 2: Wi-Fi ===== -->
+    <div class="sys-section">
+      <h2 class="sec-title zh"><span class="sys-dot wifi" style="display:inline-block"></span>二、Wi-Fi 无线网络系统</h2>
+      <h2 class="sec-title ru-text"><span class="sys-dot wifi" style="display:inline-block"></span>II. Система Wi-Fi</h2>
+      <div class="eq-table-wrap">
+        <table>
+          <thead><tr>
+            <th class="idx">#</th>
+            <th class="zh">名称</th><th class="ru-text">Наименование</th>
+            <th class="zh">单位</th><th class="ru-text">Ед.</th>
+            <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+            <th class="zh">单价(₸)</th><th class="ru-text">Цена/ед.(₸)</th>
+            <th class="zh">合计(₸)</th><th class="ru-text">Итого(₸)</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class="idx">1</td>
+              <td class="name-col">
+                <div class="eq-name zh">AC 无线控制器</div>
+                <div class="eq-name ru-text">AC-контроллер</div>
+                <div class="eq-spec zh">支持XG-PON/10G EPON / 最多管理32个子网关 / 2.5G光电复合口</div>
+                <div class="eq-spec ru-text">XG-PON/10G EPON; до 32 субшлюзов; 2,5G Combo-порт</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">325,382 ₸</td>
+              <td class="price-col total-price">325,382 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">2</td>
+              <td class="name-col">
+                <div class="eq-name zh">内置式光纤 AP</div>
+                <div class="eq-name ru-text">Беспроводная точка доступа (внутренняя AP)</div>
+                <div class="eq-spec zh">光纤型AP / 全楼27个点位覆盖</div>
+                <div class="eq-spec ru-text">Оптическая AP; 27 точек на весь корпус</div>
+              </td>
+              <td class="unit-col zh">套</td><td class="unit-col ru-text">компл.</td>
+              <td class="num-col">27</td>
+              <td class="price-col">64,220 ₸</td>
+              <td class="price-col total-price">1,733,943 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">3</td>
+              <td class="name-col">
+                <div class="eq-name zh">光电复合缆</div>
+                <div class="eq-name ru-text">Оптоэлектрический комбинированный кабель</div>
+                <div class="eq-spec zh">每AP按50m计算</div>
+                <div class="eq-spec ru-text">Расчёт: до 50 м на AP</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">1,350</td>
+              <td class="price-col">642 ₸</td>
+              <td class="price-col total-price">866,565 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">4</td>
+              <td class="name-col">
+                <div class="eq-name zh">PVC 穿线管 DN20</div>
+                <div class="eq-name ru-text">Труба PVC DN20</div>
+                <div class="eq-spec zh">每AP按10m计算</div>
+                <div class="eq-spec ru-text">Расчёт: до 10 м на AP</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">540</td>
+              <td class="price-col">214 ₸</td>
+              <td class="price-col total-price">115,668 ₸</td>
+            </tr>
+            <tr class="eq-total-row">
+              <td colspan="5" class="zh">系统合计</td>
+              <td colspan="5" class="ru-text">Итого по системе</td>
+              <td class="total-price price-col">2,716,176 ₸</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== SYSTEM 3: 视频监控 ===== -->
+    <div class="sys-section">
+      <h2 class="sec-title zh"><span class="sys-dot cctv" style="display:inline-block"></span>三、视频监控系统</h2>
+      <h2 class="sec-title ru-text"><span class="sys-dot cctv" style="display:inline-block"></span>III. Система видеонаблюдения</h2>
+      <div class="eq-table-wrap">
+        <table>
+          <thead><tr>
+            <th class="idx">#</th>
+            <th class="zh">名称</th><th class="ru-text">Наименование</th>
+            <th class="zh">单位</th><th class="ru-text">Ед.</th>
+            <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+            <th class="zh">单价(₸)</th><th class="ru-text">Цена/ед.(₸)</th>
+            <th class="zh">合计(₸)</th><th class="ru-text">Итого(₸)</th>
+          </tr></thead>
+          <tbody>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">一、服务器设备</td>
+              <td colspan="5" class="ru-text">I. Серверное оборудование</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">1</td>
+              <td class="name-col">
+                <div class="eq-name zh">64路网络硬盘录像机（NVR）</div>
+                <div class="eq-name ru-text">Сетевой видеорегистратор NVR (64 канала)</div>
+                <div class="eq-spec zh">64路接入 / 8×SATA(≤16TB) / 最高16MP解码 / HDMI+VGA / 双千兆口</div>
+                <div class="eq-spec ru-text">64 кан.; 8×SATA (до 16TB); до 16 MP; HDMI+VGA; 2×Gigabit</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">2,140,673 ₸</td>
+              <td class="price-col total-price">2,140,673 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">2</td>
+              <td class="name-col">
+                <div class="eq-name zh">16TB 硬盘</div>
+                <div class="eq-name ru-text">Жёсткий диск 16 TB</div>
+                <div class="eq-spec zh">SATA / 7200RPM / 256MB缓存 / 55路4MP存储约30天≈68TB</div>
+                <div class="eq-spec ru-text">SATA; 7200 RPM; 256 MB; 55 камер 4 Мп ≈ 68 TB за 30 дней</div>
+              </td>
+              <td class="unit-col zh">块</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">5</td>
+              <td class="price-col">267,584 ₸</td>
+              <td class="price-col total-price">1,337,921 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">3</td>
+              <td class="name-col">
+                <div class="eq-name zh">L3 核心交换机（安防专用，24口）</div>
+                <div class="eq-name ru-text">Коммутатор ядра L3 (безопасность, 24-порт)</div>
+                <div class="eq-spec zh">安防网与办公网物理隔离，各2台</div>
+                <div class="eq-spec ru-text">Физическое разделение сети безопасности и офисной; по 2 шт.</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">2,461,774 ₸</td>
+              <td class="price-col total-price">4,923,548 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">4</td>
+              <td class="name-col">
+                <div class="eq-name zh">OLT 光线路终端（安防网）</div>
+                <div class="eq-name ru-text">OLT (сеть видеонаблюдения)</div>
+                <div class="eq-spec zh">≥5个PON口 / 2个GE上行光口</div>
+                <div class="eq-spec ru-text">≥5 PON-портов; 2 GE uplink</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">8,562,691 ₸</td>
+              <td class="price-col total-price">17,125,382 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">5</td>
+              <td class="name-col">
+                <div class="eq-name zh">PoE-ONU（8口）</div>
+                <div class="eq-name ru-text">ONU (8-портовый PoE)</div>
+                <div class="eq-spec zh">8口PoE供电ONU / 各层分配：1F×7、2F×8、3F×8、4F×9、5F×10</div>
+                <div class="eq-spec ru-text">8-портовый PoE-ONU; 1эт×7, 2эт×8, 3эт×8, 4эт×9, 5эт×10</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">42</td>
+              <td class="price-col">121,697 ₸</td>
+              <td class="price-col total-price">5,111,278 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">6</td>
+              <td class="name-col">
+                <div class="eq-name zh">光分路器（2进16出）</div>
+                <div class="eq-name ru-text">Оптический сплиттер (2×16)</div>
+                <div class="eq-spec zh">每层1台，备用1台</div>
+                <div class="eq-spec ru-text">По 1 шт. на этаж + 1 резерв</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">6</td>
+              <td class="price-col">16,055 ₸</td>
+              <td class="price-col total-price">96,331 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">7</td>
+              <td class="name-col">
+                <div class="eq-name zh">2芯蝶形皮线光缆</div>
+                <div class="eq-name ru-text">Плоский оптический кабель (2 жилы)</div>
+                <div class="eq-spec zh">每ONU按50m计算</div>
+                <div class="eq-spec ru-text">Расчёт: 50 м на ONU</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">2,100</td>
+              <td class="price-col">38 ₸</td>
+              <td class="price-col total-price">79,380 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">8</td>
+              <td class="name-col">
+                <div class="eq-name zh">监控工作站</div>
+                <div class="eq-name ru-text">Системная рабочая станция</div>
+                <div class="eq-spec zh">i5 / 8G / 256G SSD / 23.8寸显示器 / 含鼠标键盘</div>
+                <div class="eq-spec ru-text">i5/8G/SSD 256G/23,8"; мышь, клавиатура, кабель питания</div>
+              </td>
+              <td class="unit-col zh">套</td><td class="unit-col ru-text">компл.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">856,269 ₸</td>
+              <td class="price-col total-price">856,269 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">9</td>
+              <td class="name-col">
+                <div class="eq-name zh">75寸视频监控显示器</div>
+                <div class="eq-name ru-text">Видеомонитор 75"</div>
+                <div class="eq-spec"></div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">535,168 ₸</td>
+              <td class="price-col total-price">535,168 ₸</td>
+            </tr>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">二、前端设备</td>
+              <td colspan="5" class="ru-text">II. Фронтальное оборудование</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">10</td>
+              <td class="name-col">
+                <div class="eq-name zh">半球型网络摄像机（4MP）</div>
+                <div class="eq-name ru-text">Купольная IP-камера (4 Мп)</div>
+                <div class="eq-spec zh">1/3″ CMOS / 2560×1440 / 50m红外 / H.264+H.265 / WDR / F2.0</div>
+                <div class="eq-spec ru-text">1/3" CMOS; 2560×1440; ИК 50 м; H.264/H.265; WDR; F2.0</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">55</td>
+              <td class="price-col">107,034 ₸</td>
+              <td class="price-col total-price">5,886,843 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">11</td>
+              <td class="name-col">
+                <div class="eq-name zh">摄像机安装支架</div>
+                <div class="eq-name ru-text">Кронштейн камеры (купольной)</div>
+                <div class="eq-spec zh">随摄像机配套</div>
+                <div class="eq-spec ru-text">В комплекте с камерой</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">55</td>
+              <td class="price-col">12,844 ₸</td>
+              <td class="price-col total-price">706,437 ₸</td>
+            </tr>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">三、辅材</td>
+              <td colspan="5" class="ru-text">III. Вспомогательные материалы</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">12</td>
+              <td class="name-col">
+                <div class="eq-name zh">Cat6 网线</div>
+                <div class="eq-name ru-text">Сетевой кабель Cat6</div>
+                <div class="eq-spec zh">每摄像机按50m计算</div>
+                <div class="eq-spec ru-text">Расчёт: до 50 м на камеру</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">2,750</td>
+              <td class="price-col">321 ₸</td>
+              <td class="price-col total-price">883,575 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">13</td>
+              <td class="name-col">
+                <div class="eq-name zh">PVC 穿线管 DN20</div>
+                <div class="eq-name ru-text">Труба PVC DN20</div>
+                <div class="eq-spec zh">每摄像机按12m计算</div>
+                <div class="eq-spec ru-text">Расчёт: до 12 м на камеру</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">660</td>
+              <td class="price-col">214 ₸</td>
+              <td class="price-col total-price">141,372 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">14</td>
+              <td class="name-col">
+                <div class="eq-name zh">PE 波纹管 DN20</div>
+                <div class="eq-name ru-text">Гофрированная труба PE DN20</div>
+                <div class="eq-spec zh">每PoE交换机按10m计算</div>
+                <div class="eq-spec ru-text">Расчёт: 10 м на PoE-коммутатор</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">50</td>
+              <td class="price-col">214 ₸</td>
+              <td class="price-col total-price">10,710 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">15</td>
+              <td class="name-col">
+                <div class="eq-name zh">FC 光纤尾纤（10m）</div>
+                <div class="eq-name ru-text">Оптический патч-корд FC (10 м)</div>
+                <div class="eq-spec"></div>
+              </td>
+              <td class="unit-col zh">条</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">50</td>
+              <td class="price-col">1,070 ₸</td>
+              <td class="price-col total-price">53,515 ₸</td>
+            </tr>
+            <tr class="eq-total-row">
+              <td colspan="5" class="zh">系统合计</td>
+              <td colspan="5" class="ru-text">Итого по системе</td>
+              <td class="total-price price-col">39,888,402 ₸</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== SYSTEM 4: 机房工程 ===== -->
+    <div class="sys-section">
+      <h2 class="sec-title zh"><span class="sys-dot server" style="display:inline-block"></span>四、机房工程</h2>
+      <h2 class="sec-title ru-text"><span class="sys-dot server" style="display:inline-block"></span>IV. Инженерия серверного помещения</h2>
+      <div class="eq-table-wrap">
+        <table>
+          <thead><tr>
+            <th class="idx">#</th>
+            <th class="zh">名称</th><th class="ru-text">Наименование</th>
+            <th class="zh">单位</th><th class="ru-text">Ед.</th>
+            <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+            <th class="zh">单价(₸)</th><th class="ru-text">Цена/ед.(₸)</th>
+            <th class="zh">合计(₸)</th><th class="ru-text">Итого(₸)</th>
+          </tr></thead>
+          <tbody>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">一、供电系统</td>
+              <td colspan="5" class="ru-text">I. Система электропитания</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">1</td>
+              <td class="name-col">
+                <div class="eq-name zh">精密配电柜</div>
+                <div class="eq-name ru-text">Распределительный шкаф (прецизионный)</div>
+                <div class="eq-spec zh">IT配电 / 进线400A/3P×2 / 出线80×40A/1P / 含C类УЗИП / 触摸屏监控</div>
+                <div class="eq-spec ru-text">IT-распределение, вход 400A/3P×2; 80×40A/1P; УЗИП кл.C; дисплей</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">1,605,505 ₸</td>
+              <td class="price-col total-price">1,605,505 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">2</td>
+              <td class="name-col">
+                <div class="eq-name zh">楼层配电箱（定制）</div>
+                <div class="eq-name ru-text">Этажный распределительный щит (индив.)</div>
+                <div class="eq-spec zh">各层1台，共5台</div>
+                <div class="eq-spec ru-text">По 1 шт. на этаж; итого 5 шт.</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">5</td>
+              <td class="price-col">321,101 ₸</td>
+              <td class="price-col total-price">1,605,506 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">3</td>
+              <td class="name-col">
+                <div class="eq-name zh">干线电缆 RVV3×16mm²</div>
+                <div class="eq-name ru-text">Кабель RVV3×16 мм²</div>
+                <div class="eq-spec zh">配电柜至楼层配电箱</div>
+                <div class="eq-spec ru-text">От распределительного шкафа до этажного щита</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">400</td>
+              <td class="price-col">12,844 ₸</td>
+              <td class="price-col total-price">5,137,720 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">4</td>
+              <td class="name-col">
+                <div class="eq-name zh">接地线 BVR3×10mm²</div>
+                <div class="eq-name ru-text">Кабель заземления BVR3×10 мм²</div>
+                <div class="eq-spec zh">楼层配电箱至PDU设备</div>
+                <div class="eq-spec ru-text">От щита до PDU оборудования</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">200</td>
+              <td class="price-col">6,422 ₸</td>
+              <td class="price-col total-price">1,284,360 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">5</td>
+              <td class="name-col">
+                <div class="eq-name zh">电缆 RVV3×6mm²</div>
+                <div class="eq-name ru-text">Кабель RVV3×6 мм²</div>
+                <div class="eq-spec zh">模块UPS至精密配电柜</div>
+                <div class="eq-spec ru-text">От модульного UPS до прецизионного шкафа</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">200</td>
+              <td class="price-col">3,211 ₸</td>
+              <td class="price-col total-price">642,180 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">6</td>
+              <td class="name-col">
+                <div class="eq-name zh">支路电缆 BVR3×2.5mm²</div>
+                <div class="eq-name ru-text">Кабель BVR3×2,5 мм²</div>
+                <div class="eq-spec zh">楼层配电箱至工位</div>
+                <div class="eq-spec ru-text">От этажного щита до рабочих мест</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">3,000</td>
+              <td class="price-col">1,392 ₸</td>
+              <td class="price-col total-price">4,174,800 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">7</td>
+              <td class="name-col">
+                <div class="eq-name zh">蓄电池连接线 BVR1×185mm²</div>
+                <div class="eq-name ru-text">Кабель BVR1×185 мм²</div>
+                <div class="eq-spec zh">UPS至电池汇流箱</div>
+                <div class="eq-spec ru-text">От UPS до батарейного бокса</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">60</td>
+              <td class="price-col">53,517 ₸</td>
+              <td class="price-col total-price">3,211,026 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">8</td>
+              <td class="name-col">
+                <div class="eq-name zh">电池断路线 BVR1×120mm²</div>
+                <div class="eq-name ru-text">Кабель BVR1×120 мм²</div>
+                <div class="eq-spec zh">电池汇流箱至电池断路器</div>
+                <div class="eq-spec ru-text">От батарейного бокса до выключателя батарей</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">15</td>
+              <td class="price-col">35,321 ₸</td>
+              <td class="price-col total-price">529,820 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">9</td>
+              <td class="name-col">
+                <div class="eq-name zh">进线电缆 YJV-4×185+1×95mm²</div>
+                <div class="eq-name ru-text">Входной кабель YJV-4×185+1×95 мм²</div>
+                <div class="eq-spec zh">配电柜主开关IT负荷进线</div>
+                <div class="eq-spec ru-text">Главный ввод распределительного шкафа IT-нагрузки</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">15</td>
+              <td class="price-col">117,737 ₸</td>
+              <td class="price-col total-price">1,766,058 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">10</td>
+              <td class="name-col">
+                <div class="eq-name zh">柜间电源线 RVV3×6</div>
+                <div class="eq-name ru-text">Кабель питания шкафа RVV3×6</div>
+                <div class="eq-spec"></div>
+              </td>
+              <td class="unit-col zh">卷</td><td class="unit-col ru-text">рул.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">3,211 ₸</td>
+              <td class="price-col total-price">6,422 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">11</td>
+              <td class="name-col">
+                <div class="eq-name zh">42U 标准服务器机柜</div>
+                <div class="eq-name ru-text">Серверный шкаф 42U 19"</div>
+                <div class="eq-spec zh">600×1000×2000mm / SPCC钢 / 钢化玻璃前门 / 含3个托盘、4个风扇、1个PDU</div>
+                <div class="eq-spec ru-text">600×1000×2000 мм; SPCC; закалённое стекло; 3 полки, 4 вент., PDU</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">235,474 ₸</td>
+              <td class="price-col total-price">470,947 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">12</td>
+              <td class="name-col">
+                <div class="eq-name zh">PDU 智能配电单元</div>
+                <div class="eq-name ru-text">Розеточный блок питания PDU</div>
+                <div class="eq-spec zh">12位五孔 / 10A/16A / 32A 8KW输入 / 含工业插头</div>
+                <div class="eq-spec ru-text">12 розеток; 10A/16A; вход 32A 8KW; промышленный разъём</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">8</td>
+              <td class="price-col">37,462 ₸</td>
+              <td class="price-col total-price">299,696 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">13</td>
+              <td class="name-col">
+                <div class="eq-name zh">KBG 镀锌金属管 Φ25</div>
+                <div class="eq-name ru-text">Труба KBG Ф25 (оцинкованная)</div>
+                <div class="eq-spec zh">Φ25mm / 壁厚1.6mm / 暗装</div>
+                <div class="eq-spec ru-text">Ф25 мм / 1,6 мм / скрытый монтаж</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">32</td>
+              <td class="price-col">2,676 ₸</td>
+              <td class="price-col total-price">85,635 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">14</td>
+              <td class="name-col">
+                <div class="eq-name zh">应急照明灯</div>
+                <div class="eq-name ru-text">Аварийный указатель (осветительный)</div>
+                <div class="eq-spec zh">Ni-Cd 800mAh / 应急90min / DC36V 3W</div>
+                <div class="eq-spec ru-text">Ni-Cd 800 mAh; аварийная работа 90 мин; DC36V 3W</div>
+              </td>
+              <td class="unit-col zh">套</td><td class="unit-col ru-text">компл.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">10,704 ₸</td>
+              <td class="price-col total-price">10,704 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">15</td>
+              <td class="name-col">
+                <div class="eq-name zh">安全出口灯</div>
+                <div class="eq-name ru-text">Указатель аварийного выхода</div>
+                <div class="eq-spec zh">Ni-Cd 12V 600/800mAh / 应急90min / AC220V</div>
+                <div class="eq-spec ru-text">Ni-Cd 12V; 90 мин; AC220V</div>
+              </td>
+              <td class="unit-col zh">套</td><td class="unit-col ru-text">компл.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">10,704 ₸</td>
+              <td class="price-col total-price">10,704 ₸</td>
+            </tr>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">二、防雷接地系统</td>
+              <td colspan="5" class="ru-text">II. Система молниезащиты и заземления</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">16</td>
+              <td class="name-col">
+                <div class="eq-name zh">电源防雷箱（100kA）</div>
+                <div class="eq-name ru-text">Бокс защиты питания от перенапряжений (100 kA)</div>
+                <div class="eq-spec zh">最大持续工作电压≥385V / 最大放电电流100kA / 响应时间≤25ns</div>
+                <div class="eq-spec ru-text">≥385V; Imax 100 kA; время срабатывания ≤25 нс</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">160,551 ₸</td>
+              <td class="price-col total-price">160,551 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">17</td>
+              <td class="name-col">
+                <div class="eq-name zh">电涌保护器（60kA）</div>
+                <div class="eq-name ru-text">УЗИП питания (60 kA)</div>
+                <div class="eq-spec zh">最大持续工作电压≥385V / 标称放电电流60kA / ≤25ns</div>
+                <div class="eq-spec ru-text">≥385V; In 60 kA; ≤25 нс</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">190,520 ₸</td>
+              <td class="price-col total-price">381,039 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">18</td>
+              <td class="name-col">
+                <div class="eq-name zh">电涌保护器（20kA）</div>
+                <div class="eq-name ru-text">УЗИП питания (20 kA)</div>
+                <div class="eq-spec zh">最大持续工作电压≥385V / 标称放电电流20kA / ≤25ns</div>
+                <div class="eq-spec ru-text">≥385V; In 20 kA; ≤25 нс</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">134,863 ₸</td>
+              <td class="price-col total-price">269,725 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">19</td>
+              <td class="name-col">
+                <div class="eq-name zh">铜排接地汇流排</div>
+                <div class="eq-name ru-text">Бокс медной шины заземления</div>
+                <div class="eq-spec zh">镀锡铜 / 30×3×300mm / 含铜带</div>
+                <div class="eq-spec ru-text">Луженая медь; 30×3×300 мм; с медной лентой</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">85,627 ₸</td>
+              <td class="price-col total-price">171,254 ₸</td>
+            </tr>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">三、UPS 不间断电源系统</td>
+              <td colspan="5" class="ru-text">III. Система UPS</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">20</td>
+              <td class="name-col">
+                <div class="eq-name zh">UPS 输出配电柜（630A）</div>
+                <div class="eq-name ru-text">Выходной распределительный шкаф UPS (630A)</div>
+                <div class="eq-spec zh">2路400A/3P输出 + 备用开关 / 含监控功能</div>
+                <div class="eq-spec ru-text">2×400A/3P выхода; резервные выключатели; мониторинг</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">107,034 ₸</td>
+              <td class="price-col total-price">107,034 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">21</td>
+              <td class="name-col">
+                <div class="eq-name zh">模块化 UPS 主机（300KVA）</div>
+                <div class="eq-name ru-text">Основной модуль UPS (300 KVA)</div>
+                <div class="eq-spec zh">高频模块化 / 功率模块≥20KVA / 输出300KVA / 输出220/380V</div>
+                <div class="eq-spec ru-text">Высокочастотный модульный; модуль ≥20 KVA; выход 300 KVA; 220/380V</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">2,140,673 ₸</td>
+              <td class="price-col total-price">2,140,673 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">22</td>
+              <td class="name-col">
+                <div class="eq-name zh">UPS 功率模块（20KVA）</div>
+                <div class="eq-name ru-text">Силовой модуль UPS (20 KVA)</div>
+                <div class="eq-spec zh">输入160–485VAC / 功率因数≥0.99 / 每路3模块，支持冗余</div>
+                <div class="eq-spec ru-text">Вход 160–485 VAC; PF ≥0,99; 3 модуля на канал, резервирование</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">535,168 ₸</td>
+              <td class="price-col total-price">535,168 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">23</td>
+              <td class="name-col">
+                <div class="eq-name zh">铅酸蓄电池 12V/200AH</div>
+                <div class="eq-name ru-text">Аккумуляторная батарея 12V 200 AH</div>
+                <div class="eq-spec zh">额定电压12V / 容量200AH / UPS专用</div>
+                <div class="eq-spec ru-text">Номинальное напряжение 12V; 200 AH; для UPS</div>
+              </td>
+              <td class="unit-col zh">块</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">10</td>
+              <td class="price-col">160,551 ₸</td>
+              <td class="price-col total-price">1,605,506 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">24</td>
+              <td class="name-col">
+                <div class="eq-name zh">蓄电池架</div>
+                <div class="eq-name ru-text">Батарейная стойка</div>
+                <div class="eq-spec zh">镀锌钢 / 适配20块200AH电池</div>
+                <div class="eq-spec ru-text">Оцинкованная сталь; для 20 батарей 200 AH</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">321,101 ₸</td>
+              <td class="price-col total-price">321,101 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">25</td>
+              <td class="name-col">
+                <div class="eq-name zh">蓄电池保护开关及辅件</div>
+                <div class="eq-name ru-text">Прочие вспомогательные аксессуары UPS</div>
+                <div class="eq-spec zh">含电池断路保护开关、电池汇流箱等</div>
+                <div class="eq-spec ru-text">Бокс защитного выключателя батарей, батарейный сборный бокс и др.</div>
+              </td>
+              <td class="unit-col zh">项</td><td class="unit-col ru-text">поз.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">428,135 ₸</td>
+              <td class="price-col total-price">428,135 ₸</td>
+            </tr>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">四、空调系统</td>
+              <td colspan="5" class="ru-text">IV. Система кондиционирования</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">26</td>
+              <td class="name-col">
+                <div class="eq-name zh">5P 精密空调（下送风）</div>
+                <div class="eq-name ru-text">Напольный кондиционер 5P (прецизионный)</div>
+                <div class="eq-spec zh">制冷量12150W / 制热量13900W / 风量1860m³/h / 380V/50Hz / 噪声≤56dB</div>
+                <div class="eq-spec ru-text">Холод 12150W; тепло 13900W; поток 1860 м³/ч; 380V/50Hz; ≤56 дБ</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">1,070,336 ₸</td>
+              <td class="price-col total-price">1,070,336 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">27</td>
+              <td class="name-col">
+                <div class="eq-name zh">空调安装配套管件</div>
+                <div class="eq-name ru-text">Аксессуары кондиционера (трубы)</div>
+                <div class="eq-spec zh">精密空调安装用铜管、水管等配件</div>
+                <div class="eq-spec ru-text">Медные и водяные трубы для монтажа кондиционера</div>
+              </td>
+              <td class="unit-col zh">项</td><td class="unit-col ru-text">поз.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">214,067 ₸</td>
+              <td class="price-col total-price">214,067 ₸</td>
+            </tr>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">五、消防系统</td>
+              <td colspan="5" class="ru-text">V. Система пожарной сигнализации и пожаротушения</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">28</td>
+              <td class="name-col">
+                <div class="eq-name zh">光电感烟探测器</div>
+                <div class="eq-name ru-text">Дымовой извещатель</div>
+                <div class="eq-spec zh">总线24V / -10°C~+55°C / IP23 / 含底座</div>
+                <div class="eq-spec ru-text">Шина 24V; -10…+55°C; IP23; с основанием</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">50</td>
+              <td class="price-col">12,844 ₸</td>
+              <td class="price-col total-price">642,215 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">29</td>
+              <td class="name-col">
+                <div class="eq-name zh">定温感温探测器</div>
+                <div class="eq-name ru-text">Тепловой извещатель</div>
+                <div class="eq-spec zh">总线24V / -10°C~+55°C / IP23 / 含底座</div>
+                <div class="eq-spec ru-text">Шина 24V; -10…+55°C; IP23; с основанием</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">50</td>
+              <td class="price-col">12,844 ₸</td>
+              <td class="price-col total-price">642,215 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">30</td>
+              <td class="name-col">
+                <div class="eq-name zh">探测器通用底座</div>
+                <div class="eq-name ru-text">Универсальное основание извещателя</div>
+                <div class="eq-spec zh">通用型，含配件</div>
+                <div class="eq-spec ru-text">В комплекте</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">32,110 ₸</td>
+              <td class="price-col total-price">64,221 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">31</td>
+              <td class="name-col">
+                <div class="eq-name zh">气体释放指示灯</div>
+                <div class="eq-name ru-text">Оповещатель выпуска газа</div>
+                <div class="eq-spec zh">AC220V 50Hz / 前板塑料 / 其余金属</div>
+                <div class="eq-spec ru-text">AC220V 50Hz; пластик + металл</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">12,844 ₸</td>
+              <td class="price-col total-price">12,844 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">32</td>
+              <td class="name-col">
+                <div class="eq-name zh">紧急启停按钮</div>
+                <div class="eq-name ru-text">Кнопка аварийного пуска/останова</div>
+                <div class="eq-spec zh">DC16–28V / 破玻璃启动</div>
+                <div class="eq-spec ru-text">DC16–28V; разбить стекло и нажать</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">2,676 ₸</td>
+              <td class="price-col total-price">2,676 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">33</td>
+              <td class="name-col">
+                <div class="eq-name zh">声光报警器</div>
+                <div class="eq-name ru-text">Светозвуковой пожарный оповещатель</div>
+                <div class="eq-spec zh">总线24V / DC24V供电 / IP33 / -10°C~+50°C</div>
+                <div class="eq-spec ru-text">Шина 24V; DC24V; IP33; -10…+50°C</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">10</td>
+              <td class="price-col">21,407 ₸</td>
+              <td class="price-col total-price">214,067 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">34</td>
+              <td class="name-col">
+                <div class="eq-name zh">火灾报警控制器（64点）</div>
+                <div class="eq-name ru-text">Контроллер пожарной сигнализации (64 точки)</div>
+                <div class="eq-spec zh">64点 / AC220V/50Hz / -10°C~+50°C / 金属箱体</div>
+                <div class="eq-spec ru-text">64 точки; AC220V/50Hz; -10…+50°C; металл</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">535,168 ₸</td>
+              <td class="price-col total-price">535,168 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">35</td>
+              <td class="name-col">
+                <div class="eq-name zh">气体灭火控制器（2区）</div>
+                <div class="eq-name ru-text">Контроллер газового пожаротушения (2 зоны)</div>
+                <div class="eq-spec zh">2区 / AC220V 50/60Hz / 0°C~+40°C / 壁装于入口</div>
+                <div class="eq-spec ru-text">2 зоны; AC220V; 0…+40°C; настенный у входа</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">438,838 ₸</td>
+              <td class="price-col total-price">438,838 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">36</td>
+              <td class="name-col">
+                <div class="eq-name zh">消防管理系统软件</div>
+                <div class="eq-name ru-text">ПО системы управления пожарной сигнализацией</div>
+                <div class="eq-spec zh">含安装调试</div>
+                <div class="eq-spec ru-text">В комплекте</div>
+              </td>
+              <td class="unit-col zh">套</td><td class="unit-col ru-text">компл.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">535,168 ₸</td>
+              <td class="price-col total-price">535,168 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">37</td>
+              <td class="name-col">
+                <div class="eq-name zh">七氟丙烷柜式气体灭火装置（40L）</div>
+                <div class="eq-name ru-text">Шкафная установка HFC-227ea 40L</div>
+                <div class="eq-spec zh">工作压力2.5MPa(20°C) / DC24V/1.6A / 自动+手动启动</div>
+                <div class="eq-spec ru-text">2,5 MPa при 20°C; DC24V/1,6A; авто + ручной пуск</div>
+              </td>
+              <td class="unit-col zh">套</td><td class="unit-col ru-text">компл.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">877,676 ₸</td>
+              <td class="price-col total-price">877,676 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">38</td>
+              <td class="name-col">
+                <div class="eq-name zh">七氟丙烷灭火剂（HFC-227ea）</div>
+                <div class="eq-name ru-text">Огнетушащее вещество гептафторпропан</div>
+                <div class="eq-spec zh">双瓶组配置 / 2.5MPa / 自动+手动启动</div>
+                <div class="eq-spec ru-text">Двойной баллон; 2,5 MPa; авто + ручной пуск</div>
+              </td>
+              <td class="unit-col zh">kg</td><td class="unit-col ru-text">кг</td>
+              <td class="num-col">100</td>
+              <td class="price-col">7,492 ₸</td>
+              <td class="price-col total-price">749,210 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">39</td>
+              <td class="name-col">
+                <div class="eq-name zh">手提式干粉灭火器（3kg）</div>
+                <div class="eq-name ru-text">Ручной огнетушитель 3 кг</div>
+                <div class="eq-spec zh">氮气充压1.2MPa(20°C) / 电气绝缘5kV / GB4351.1-2005</div>
+                <div class="eq-spec ru-text">N₂ 1,2 MPa; изоляция 5 kV; GB4351.1-2005</div>
+              </td>
+              <td class="unit-col zh">套</td><td class="unit-col ru-text">компл.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">21,407 ₸</td>
+              <td class="price-col total-price">42,813 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">40</td>
+              <td class="name-col">
+                <div class="eq-name zh">消防辅助材料</div>
+                <div class="eq-name ru-text">Прочие вспомогательные материалы</div>
+                <div class="eq-spec"></div>
+              </td>
+              <td class="unit-col zh">项</td><td class="unit-col ru-text">поз.</td>
+              <td class="num-col">1</td>
+              <td class="price-col">—</td>
+              <td class="price-col total-price">140,000 ₸</td>
+            </tr>
+            <tr class="section-group-row">
+              <td colspan="5" class="zh">六、综合布线辅材</td>
+              <td colspan="5" class="ru-text">VI. Материалы структурированной кабельной системы</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="idx">41</td>
+              <td class="name-col">
+                <div class="eq-name zh">弱电网格桥架 400×100mm</div>
+                <div class="eq-name ru-text">Кабельный лоток (слаботочный) 400×100</div>
+                <div class="eq-spec zh">镀锌钢丝 / 含安装附件、吊架</div>
+                <div class="eq-spec ru-text">Оцинкованная проволока; монтажные принадлежности</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">15</td>
+              <td class="price-col">6,422 ₸</td>
+              <td class="price-col total-price">96,327 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">42</td>
+              <td class="name-col">
+                <div class="eq-name zh">强电网格桥架 400×100mm</div>
+                <div class="eq-name ru-text">Кабельный лоток (силовой) 400×100</div>
+                <div class="eq-spec zh">镀锌钢丝 / 含安装附件、吊架</div>
+                <div class="eq-spec ru-text">Оцинкованная проволока; монтажные принадлежности</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">15</td>
+              <td class="price-col">6,422 ₸</td>
+              <td class="price-col total-price">96,327 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">43</td>
+              <td class="name-col">
+                <div class="eq-name zh">Cat6 非屏蔽网线</div>
+                <div class="eq-name ru-text">Сетевой кабель Cat6 (UTP)</div>
+                <div class="eq-spec zh">线径0.57±0.008mm / HDPE绝缘 / PVC外护套 / 暗敷</div>
+                <div class="eq-spec ru-text">0,57 мм; HDPE изоляция; PVC оболочка; скрытая прокладка</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">240</td>
+              <td class="price-col">321 ₸</td>
+              <td class="price-col total-price">77,112 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">44</td>
+              <td class="name-col">
+                <div class="eq-name zh">Cat6 RJ45 水晶头</div>
+                <div class="eq-name ru-text">Сетевой коннектор Cat6 RJ45</div>
+                <div class="eq-spec zh">千兆以太网 / 三叉铜片 / 孔径1.1mm</div>
+                <div class="eq-spec ru-text">Gigabit Ethernet; трёхзубчатая пластина; 1,1 мм</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">84</td>
+              <td class="price-col">107 ₸</td>
+              <td class="price-col total-price">8,996 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">45</td>
+              <td class="name-col">
+                <div class="eq-name zh">24口配线架</div>
+                <div class="eq-name ru-text">Патч-панель на 24 порта</div>
+                <div class="eq-spec zh">1U / 19寸标准机柜 / 粉末涂层防氧化</div>
+                <div class="eq-spec ru-text">1U; 19" шкаф; порошковое покрытие</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">4</td>
+              <td class="price-col">90,978 ₸</td>
+              <td class="price-col total-price">363,913 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">46</td>
+              <td class="name-col">
+                <div class="eq-name zh">理线器（24/50口）</div>
+                <div class="eq-name ru-text">Органайзер кабеля 24/50 портов</div>
+                <div class="eq-spec zh">1U / 19寸标准机柜</div>
+                <div class="eq-spec ru-text">1U; 19" шкаф</div>
+              </td>
+              <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">4</td>
+              <td class="price-col">90,978 ₸</td>
+              <td class="price-col total-price">363,913 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">47</td>
+              <td class="name-col">
+                <div class="eq-name zh">24芯单模光缆</div>
+                <div class="eq-name ru-text">Оптический кабель связи (24 жилы)</div>
+                <div class="eq-spec zh">单模OS2 / PE外护套 / 暗敷</div>
+                <div class="eq-spec ru-text">Одномодовый OS2; PE-оболочка; скрытая прокладка</div>
+              </td>
+              <td class="unit-col zh">米</td><td class="unit-col ru-text">м</td>
+              <td class="num-col">60</td>
+              <td class="price-col">482 ₸</td>
+              <td class="price-col total-price">28,896 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">48</td>
+              <td class="name-col">
+                <div class="eq-name zh">ODF 光纤配线架（4U）</div>
+                <div class="eq-name ru-text">Оптический распределительный кросс ODF (4U)</div>
+                <div class="eq-spec zh">冷轧钢 / 满配96口LC / 含尾纤 / 机柜安装</div>
+                <div class="eq-spec ru-text">Холоднокатаная сталь; 96×LC; пигтейлы; установка в шкаф</div>
+              </td>
+              <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">2</td>
+              <td class="price-col">214,067 ₸</td>
+              <td class="price-col total-price">428,134 ₸</td>
+            </tr>
+            <tr>
+              <td class="idx">49</td>
+              <td class="name-col">
+                <div class="eq-name zh">LC-LC 单模光纤跳线</div>
+                <div class="eq-name ru-text">Оптическая перемычка LC-LC</div>
+                <div class="eq-spec zh">单模单芯 / 长2m / 插入损耗≤0.3dB / 回损≥-50dB</div>
+                <div class="eq-spec ru-text">Одномодовая; 2 м; потери ≤0,3 dB; обр.потери ≥-50 dB</div>
+              </td>
+              <td class="unit-col zh">条</td><td class="unit-col ru-text">шт.</td>
+              <td class="num-col">240</td>
+              <td class="price-col">1,070 ₸</td>
+              <td class="price-col total-price">256,872 ₸</td>
+            </tr>
+            <tr class="eq-total-row">
+              <td colspan="5" class="zh">系统合计</td>
+              <td colspan="5" class="ru-text">Итого по системе</td>
+              <td class="total-price price-col">34,863,273 ₸</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<div id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="nav-arrow" href="../index.html">
+      <span class="zh">🏠 返回总览</span>
+      <span class="ru-text">🏠 На главную</span>
+    </a>
+  </div>
+</div>
+
+<script>
+let lang = 'zh';
+const sysColors = ['#00d4ff','#10b981','#f0a500','#a855f7'];
+const sysLabelsZH = ['基础网络','Wi-Fi系统','视频监控','机房工程'];
+const sysLabelsRU = ['Базовая сеть','Wi-Fi','Видеонаблюдение','Серверная'];
+const sysValues = [31.52, 2.72, 39.89, 34.86];
+
+window.barChart = new Chart(document.getElementById('barC'), {
+  type:'bar',
+  data:{
+    labels: sysLabelsZH,
+    datasets:[{
+      data: sysValues,
+      backgroundColor: sysColors.map(c=>c+'33'),
+      borderColor: sysColors,
+      borderWidth:2,
+      borderRadius:4
+    }]
+  },
+  options:{
+    indexAxis:'y',
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:'rgba(30,58,95,.5)'},ticks:{color:'#94a3b8',font:{size:10},callback:v=>v+'M ₸'}},
+      y:{grid:{display:false},ticks:{color:'#e2e8f0',font:{size:11}}}
+    }
+  }
+});
+
+window.donutChart = new Chart(document.getElementById('donutC'), {
+  type:'doughnut',
+  data:{
+    labels: sysLabelsZH,
+    datasets:[{
+      data:[28.9, 2.5, 36.6, 32.0],
+      backgroundColor: sysColors.map(c=>c+'44'),
+      borderColor: sysColors,
+      borderWidth:2
+    }]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    cutout:'68%',
+    plugins:{
+      legend:{
+        display:true,
+        position:'bottom',
+        labels:{color:'#94a3b8',font:{size:10},padding:8,boxWidth:12}
+      }
+    }
+  }
+});
+
+function toggleLang(){
+  lang = lang==='zh'?'ru':'zh';
+  document.body.classList.toggle('ru', lang==='ru');
+  document.getElementById('lang-btn').textContent = lang==='zh'?'РУС / 中文':'中文 / РУС';
+  if(window.barChart){
+    window.barChart.data.labels = lang==='ru'?sysLabelsRU:sysLabelsZH;
+    window.barChart.update();
+  }
+  if(window.donutChart){
+    window.donutChart.data.labels = lang==='ru'?sysLabelsRU:sysLabelsZH;
+    window.donutChart.update();
+  }
+}
+</script>
+</body>
+</html>

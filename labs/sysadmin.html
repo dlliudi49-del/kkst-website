@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>系统管理 · KKST 建设方案</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#070d1a;--bg2:#0e1829;--card:#111e33;--card2:#162340;
+  --border:#1e3a5f;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --a1:#10b981;--a2:#047857;--gold:#f0a500;--green:#10b981;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.6}
+body.ru{font-family:'Segoe UI','Arial',sans-serif}
+#topbar{position:sticky;top:0;z-index:100;background:rgba(7,13,26,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;gap:16px}
+#topbar .back{color:var(--a1);text-decoration:none;font-size:13px;
+  font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap}
+#topbar .back:hover{opacity:.8}
+#topbar .crumb{font-size:13px;color:var(--text3)}
+#topbar .crumb span{color:var(--text2)}
+#lang-btn{background:var(--card2);border:1px solid var(--border);
+  color:var(--text);padding:5px 14px;border-radius:20px;cursor:pointer;
+  font-size:13px;white-space:nowrap;transition:all .2s}
+#lang-btn:hover{border-color:var(--a1);color:var(--a1)}
+#hero{position:relative;height:480px;overflow:hidden;background:var(--bg2)}
+#hero-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.65)}
+#hero-overlay{position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(7,13,26,.85) 35%,rgba(7,13,26,.2) 100%)}
+#hero-content{position:absolute;inset:0;display:flex;align-items:center;
+  padding:0 64px;max-width:700px}
+.hero-inner .floor-badge{display:inline-block;background:rgba(255,255,255,.1);
+  border:1px solid var(--a1);color:var(--a1);font-size:12px;padding:3px 14px;
+  border-radius:20px;margin-bottom:18px;letter-spacing:1px}
+.hero-inner h1{font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.2;margin-bottom:8px}
+.hero-inner .ru-name{font-size:clamp(14px,2vw,20px);color:rgba(255,255,255,.6);font-style:italic;margin-bottom:20px}
+.hero-inner .tag-row{display:flex;gap:10px;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:var(--text2);font-size:12px;padding:4px 12px;border-radius:8px}
+.tag b{color:#fff}
+.page-wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+section{padding:56px 0}
+section+section{padding-top:0}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
+.ov-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 20px;text-align:center;position:relative;overflow:hidden}
+.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--a1),var(--a2))}
+.ov-card .val{font-size:32px;font-weight:800;color:var(--a1);font-family:'Courier New',monospace}
+.ov-card .lbl{font-size:12px;color:var(--text3);margin-top:4px}
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.desc-card{background:var(--card);border-radius:14px;padding:28px;
+  border-left:4px solid var(--a1);margin-bottom:32px}
+.desc-card p{font-size:15px;color:var(--text2);line-height:1.9}
+.budget-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:40px}
+@media(max-width:600px){.budget-grid{grid-template-columns:1fr}}
+.bud-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center}
+.bud-card.total{border-color:var(--a1)}
+.bud-card .bval{font-size:24px;font-weight:800;margin-bottom:4px;font-family:'Courier New',monospace}
+.bud-card.total .bval{color:var(--a1)}
+.bud-card.reno  .bval{color:var(--gold)}
+.bud-card.equip .bval{color:var(--green)}
+.bud-card .bpct{font-size:13px;color:var(--text3);margin-top:2px}
+.bud-card .blbl{font-size:12px;color:var(--text3);margin-top:6px}
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:40px}
+@media(max-width:700px){.chart-row{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px}
+.chart-card h3{font-size:14px;color:var(--text2);margin-bottom:16px}
+.chart-wrap{position:relative;height:160px}
+.plan-img{border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:40px}
+.plan-img img{width:100%;display:block}
+.eq-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--card2);color:var(--a1);font-weight:600;padding:12px 14px;
+  text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:1px solid rgba(30,58,95,.4);color:var(--text2);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(0,212,255,.04);color:var(--text)}
+.idx{color:var(--text3);text-align:center;width:36px}
+.name-col{min-width:180px}
+.eq-name{color:var(--text);font-weight:500}
+.eq-spec{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5}
+.brand-col{color:var(--a1);white-space:nowrap}
+.num-col{text-align:center;white-space:nowrap}
+.price-col{text-align:right;font-family:monospace;white-space:nowrap}
+.total-price{color:var(--gold);font-weight:600}
+.eq-total-row td{background:var(--card2);font-weight:700;border-top:2px solid var(--border)}
+.eq-total-row .total-price{color:var(--a1);font-size:15px}
+#bottom-nav{padding:40px 0;border-top:1px solid var(--border)}
+.bottom-nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px}
+.nav-arrow{color:var(--a1);text-decoration:none;font-size:14px;
+  font-weight:600;padding:10px 20px;border:1px solid var(--border);
+  border-radius:10px;transition:all .2s;display:block}
+.nav-arrow:hover{border-color:var(--a1);background:rgba(0,212,255,.08)}
+.ru-text{display:none}
+body.ru .zh{display:none}
+body.ru .ru-text{display:revert}
+
+.drawings-section{margin-bottom:40px}
+.drawings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+.draw-img{width:100%;border-radius:12px;border:1px solid var(--border);display:block;
+  transition:transform .3s;cursor:zoom-in}
+.draw-img:hover{transform:scale(1.02)}
+.draw-caption{font-size:12px;color:var(--text3);text-align:center;margin-top:8px}
+.img-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;
+  align-items:center;justify-content:center;cursor:zoom-out}
+.img-modal.open{display:flex}
+.img-modal img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px}
+</style>
+</head>
+<body>
+<div id="topbar">
+  <a class="back" href="../index.html">← <span class="zh">返回总览</span><span class="ru-text">На главную</span></a>
+  <span class="crumb zh">五层 / <span>系统管理</span></span>
+  <span class="crumb ru-text">5-й эт. / <span>Системное администрирование</span></span>
+  <button id="lang-btn" onclick="toggleLang()">РУС / 中文</button>
+</div>
+
+<section id="hero">
+  <img id="hero-img" src="../assets/images/render_sysadmin.jpg" alt="系统管理"
+       onerror="this.style.display='none';document.getElementById('hero').style.background='linear-gradient(135deg,#0e1829,#162340)'">
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <div class="hero-inner">
+      <div class="floor-badge">
+        <span class="zh">五层 · 第5楼</span>
+        <span class="ru-text">5-й этаж</span>
+      </div>
+      <h1 class="zh">系统管理</h1>
+      <h1 class="ru-text">Системное администрирование</h1>
+      <p class="ru-name zh">Системное администрирование</p>
+      <p class="ru-name ru-text">系统管理</p>
+      <div class="tag-row">
+        <span class="tag"><b class="zh">面积</b><b class="ru-text">S</b> 约75㎡</span>
+        <span class="tag zh"><b>座位</b> 20 位</span><span class="tag ru-text"><b>Мест</b> 20</span>
+        <span class="tag zh"><b>设备</b> 37 种</span>
+        <span class="tag ru-text"><b>Обор.</b> 37 поз.</span>
+        <span class="tag"><b>₸</b> 25.33M ₸</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrap">
+  <section>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="val">25.33M ₸</div>
+        <div class="lbl zh">总建设预算</div><div class="lbl ru-text">Общий бюджет</div>
+      </div>
+      <div class="ov-card"><div class="val">约75㎡</div><div class="lbl zh">建筑面积</div><div class="lbl ru-text">Площадь</div></div>
+      <div class="ov-card"><div class="val">20</div><div class="lbl zh">座位数</div><div class="lbl ru-text">Мест</div></div>
+      <div class="ov-card">
+        <div class="val">37</div>
+        <div class="lbl zh">设备种类</div><div class="lbl ru-text">Видов оборуд.</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">5F</div>
+        <div class="lbl zh">所在楼层</div><div class="lbl ru-text">Этаж</div>
+      </div>
+    </div>
+
+    <h2 class="sec-title zh">功能定位</h2>
+    <h2 class="sec-title ru-text">Назначение</h2>
+    <div class="desc-card">
+      <p class="zh">中心IT基础设施核心机房，配备MikroTik核心交换机/路由器/防火墙、APC UPS电源系统及完整的结构化布线系统，为全楼16个实训室提供网络和安全保障。</p>
+      <p class="ru-text">Серверная комната центра: коммутаторы MikroTik, маршрутизаторы, межсетевые экраны, ИБП APC — сетевая инфраструктура для всех 16 лабораторий.</p>
+    </div>
+
+    <h2 class="sec-title zh">预算构成</h2>
+    <h2 class="sec-title ru-text">Структура бюджета</h2>
+    <div class="budget-grid">
+      <div class="bud-card total">
+        <div class="bval">25.33M ₸</div>
+        <div class="blbl zh">总建设预算</div><div class="blbl ru-text">Итого</div>
+      </div>
+      <div class="bud-card equip">
+        <div class="bval">17.90M ₸</div>
+        <div class="bpct">71%</div>
+        <div class="blbl zh">设备购置费</div><div class="blbl ru-text">Оборудование</div>
+      </div>
+      <div class="bud-card reno">
+        <div class="bval">7.43M ₸</div>
+        <div class="bpct">29%</div>
+        <div class="blbl zh">室内装修改造费</div><div class="blbl ru-text">Ремонт и отделка</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3 class="zh">预算构成可视化</h3><h3 class="ru-text">Визуализация бюджета</h3>
+        <div class="chart-wrap"><canvas id="barC"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 class="zh">装修 vs 设备</h3><h3 class="ru-text">Ремонт vs Оборуд.</h3>
+        <div class="chart-wrap"><canvas id="donutC"></canvas></div>
+      </div>
+    </div>
+
+    <h2 class="sec-title zh">楼层平面图</h2>
+    <h2 class="sec-title ru-text">План этажа</h2>
+    <div class="plan-img"><img src="../assets/images/plan_floor5_cad.jpg" alt="floor plan"></div>
+
+    <h2 class="sec-title zh">完整设备清单</h2>
+    <h2 class="sec-title ru-text">Полный перечень оборудования</h2>
+    <div class="eq-table-wrap">
+      <table>
+        <thead><tr>
+          <th class="idx">#</th>
+          <th class="zh">设备名称</th><th class="ru-text">Наименование</th>
+          <th class="zh">品牌</th><th class="ru-text">Бренд</th>
+          <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+          <th class="zh">单价(₸)</th><th class="ru-text">Цена/ед.(₸)</th>
+          <th class="zh">合计(₸)</th><th class="ru-text">Итого(₸)</th>
+        </tr></thead>
+        <tbody>
+        <tr>
+          <td class="idx">1</td>
+          <td class="name-col">
+            <div class="eq-name zh">CRS326-24G-2S+RM</div><div class="eq-name ru-text">CRS326-24G-2S+RM</div>
+            <div class="eq-spec zh">L2交换机</div><div class="eq-spec ru-text">Переключатель L2 (MikroTik)</div>
+          </td>
+          <td class="brand-col">MikroTik</td>
+          <td class="num-col">1</td>
+          <td class="price-col">179,340 ₸ </td>
+          <td class="price-col total-price">179,340 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">2</td>
+          <td class="name-col">
+            <div class="eq-name zh">RB3011UiAS-RM</div><div class="eq-name ru-text">RB3011UiAS-RM</div>
+            <div class="eq-spec zh">路由器</div><div class="eq-spec ru-text">Маршрутизатор (MikroTik)</div>
+          </td>
+          <td class="brand-col">MikroTik</td>
+          <td class="num-col">1</td>
+          <td class="price-col">166,600 ₸ </td>
+          <td class="price-col total-price">166,600 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">3</td>
+          <td class="name-col">
+            <div class="eq-name zh">cAP ac</div><div class="eq-name ru-text">cAP ac</div>
+            <div class="eq-spec zh">Wi-Fi接入点（吸顶式）</div><div class="eq-spec ru-text">Точка доступа Wi-Fi (MikroTik)</div>
+          </td>
+          <td class="brand-col">MikroTik</td>
+          <td class="num-col">1</td>
+          <td class="price-col">80,360 ₸ </td>
+          <td class="price-col total-price">80,360 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">4</td>
+          <td class="name-col">
+            <div class="eq-name zh">RB4011iGS+RM</div><div class="eq-name ru-text">RB4011iGS+RM</div>
+            <div class="eq-spec zh">防火墙</div><div class="eq-spec ru-text">Межсетевой экран (MikroTik)</div>
+          </td>
+          <td class="brand-col">MikroTik</td>
+          <td class="num-col">1</td>
+          <td class="price-col">196,000 ₸ </td>
+          <td class="price-col total-price">196,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">5</td>
+          <td class="name-col">
+            <div class="eq-name zh">PP-19-24-8P8C-C6-110D</div><div class="eq-name ru-text">PP-19-24-8P8C-C6-110D</div>
+            <div class="eq-spec zh">Cat6 24口配线架</div><div class="eq-spec ru-text">Патч-панель Cat6 24 порта</div>
+          </td>
+          <td class="brand-col">Hyperline</td>
+          <td class="num-col">1</td>
+          <td class="price-col">39,200 ₸ </td>
+          <td class="price-col total-price">39,200 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">6</td>
+          <td class="name-col">
+            <div class="eq-name zh">CM-1U-T-BL</div><div class="eq-name ru-text">CM-1U-T-BL</div>
+            <div class="eq-spec zh">理线器</div><div class="eq-spec ru-text">Кабельный органайзер</div>
+          </td>
+          <td class="brand-col">Hyperline</td>
+          <td class="num-col">2</td>
+          <td class="price-col">9,800 ₸ </td>
+          <td class="price-col total-price">19,600 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">7</td>
+          <td class="name-col">
+            <div class="eq-name zh">PC-LPL-PC-RJ45-RJ45-C6-1M</div><div class="eq-name ru-text">PC-LPL-PC-RJ45-RJ45-C6-1M</div>
+            <div class="eq-spec zh">Cat6 1m跟线</div><div class="eq-spec ru-text">Кабель Cat6 1 м</div>
+          </td>
+          <td class="brand-col">Hyperline</td>
+          <td class="num-col">24</td>
+          <td class="price-col">2,940 ₸ </td>
+          <td class="price-col total-price">70,560 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">8</td>
+          <td class="name-col">
+            <div class="eq-name zh">Smart-UPS 1500VA RM 2U</div><div class="eq-name ru-text">Smart-UPS 1500VA RM 2U</div>
+            <div class="eq-spec zh">UPS 1500VA</div><div class="eq-spec ru-text">ИБП 1500VA</div>
+          </td>
+          <td class="brand-col">APC</td>
+          <td class="num-col">1</td>
+          <td class="price-col">392,000 ₸ </td>
+          <td class="price-col total-price">392,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">9</td>
+          <td class="name-col">
+            <div class="eq-name zh">AP7920B Basic 1U</div><div class="eq-name ru-text">AP7920B Basic 1U</div>
+            <div class="eq-spec zh">PDU插座排</div><div class="eq-spec ru-text">Блок розеток PDU</div>
+          </td>
+          <td class="brand-col">APC</td>
+          <td class="num-col">1</td>
+          <td class="price-col">313,600 ₸ </td>
+          <td class="price-col total-price">313,600 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">10</td>
+          <td class="name-col">
+            <div class="eq-name zh">RS822+ 4×4TB WD Red</div><div class="eq-name ru-text">RS822+ 4×4TB WD Red</div>
+            <div class="eq-spec zh">NAS存储</div><div class="eq-spec ru-text">Сетевое хранилище NAS</div>
+          </td>
+          <td class="brand-col">Synology</td>
+          <td class="num-col">1</td>
+          <td class="price-col">6.48M ₸ </td>
+          <td class="price-col total-price">6.48M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">11</td>
+          <td class="name-col">
+            <div class="eq-name zh">TL-SG3428XMP</div><div class="eq-name ru-text">TL-SG3428XMP</div>
+            <div class="eq-spec zh">L2 PoE交换机</div><div class="eq-spec ru-text">Коммутатор L2 PoE</div>
+          </td>
+          <td class="brand-col">TP-Link</td>
+          <td class="num-col">1</td>
+          <td class="price-col">686,000 ₸ </td>
+          <td class="price-col total-price">686,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">12</td>
+          <td class="name-col">
+            <div class="eq-name zh">ER8411</div><div class="eq-name ru-text">ER8411</div>
+            <div class="eq-spec zh">Omada路由器</div><div class="eq-spec ru-text">Маршрутизатор Omada</div>
+          </td>
+          <td class="brand-col">TP-Link</td>
+          <td class="num-col">1</td>
+          <td class="price-col">759,500 ₸ </td>
+          <td class="price-col total-price">759,500 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">13</td>
+          <td class="name-col">
+            <div class="eq-name zh">EAP670 + OC200</div><div class="eq-name ru-text">EAP670 + OC200</div>
+            <div class="eq-spec zh">Wi-Fi 6接入点+控制器</div><div class="eq-spec ru-text">Wi-Fi 6 + контроллер</div>
+          </td>
+          <td class="brand-col">TP-Link</td>
+          <td class="num-col">1</td>
+          <td class="price-col">294,000 ₸ </td>
+          <td class="price-col total-price">294,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">14</td>
+          <td class="name-col">
+            <div class="eq-name zh">ER7206 Omada</div><div class="eq-name ru-text">ER7206 Omada</div>
+            <div class="eq-spec zh">VPN防火墙</div><div class="eq-spec ru-text">VPN-брандмауэр</div>
+          </td>
+          <td class="brand-col">TP-Link</td>
+          <td class="num-col">1</td>
+          <td class="price-col">196,000 ₸ </td>
+          <td class="price-col total-price">196,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">15</td>
+          <td class="name-col">
+            <div class="eq-name zh">TL-SC1424H</div><div class="eq-name ru-text">TL-SC1424H</div>
+            <div class="eq-spec zh">Cat6 24口配线架</div><div class="eq-spec ru-text">Патч-панель Cat6 24 порта</div>
+          </td>
+          <td class="brand-col">TP-Link</td>
+          <td class="num-col">1</td>
+          <td class="price-col">39,200 ₸ </td>
+          <td class="price-col total-price">39,200 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">16</td>
+          <td class="name-col">
+            <div class="eq-name zh">TL-CM15C</div><div class="eq-name ru-text">TL-CM15C</div>
+            <div class="eq-spec zh">理线器</div><div class="eq-spec ru-text">Кабельный органайзер</div>
+          </td>
+          <td class="brand-col">TP-Link</td>
+          <td class="num-col">2</td>
+          <td class="price-col">9,800 ₸ </td>
+          <td class="price-col total-price">19,600 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">17</td>
+          <td class="name-col">
+            <div class="eq-name zh">TL-EC610-1M</div><div class="eq-name ru-text">TL-EC610-1M</div>
+            <div class="eq-spec zh">Cat6 1m跟线</div><div class="eq-spec ru-text">Кабель Cat6 1 м</div>
+          </td>
+          <td class="brand-col">TP-Link</td>
+          <td class="num-col">24</td>
+          <td class="price-col">2,940 ₸ </td>
+          <td class="price-col total-price">70,560 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">18</td>
+          <td class="name-col">
+            <div class="eq-name zh">PR1500ELCDRT2U</div><div class="eq-name ru-text">PR1500ELCDRT2U</div>
+            <div class="eq-spec zh">UPS 1500VA</div><div class="eq-spec ru-text">ИБП 1500VA</div>
+          </td>
+          <td class="brand-col">CyberPower</td>
+          <td class="num-col">1</td>
+          <td class="price-col">225,400 ₸ </td>
+          <td class="price-col total-price">225,400 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">19</td>
+          <td class="name-col">
+            <div class="eq-name zh">ePDU Managed 1U</div><div class="eq-name ru-text">ePDU Managed 1U</div>
+            <div class="eq-spec zh">PDU插座排</div><div class="eq-spec ru-text">Блок розеток PDU</div>
+          </td>
+          <td class="brand-col">Eaton</td>
+          <td class="num-col">1</td>
+          <td class="price-col">980,000 ₸ </td>
+          <td class="price-col total-price">980,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">20</td>
+          <td class="name-col">
+            <div class="eq-name zh">TS-453E-8G 4×4TB</div><div class="eq-name ru-text">TS-453E-8G 4×4TB</div>
+            <div class="eq-spec zh">NAS存储</div><div class="eq-spec ru-text">Сетевое хранилище NAS</div>
+          </td>
+          <td class="brand-col">QNAP</td>
+          <td class="num-col">1</td>
+          <td class="price-col">1.18M ₸ </td>
+          <td class="price-col total-price">1.18M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">21</td>
+          <td class="name-col">
+            <div class="eq-name zh">DGS-1210-28/ME</div><div class="eq-name ru-text">DGS-1210-28/ME</div>
+            <div class="eq-spec zh">L2交换机</div><div class="eq-spec ru-text">Коммутатор L2</div>
+          </td>
+          <td class="brand-col">D-Link</td>
+          <td class="num-col">1</td>
+          <td class="price-col">264,600 ₸ </td>
+          <td class="price-col total-price">264,600 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">22</td>
+          <td class="name-col">
+            <div class="eq-name zh">DSR-1000AC</div><div class="eq-name ru-text">DSR-1000AC</div>
+            <div class="eq-spec zh">VPN路由器</div><div class="eq-spec ru-text">VPN-маршрутизатор</div>
+          </td>
+          <td class="brand-col">D-Link</td>
+          <td class="num-col">1</td>
+          <td class="price-col">245,000 ₸ </td>
+          <td class="price-col total-price">245,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">23</td>
+          <td class="name-col">
+            <div class="eq-name zh">DAP-2680 (802.11ac)</div><div class="eq-name ru-text">DAP-2680 (802.11ac)</div>
+            <div class="eq-spec zh">Wi-Fi接入点</div><div class="eq-spec ru-text">Точка доступа Wi-Fi</div>
+          </td>
+          <td class="brand-col">D-Link</td>
+          <td class="num-col">1</td>
+          <td class="price-col">196,000 ₸ </td>
+          <td class="price-col total-price">196,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">24</td>
+          <td class="name-col">
+            <div class="eq-name zh">DSA-3200</div><div class="eq-name ru-text">DSA-3200</div>
+            <div class="eq-spec zh">UTM防火墙</div><div class="eq-spec ru-text">UTM-брандмауэр</div>
+          </td>
+          <td class="brand-col">D-Link</td>
+          <td class="num-col">1</td>
+          <td class="price-col">196,000 ₸ </td>
+          <td class="price-col total-price">196,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">25</td>
+          <td class="name-col">
+            <div class="eq-name zh">NPP-C61BLK24A</div><div class="eq-name ru-text">NPP-C61BLK24A</div>
+            <div class="eq-spec zh">Cat6 24口配线架</div><div class="eq-spec ru-text">Патч-панель Cat6 24 порта</div>
+          </td>
+          <td class="brand-col">D-Link</td>
+          <td class="num-col">1</td>
+          <td class="price-col">39,200 ₸ </td>
+          <td class="price-col total-price">39,200 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">26</td>
+          <td class="name-col">
+            <div class="eq-name zh">NMC-1U01</div><div class="eq-name ru-text">NMC-1U01</div>
+            <div class="eq-spec zh">理线器</div><div class="eq-spec ru-text">Кабельный органайзер</div>
+          </td>
+          <td class="brand-col">D-Link</td>
+          <td class="num-col">2</td>
+          <td class="price-col">9,800 ₸ </td>
+          <td class="price-col total-price">19,600 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">27</td>
+          <td class="name-col">
+            <div class="eq-name zh">NCB-C6UYELR1-1</div><div class="eq-name ru-text">NCB-C6UYELR1-1</div>
+            <div class="eq-spec zh">Cat6 1m跟线</div><div class="eq-spec ru-text">Кабель Cat6 1 м</div>
+          </td>
+          <td class="brand-col">D-Link</td>
+          <td class="num-col">24</td>
+          <td class="price-col">2,940 ₸ </td>
+          <td class="price-col total-price">70,560 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">28</td>
+          <td class="name-col">
+            <div class="eq-name zh">KIN-1500AP RM</div><div class="eq-name ru-text">KIN-1500AP RM</div>
+            <div class="eq-spec zh">UPS 1500VA</div><div class="eq-spec ru-text">ИБП 1500VA</div>
+          </td>
+          <td class="brand-col">Powercom</td>
+          <td class="num-col">1</td>
+          <td class="price-col">245,000 ₸ </td>
+          <td class="price-col total-price">245,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">29</td>
+          <td class="name-col">
+            <div class="eq-name zh">S5731-H24T4XC</div><div class="eq-name ru-text">S5731-H24T4XC</div>
+            <div class="eq-spec zh">L2/L3交换机</div><div class="eq-spec ru-text">Коммутатор L2/L3</div>
+          </td>
+          <td class="brand-col">Huawei</td>
+          <td class="num-col">1</td>
+          <td class="price-col">735,000 ₸ </td>
+          <td class="price-col total-price">735,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">30</td>
+          <td class="name-col">
+            <div class="eq-name zh">AR1220C-S</div><div class="eq-name ru-text">AR1220C-S</div>
+            <div class="eq-spec zh">路由器</div><div class="eq-spec ru-text">Маршрутизатор</div>
+          </td>
+          <td class="brand-col">Huawei</td>
+          <td class="num-col">1</td>
+          <td class="price-col">392,000 ₸ </td>
+          <td class="price-col total-price">392,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">31</td>
+          <td class="name-col">
+            <div class="eq-name zh">AirEngine 5762-12</div><div class="eq-name ru-text">AirEngine 5762-12</div>
+            <div class="eq-spec zh">Wi-Fi 6接入点</div><div class="eq-spec ru-text">Точка доступа Wi-Fi 6</div>
+          </td>
+          <td class="brand-col">Huawei</td>
+          <td class="num-col">1</td>
+          <td class="price-col">81,340 ₸ </td>
+          <td class="price-col total-price">81,340 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">32</td>
+          <td class="name-col">
+            <div class="eq-name zh">USG6315E</div><div class="eq-name ru-text">USG6315E</div>
+            <div class="eq-spec zh">NGFW防火墙</div><div class="eq-spec ru-text">NGFW-брандмауэр</div>
+          </td>
+          <td class="brand-col">Huawei</td>
+          <td class="num-col">1</td>
+          <td class="price-col">1.76M ₸ </td>
+          <td class="price-col total-price">1.76M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">33</td>
+          <td class="name-col">
+            <div class="eq-name zh">PP-19-24-8P8C-C6-110D</div><div class="eq-name ru-text">PP-19-24-8P8C-C6-110D</div>
+            <div class="eq-spec zh">Cat6 24口配线架</div><div class="eq-spec ru-text">Патч-панель Cat6 24 порта</div>
+          </td>
+          <td class="brand-col">Hyperline</td>
+          <td class="num-col">1</td>
+          <td class="price-col">39,200 ₸ </td>
+          <td class="price-col total-price">39,200 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">34</td>
+          <td class="name-col">
+            <div class="eq-name zh">CM-1U-T-BL</div><div class="eq-name ru-text">CM-1U-T-BL</div>
+            <div class="eq-spec zh">理线器</div><div class="eq-spec ru-text">Кабельный органайзер</div>
+          </td>
+          <td class="brand-col">Hyperline</td>
+          <td class="num-col">2</td>
+          <td class="price-col">9,800 ₸ </td>
+          <td class="price-col total-price">19,600 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">35</td>
+          <td class="name-col">
+            <div class="eq-name zh">PC-LPL-PC-RJ45-RJ45-C6-1M</div><div class="eq-name ru-text">PC-LPL-PC-RJ45-RJ45-C6-1M</div>
+            <div class="eq-spec zh">Cat6 1m跟线</div><div class="eq-spec ru-text">Кабель Cat6 1 м</div>
+          </td>
+          <td class="brand-col">Hyperline</td>
+          <td class="num-col">24</td>
+          <td class="price-col">2,940 ₸ </td>
+          <td class="price-col total-price">70,560 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">36</td>
+          <td class="name-col">
+            <div class="eq-name zh">5PX 2200i RT2U</div><div class="eq-name ru-text">5PX 2200i RT2U</div>
+            <div class="eq-spec zh">UPS 2200VA</div><div class="eq-spec ru-text">ИБП 2200VA</div>
+          </td>
+          <td class="brand-col">Eaton</td>
+          <td class="num-col">1</td>
+          <td class="price-col">352,800 ₸ </td>
+          <td class="price-col total-price">352,800 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">37</td>
+          <td class="name-col">
+            <div class="eq-name zh">UPS2000-G-3KRTL PDU</div><div class="eq-name ru-text">UPS2000-G-3KRTL PDU</div>
+            <div class="eq-spec zh">PDU插座排</div><div class="eq-spec ru-text">Блок розеток PDU</div>
+          </td>
+          <td class="brand-col">Huawei</td>
+          <td class="num-col">1</td>
+          <td class="price-col">784,000 ₸ </td>
+          <td class="price-col total-price">784,000 ₸</td>
+        </tr>
+          <tr class="eq-total-row">
+            <td colspan="5" class="zh" style="color:var(--text2)">设备合计</td>
+            <td colspan="5" class="ru-text" style="color:var(--text2)">Итого по оборудованию</td>
+            <td class="total-price price-col">17.90M ₸</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="nav-arrow prev" href="ict.html">← <span class="zh">信息通信</span><span class="ru-text">Информационные и коммуникационные технологии</span></a>
+    <a class="nav-arrow" href="../index.html" style="text-align:center">
+      <span class="zh">🏠 返回总览</span><span class="ru-text">🏠 На главную</span>
+    </a>
+    <span></span>
+  </div>
+</div>
+
+<script>
+let lang='zh';
+
+function openModal(src){
+  document.getElementById('modalImg').src = src;
+  document.getElementById('imgModal').classList.add('open');
+}
+
+function toggleLang(){
+  lang=lang==='zh'?'ru':'zh';
+  document.body.classList.toggle('ru',lang==='ru');
+  document.getElementById('lang-btn').textContent=lang==='zh'?'РУС / 中文':'中文 / РУС';
+  if(window.barChart){
+    window.barChart.data.labels=lang==='ru'?['Оборудование','Ремонт']:['设备费','装修费'];
+    window.barChart.update();
+  }
+}
+window.barChart=new Chart(document.getElementById('barC'),{
+  type:'bar',
+  data:{labels: document.body.classList.contains('ru') ? ['Оборудование','Ремонт'] : ['设备费','装修费'],
+    datasets:[
+      {label:'设备 / Оборудование',data:[17.90,0],backgroundColor:'#10b981',borderRadius:6},
+      {label:'装修 / Ремонт',data:[0,7.43],backgroundColor:'#f0a500',borderRadius:6},
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#94a3b8',font:{size:12}}},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label.split('/')[0].trim()}: ${c.parsed.y.toFixed(2)}M ₸`}}},
+    scales:{x:{grid:{display:false},ticks:{color:'#94a3b8'}},
+      y:{grid:{color:'rgba(30,58,95,.4)'},ticks:{color:'#64748b',callback:v=>v+'M'}}}}
+});
+new Chart(document.getElementById('donutC'),{
+  type:'doughnut',
+  data:{labels:['设备 / Оборудование','装修 / Ремонт'],
+    datasets:[{data:[71,29],backgroundColor:['#10b981','#f0a500'],borderWidth:0,hoverOffset:6}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+    plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:12}}}}}
+});
+</script>
+</body>
+</html>

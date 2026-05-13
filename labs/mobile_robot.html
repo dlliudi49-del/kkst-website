@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>移动机器人 · KKST 建设方案</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#070d1a;--bg2:#0e1829;--card:#111e33;--card2:#162340;
+  --border:#1e3a5f;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --a1:#ef4444;--a2:#dc2626;--gold:#f0a500;--green:#10b981;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.6}
+body.ru{font-family:'Segoe UI','Arial',sans-serif}
+#topbar{position:sticky;top:0;z-index:100;background:rgba(7,13,26,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;gap:16px}
+#topbar .back{color:var(--a1);text-decoration:none;font-size:13px;
+  font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap}
+#topbar .back:hover{opacity:.8}
+#topbar .crumb{font-size:13px;color:var(--text3)}
+#topbar .crumb span{color:var(--text2)}
+#lang-btn{background:var(--card2);border:1px solid var(--border);
+  color:var(--text);padding:5px 14px;border-radius:20px;cursor:pointer;
+  font-size:13px;white-space:nowrap;transition:all .2s}
+#lang-btn:hover{border-color:var(--a1);color:var(--a1)}
+#hero{position:relative;height:480px;overflow:hidden;background:var(--bg2)}
+#hero-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.65)}
+#hero-overlay{position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(7,13,26,.85) 35%,rgba(7,13,26,.2) 100%)}
+#hero-content{position:absolute;inset:0;display:flex;align-items:center;
+  padding:0 64px;max-width:700px}
+.hero-inner .floor-badge{display:inline-block;background:rgba(255,255,255,.1);
+  border:1px solid var(--a1);color:var(--a1);font-size:12px;padding:3px 14px;
+  border-radius:20px;margin-bottom:18px;letter-spacing:1px}
+.hero-inner h1{font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.2;margin-bottom:8px}
+.hero-inner .ru-name{font-size:clamp(14px,2vw,20px);color:rgba(255,255,255,.6);font-style:italic;margin-bottom:20px}
+.hero-inner .tag-row{display:flex;gap:10px;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:var(--text2);font-size:12px;padding:4px 12px;border-radius:8px}
+.tag b{color:#fff}
+.page-wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+section{padding:56px 0}
+section+section{padding-top:0}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
+.ov-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 20px;text-align:center;position:relative;overflow:hidden}
+.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--a1),var(--a2))}
+.ov-card .val{font-size:32px;font-weight:800;color:var(--a1);font-family:'Courier New',monospace}
+.ov-card .lbl{font-size:12px;color:var(--text3);margin-top:4px}
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.desc-card{background:var(--card);border-radius:14px;padding:28px;
+  border-left:4px solid var(--a1);margin-bottom:32px}
+.desc-card p{font-size:15px;color:var(--text2);line-height:1.9}
+.budget-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:40px}
+@media(max-width:600px){.budget-grid{grid-template-columns:1fr}}
+.bud-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center}
+.bud-card.total{border-color:var(--a1)}
+.bud-card .bval{font-size:24px;font-weight:800;margin-bottom:4px;font-family:'Courier New',monospace}
+.bud-card.total .bval{color:var(--a1)}
+.bud-card.reno  .bval{color:var(--gold)}
+.bud-card.equip .bval{color:var(--green)}
+.bud-card .bpct{font-size:13px;color:var(--text3);margin-top:2px}
+.bud-card .blbl{font-size:12px;color:var(--text3);margin-top:6px}
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:40px}
+@media(max-width:700px){.chart-row{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px}
+.chart-card h3{font-size:14px;color:var(--text2);margin-bottom:16px}
+.chart-wrap{position:relative;height:160px}
+.plan-img{border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:40px}
+.plan-img img{width:100%;display:block}
+.eq-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--card2);color:var(--a1);font-weight:600;padding:12px 14px;
+  text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:1px solid rgba(30,58,95,.4);color:var(--text2);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(0,212,255,.04);color:var(--text)}
+.idx{color:var(--text3);text-align:center;width:36px}
+.name-col{min-width:180px}
+.eq-name{color:var(--text);font-weight:500}
+.eq-spec{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5}
+.brand-col{color:var(--a1);white-space:nowrap}
+.num-col{text-align:center;white-space:nowrap}
+.price-col{text-align:right;font-family:monospace;white-space:nowrap}
+.total-price{color:var(--gold);font-weight:600}
+.eq-total-row td{background:var(--card2);font-weight:700;border-top:2px solid var(--border)}
+.eq-total-row .total-price{color:var(--a1);font-size:15px}
+#bottom-nav{padding:40px 0;border-top:1px solid var(--border)}
+.bottom-nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px}
+.nav-arrow{color:var(--a1);text-decoration:none;font-size:14px;
+  font-weight:600;padding:10px 20px;border:1px solid var(--border);
+  border-radius:10px;transition:all .2s;display:block}
+.nav-arrow:hover{border-color:var(--a1);background:rgba(0,212,255,.08)}
+.ru-text{display:none}
+body.ru .zh{display:none}
+body.ru .ru-text{display:revert}
+
+.drawings-section{margin-bottom:40px}
+.drawings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+.draw-img{width:100%;border-radius:12px;border:1px solid var(--border);display:block;
+  transition:transform .3s;cursor:zoom-in}
+.draw-img:hover{transform:scale(1.02)}
+.draw-caption{font-size:12px;color:var(--text3);text-align:center;margin-top:8px}
+.img-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;
+  align-items:center;justify-content:center;cursor:zoom-out}
+.img-modal.open{display:flex}
+.img-modal img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px}
+</style>
+</head>
+<body>
+<div id="topbar">
+  <a class="back" href="../index.html">← <span class="zh">返回总览</span><span class="ru-text">На главную</span></a>
+  <span class="crumb zh">三层 / <span>移动机器人</span></span>
+  <span class="crumb ru-text">3-й эт. / <span>Лаборатория мобильных роботов</span></span>
+  <button id="lang-btn" onclick="toggleLang()">РУС / 中文</button>
+</div>
+
+<section id="hero">
+  <img id="hero-img" src="../assets/images/render_mobile_robot.jpg" alt="移动机器人"
+       onerror="this.style.display='none';document.getElementById('hero').style.background='linear-gradient(135deg,#0e1829,#162340)'">
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <div class="hero-inner">
+      <div class="floor-badge">
+        <span class="zh">三层 · 第3楼</span>
+        <span class="ru-text">3-й этаж</span>
+      </div>
+      <h1 class="zh">移动机器人</h1>
+      <h1 class="ru-text">Лаборатория мобильных роботов</h1>
+      <p class="ru-name zh">Лаборатория мобильных роботов</p>
+      <p class="ru-name ru-text">移动机器人</p>
+      <div class="tag-row">
+        <span class="tag"><b class="zh">面积</b><b class="ru-text">S</b> 约80㎡</span>
+        <span class="tag zh"><b>座位</b> 20 位</span><span class="tag ru-text"><b>Мест</b> 20</span>
+        <span class="tag zh"><b>设备</b> 6 种</span>
+        <span class="tag ru-text"><b>Обор.</b> 6 поз.</span>
+        <span class="tag"><b>₸</b> 35.23M ₸</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrap">
+  <section>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="val">35.23M ₸</div>
+        <div class="lbl zh">总建设预算</div><div class="lbl ru-text">Общий бюджет</div>
+      </div>
+      <div class="ov-card"><div class="val">约80㎡</div><div class="lbl zh">建筑面积</div><div class="lbl ru-text">Площадь</div></div>
+      <div class="ov-card"><div class="val">20</div><div class="lbl zh">座位数</div><div class="lbl ru-text">Мест</div></div>
+      <div class="ov-card">
+        <div class="val">6</div>
+        <div class="lbl zh">设备种类</div><div class="lbl ru-text">Видов оборуд.</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">3F</div>
+        <div class="lbl zh">所在楼层</div><div class="lbl ru-text">Этаж</div>
+      </div>
+    </div>
+
+    <h2 class="sec-title zh">功能定位</h2>
+    <h2 class="sec-title ru-text">Назначение</h2>
+    <div class="desc-card">
+      <p class="zh">前沿移动机器人实训平台，配备宇树G1人形机器人、四足机械狗、ROS小车、六足机器人及世赛竞赛套件，覆盖ROS系统开发、自主导航与多机协同。</p>
+      <p class="ru-text">Передовая платформа мобильной робототехники: гуманоид Unitree G1, четырёхногий робот, ROS-шасси, шестиногий робот и комплект WorldSkills.</p>
+    </div>
+
+    <h2 class="sec-title zh">预算构成</h2>
+    <h2 class="sec-title ru-text">Структура бюджета</h2>
+    <div class="budget-grid">
+      <div class="bud-card total">
+        <div class="bval">35.23M ₸</div>
+        <div class="blbl zh">总建设预算</div><div class="blbl ru-text">Итого</div>
+      </div>
+      <div class="bud-card equip">
+        <div class="bval">31.59M ₸</div>
+        <div class="bpct">90%</div>
+        <div class="blbl zh">设备购置费</div><div class="blbl ru-text">Оборудование</div>
+      </div>
+      <div class="bud-card reno">
+        <div class="bval">3.64M ₸</div>
+        <div class="bpct">10%</div>
+        <div class="blbl zh">室内装修改造费</div><div class="blbl ru-text">Ремонт и отделка</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3 class="zh">预算构成可视化</h3><h3 class="ru-text">Визуализация бюджета</h3>
+        <div class="chart-wrap"><canvas id="barC"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 class="zh">装修 vs 设备</h3><h3 class="ru-text">Ремонт vs Оборуд.</h3>
+        <div class="chart-wrap"><canvas id="donutC"></canvas></div>
+      </div>
+    </div>
+
+    <h2 class="sec-title zh">楼层平面图</h2>
+    <h2 class="sec-title ru-text">План этажа</h2>
+    <div class="plan-img"><img src="../assets/images/plan_floor3_cad.jpg" alt="floor plan"></div>
+
+    
+    <h2 class="sec-title zh">室内设计图纸</h2>
+    <h2 class="sec-title ru-text">Дизайн-чертежи интерьера</h2>
+    <div class="drawings-section">
+      <div class="drawings-grid">
+    <div>
+      <img src="../assets/images/draw_mobile_robot_1.jpg" alt="移动机器人实验室立面图" class="draw-img" onclick="openModal(this.src)">
+      <p class="draw-caption zh">移动机器人实验室立面图 — 立面图 A</p><p class="draw-caption ru-text">Чертежи лаборатории мобильных роботов — Чертёж A</p>
+    </div>
+    <div>
+      <img src="../assets/images/draw_mobile_robot_2.jpg" alt="移动机器人实验室立面图" class="draw-img" onclick="openModal(this.src)">
+      <p class="draw-caption zh">移动机器人实验室立面图 — 立面图 B</p><p class="draw-caption ru-text">Чертежи лаборатории мобильных роботов — Чертёж B</p>
+    </div>
+      </div>
+    </div>
+<h2 class="sec-title zh">完整设备清单</h2>
+    <h2 class="sec-title ru-text">Полный перечень оборудования</h2>
+    <div class="eq-table-wrap">
+      <table>
+        <thead><tr>
+          <th class="idx">#</th>
+          <th class="zh">设备名称</th><th class="ru-text">Наименование</th>
+          <th class="zh">品牌</th><th class="ru-text">Бренд</th>
+          <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+          <th class="zh">单价(₸)</th><th class="ru-text">Цена/ед.(₸)</th>
+          <th class="zh">合计(₸)</th><th class="ru-text">Итого(₸)</th>
+        </tr></thead>
+        <tbody>
+                  <tr>
+          <td class="idx">1</td>
+          <td class="name-col">
+            <div class="eq-name zh">2026 上海世賽套件</div><div class="eq-name ru-text">Форма чемпионата мира 2026 года в Шанхае</div>
+            <div class="eq-spec zh">IR红外测距传感器2个、IR传感器支架2个、超声波传感器支架2个、蓝色扎带100根1包、12V 3000mAh NiMH电池2个、电池充电器1个、高电流电源分配板1个、机器人工具箱2个、USB/Bluetooth遥控器1个、LED灯塔1个、…</div><div class="eq-spec ru-text">2 ИК-датчика дальности, 2 кронштейна для ИК-датчика, 2 кронштейна для ультразвукового датчика, 100 синих кабельных стяжек в упаковке, 2 NiMH-аккумулятора 12 В, 3000 мАч, 1 зарядное устройство, 1 сильноточный распределительный щит, 2 ящика для инструментов для роботов, 1 пульт дистанционного управления USB/Bluetooth, 1 светодиодный маяк,…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">12.60M ₸</td>
+          <td class="price-col total-price">12.60M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">2</td>
+          <td class="name-col">
+            <div class="eq-name zh">宇树 G1 EDU</div><div class="eq-name ru-text">Юшу G1 EDU</div>
+            <div class="eq-spec zh">产品型号：Unitree/宇树 G1 EDU 人形机器人；站立尺寸 1320×450×200mm，折叠尺寸 690×450×300mm，带电池重量约 35kg+；总自由度 23-43，自由度配置含单腿 6、单臂 5、腰部 1+可选 2、单手…</div><div class="eq-spec ru-text">Модель продукта: робот-гуманоид Unitree/Yushu G1 EDU; размер стоя 1320×450×200 мм, размер в сложенном виде 690×450×300 мм, вес с аккумулятором около 35 кг+; общее количество степеней свободы 23-43, конфигурация степеней свободы включает 6 отдельных ног, 5 отдельных рук, 1 пояс, опционально 2. Одна рука…</div>
+          </td>
+          <td class="brand-col">Unitree 宇树</td>
+          <td class="num-col">1</td>
+          <td class="price-col">17.29M ₸</td>
+          <td class="price-col total-price">17.29M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">3</td>
+          <td class="name-col">
+            <div class="eq-name zh">ROS智能小车</div><div class="eq-name ru-text">РОС умная машина</div>
+            <div class="eq-spec zh">ROS 智能小车教学套件，支持不低于四种运动模态切换（麦克纳姆轮全向移动、差速、阿克曼等），搭载高性能传感器，含 SLAM 建图导航功能，适配 AI 与机器人教育及行业需求。
+
+★关键参数（不低于以下标准）：
+- 主控平台：具备 ROS2 …</div><div class="eq-spec ru-text">Учебный комплект для интеллектуального автомобиля ROS поддерживает переключение не менее четырех режимов движения (всенаправленное движение колеса Mecanum, дифференциал, Аккерман и т. д.), оснащен высокопроизводительными датчиками и включает в себя функции картографирования и навигации SLAM, адаптируясь к образованию в области искусственного интеллекта и робототехники и отраслевым потребностям.
+
+★Основные параметры (не ниже следующих стандартов):
+- Основная платформа управления: оснащена ROS2…</div>
+          </td>
+          <td class="brand-col">亚博智能Ros2</td>
+          <td class="num-col">1</td>
+          <td class="price-col">254,800 ₸</td>
+          <td class="price-col total-price">254,800 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">4</td>
+          <td class="name-col">
+            <div class="eq-name zh">四足机械狗</div><div class="eq-name ru-text">Четырехлапая механическая собака</div>
+            <div class="eq-spec zh">产品名称：AI四足机械狗
+控制核心：树莓派5（Raspberry Pi 5）或同等性能计算平台
+运动结构：四足仿生结构，高扭矩伺服电机，多自由度运动控制
+视觉系统：AI视觉摄像头，支持目标识别、图像处理与视觉导航
+AI能力：支持本地AI模型…</div><div class="eq-spec ru-text">Название продукта: Четвероногая механическая собака AI
+Ядро управления: Raspberry Pi 5 или эквивалентная вычислительная платформа.
+Структура движения: четвероногие бионические структуры, серводвигатель с высоким крутящим моментом, управление движением с несколькими степенями свободы.
+Система технического зрения: камера искусственного интеллекта, поддерживающая распознавание целей, обработку изображений и визуальную навигацию.
+Возможности искусственного интеллекта: поддержка локальных моделей искусственного интеллекта…</div>
+          </td>
+          <td class="brand-col">亚博智能4足狗</td>
+          <td class="num-col">1</td>
+          <td class="price-col">333,200 ₸</td>
+          <td class="price-col total-price">333,200 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">5</td>
+          <td class="name-col">
+            <div class="eq-name zh">机械臂</div><div class="eq-name ru-text">Роботизированная рука</div>
+            <div class="eq-spec zh">产品名称：ROS2智能SLAM导航机器人小车（Jetson版）
+计算平台：NVIDIA Jetson Orin Nano Super 8GB
+控制系统：支持ROS2机器人操作系统
+运动结构：差速轮式移动平台，集成多自由度机械臂
+感知系统：激…</div><div class="eq-spec ru-text">Название продукта: Интеллектуальный навигационный робот-автомобиль ROS2 SLAM (версия Jetson)
+Вычислительная платформа: NVIDIA Jetson Orin Nano Super 8 ГБ
+Система управления: поддерживает операционную систему робота ROS2.
+Кинематическая структура: мобильная платформа с дифференциальными колесами, интегрированная роботизированная рука с несколькими степенями свободы.
+Система восприятия: захватывающая…</div>
+          </td>
+          <td class="brand-col">亚博智能Ros2机械臂</td>
+          <td class="num-col">1</td>
+          <td class="price-col">724,318 ₸</td>
+          <td class="price-col total-price">724,318 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">6</td>
+          <td class="name-col">
+            <div class="eq-name zh">六足机器人</div><div class="eq-name ru-text">Шестиногий робот</div>
+            <div class="eq-spec zh">产品名称：ROS2六足仿生机器人（SLAM导航版）
+控制平台：支持树莓派5（本配置不含主板）
+运动结构：六足仿生结构，约18自由度舵机驱动，支持多步态运动控制
+感知系统：A1激光雷达，支持SLAM建图、环境感知与自主导航
+视觉系统：AI视觉…</div><div class="eq-spec ru-text">Название продукта: шестиногий бионический робот ROS2 (навигационная версия SLAM)
+Платформа управления: поддерживает Raspberry Pi 5 (в эту конфигурацию не входит материнская плата)
+Структура движения: бионическая структура с шестью ногами, сервопривод примерно с 18 степенями свободы, поддерживающий управление движением с несколькими походками.
+Система восприятия: лидар А1, поддерживающий картографирование SLAM, восприятие окружающей среды и автономную навигацию.
+Система технического зрения: видение искусственного интеллекта…</div>
+          </td>
+          <td class="brand-col">亚博智能Ros2 六足仿生</td>
+          <td class="num-col">1</td>
+          <td class="price-col">392,000 ₸</td>
+          <td class="price-col total-price">392,000 ₸</td>
+        </tr>
+          <tr class="eq-total-row">
+            <td colspan="5" class="zh" style="color:var(--text2)">设备合计</td>
+            <td colspan="5" class="ru-text" style="color:var(--text2)">Итого по оборудованию</td>
+            <td class="total-price price-col">31.59M ₸</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="nav-arrow prev" href="drone.html">← <span class="zh">无人航空</span><span class="ru-text">Центр беспилотной авиации</span></a>
+    <a class="nav-arrow" href="../index.html" style="text-align:center">
+      <span class="zh">🏠 返回总览</span><span class="ru-text">🏠 На главную</span>
+    </a>
+    <a class="nav-arrow next" href="industrial_robot.html"><span class="zh">工业机器人</span><span class="ru-text">Промышленная робототехника</span> →</a>
+  </div>
+</div>
+
+<script>
+let lang='zh';
+
+function openModal(src){
+  document.getElementById('modalImg').src = src;
+  document.getElementById('imgModal').classList.add('open');
+}
+
+function toggleLang(){
+  lang=lang==='zh'?'ru':'zh';
+  document.body.classList.toggle('ru',lang==='ru');
+  document.getElementById('lang-btn').textContent=lang==='zh'?'РУС / 中文':'中文 / РУС';
+  if(window.barChart){
+    window.barChart.data.labels=lang==='ru'?['Оборудование','Ремонт']:['设备费','装修费'];
+    window.barChart.update();
+  }
+}
+window.barChart=new Chart(document.getElementById('barC'),{
+  type:'bar',
+  data:{labels: document.body.classList.contains('ru') ? ['Оборудование','Ремонт'] : ['设备费','装修费'],
+    datasets:[
+      {label:'设备 / Оборудование',data:[31.59,0],backgroundColor:'#10b981',borderRadius:6},
+      {label:'装修 / Ремонт',data:[0,3.64],backgroundColor:'#f0a500',borderRadius:6},
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#94a3b8',font:{size:12}}},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label.split('/')[0].trim()}: ${c.parsed.y.toFixed(2)}M ₸`}}},
+    scales:{x:{grid:{display:false},ticks:{color:'#94a3b8'}},
+      y:{grid:{color:'rgba(30,58,95,.4)'},ticks:{color:'#64748b',callback:v=>v+'M'}}}}
+});
+new Chart(document.getElementById('donutC'),{
+  type:'doughnut',
+  data:{labels:['设备 / Оборудование','装修 / Ремонт'],
+    datasets:[{data:[90,10],backgroundColor:['#10b981','#f0a500'],borderWidth:0,hoverOffset:6}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+    plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:12}}}}}
+});
+</script>
+</body>
+</html>

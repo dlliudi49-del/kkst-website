@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>人工智能 · KKST 建设方案</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#070d1a;--bg2:#0e1829;--card:#111e33;--card2:#162340;
+  --border:#1e3a5f;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --a1:#00d4ff;--a2:#0090cc;--gold:#f0a500;--green:#10b981;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.6}
+body.ru{font-family:'Segoe UI','Arial',sans-serif}
+#topbar{position:sticky;top:0;z-index:100;background:rgba(7,13,26,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;gap:16px}
+#topbar .back{color:var(--a1);text-decoration:none;font-size:13px;
+  font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap}
+#topbar .back:hover{opacity:.8}
+#topbar .crumb{font-size:13px;color:var(--text3)}
+#topbar .crumb span{color:var(--text2)}
+#lang-btn{background:var(--card2);border:1px solid var(--border);
+  color:var(--text);padding:5px 14px;border-radius:20px;cursor:pointer;
+  font-size:13px;white-space:nowrap;transition:all .2s}
+#lang-btn:hover{border-color:var(--a1);color:var(--a1)}
+#hero{position:relative;height:480px;overflow:hidden;background:var(--bg2)}
+#hero-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.65)}
+#hero-overlay{position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(7,13,26,.85) 35%,rgba(7,13,26,.2) 100%)}
+#hero-content{position:absolute;inset:0;display:flex;align-items:center;
+  padding:0 64px;max-width:700px}
+.hero-inner .floor-badge{display:inline-block;background:rgba(255,255,255,.1);
+  border:1px solid var(--a1);color:var(--a1);font-size:12px;padding:3px 14px;
+  border-radius:20px;margin-bottom:18px;letter-spacing:1px}
+.hero-inner h1{font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.2;margin-bottom:8px}
+.hero-inner .ru-name{font-size:clamp(14px,2vw,20px);color:rgba(255,255,255,.6);font-style:italic;margin-bottom:20px}
+.hero-inner .tag-row{display:flex;gap:10px;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:var(--text2);font-size:12px;padding:4px 12px;border-radius:8px}
+.tag b{color:#fff}
+.page-wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+section{padding:56px 0}
+section+section{padding-top:0}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
+.ov-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 20px;text-align:center;position:relative;overflow:hidden}
+.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--a1),var(--a2))}
+.ov-card .val{font-size:32px;font-weight:800;color:var(--a1);font-family:'Courier New',monospace}
+.ov-card .lbl{font-size:12px;color:var(--text3);margin-top:4px}
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.desc-card{background:var(--card);border-radius:14px;padding:28px;
+  border-left:4px solid var(--a1);margin-bottom:32px}
+.desc-card p{font-size:15px;color:var(--text2);line-height:1.9}
+.budget-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:40px}
+@media(max-width:600px){.budget-grid{grid-template-columns:1fr}}
+.bud-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center}
+.bud-card.total{border-color:var(--a1)}
+.bud-card .bval{font-size:24px;font-weight:800;margin-bottom:4px;font-family:'Courier New',monospace}
+.bud-card.total .bval{color:var(--a1)}
+.bud-card.reno  .bval{color:var(--gold)}
+.bud-card.equip .bval{color:var(--green)}
+.bud-card .bpct{font-size:13px;color:var(--text3);margin-top:2px}
+.bud-card .blbl{font-size:12px;color:var(--text3);margin-top:6px}
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:40px}
+@media(max-width:700px){.chart-row{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px}
+.chart-card h3{font-size:14px;color:var(--text2);margin-bottom:16px}
+.chart-wrap{position:relative;height:160px}
+.plan-img{border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:40px}
+.plan-img img{width:100%;display:block}
+.eq-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--card2);color:var(--a1);font-weight:600;padding:12px 14px;
+  text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:1px solid rgba(30,58,95,.4);color:var(--text2);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(0,212,255,.04);color:var(--text)}
+.idx{color:var(--text3);text-align:center;width:36px}
+.name-col{min-width:180px}
+.eq-name{color:var(--text);font-weight:500}
+.eq-spec{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5}
+.brand-col{color:var(--a1);white-space:nowrap}
+.num-col{text-align:center;white-space:nowrap}
+.price-col{text-align:right;font-family:monospace;white-space:nowrap}
+.total-price{color:var(--gold);font-weight:600}
+.eq-total-row td{background:var(--card2);font-weight:700;border-top:2px solid var(--border)}
+.eq-total-row .total-price{color:var(--a1);font-size:15px}
+#bottom-nav{padding:40px 0;border-top:1px solid var(--border)}
+.bottom-nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px}
+.nav-arrow{color:var(--a1);text-decoration:none;font-size:14px;
+  font-weight:600;padding:10px 20px;border:1px solid var(--border);
+  border-radius:10px;transition:all .2s;display:block}
+.nav-arrow:hover{border-color:var(--a1);background:rgba(0,212,255,.08)}
+.ru-text{display:none}
+body.ru .zh{display:none}
+body.ru .ru-text{display:revert}
+
+.drawings-section{margin-bottom:40px}
+.drawings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+.draw-img{width:100%;border-radius:12px;border:1px solid var(--border);display:block;
+  transition:transform .3s;cursor:zoom-in}
+.draw-img:hover{transform:scale(1.02)}
+.draw-caption{font-size:12px;color:var(--text3);text-align:center;margin-top:8px}
+.img-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;
+  align-items:center;justify-content:center;cursor:zoom-out}
+.img-modal.open{display:flex}
+.img-modal img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px}
+</style>
+</head>
+<body>
+<div id="topbar">
+  <a class="back" href="../index.html">← <span class="zh">返回总览</span><span class="ru-text">На главную</span></a>
+  <span class="crumb zh">四层 / <span>人工智能</span></span>
+  <span class="crumb ru-text">4-й эт. / <span>Центр искусственного интеллекта</span></span>
+  <button id="lang-btn" onclick="toggleLang()">РУС / 中文</button>
+</div>
+
+<section id="hero">
+  <img id="hero-img" src="../assets/images/render_ai.jpg" alt="人工智能"
+       onerror="this.style.display='none';document.getElementById('hero').style.background='linear-gradient(135deg,#0e1829,#162340)'">
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <div class="hero-inner">
+      <div class="floor-badge">
+        <span class="zh">四层 · 第4楼</span>
+        <span class="ru-text">4-й этаж</span>
+      </div>
+      <h1 class="zh">人工智能</h1>
+      <h1 class="ru-text">Центр искусственного интеллекта</h1>
+      <p class="ru-name zh">Центр искусственного интеллекта</p>
+      <p class="ru-name ru-text">人工智能</p>
+      <div class="tag-row">
+        <span class="tag"><b class="zh">面积</b><b class="ru-text">S</b> 72.7㎡</span>
+        <span class="tag zh"><b>座位</b> 20 位</span><span class="tag ru-text"><b>Мест</b> 20</span>
+        <span class="tag zh"><b>设备</b> 11 种</span>
+        <span class="tag ru-text"><b>Обор.</b> 11 поз.</span>
+        <span class="tag"><b>₸</b> 58.68M ₸</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrap">
+  <section>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="val">58.68M ₸</div>
+        <div class="lbl zh">总建设预算</div><div class="lbl ru-text">Общий бюджет</div>
+      </div>
+      <div class="ov-card"><div class="val">72.7㎡</div><div class="lbl zh">建筑面积</div><div class="lbl ru-text">Площадь</div></div>
+      <div class="ov-card"><div class="val">20</div><div class="lbl zh">座位数</div><div class="lbl ru-text">Мест</div></div>
+      <div class="ov-card">
+        <div class="val">11</div>
+        <div class="lbl zh">设备种类</div><div class="lbl ru-text">Видов оборуд.</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">4F</div>
+        <div class="lbl zh">所在楼层</div><div class="lbl ru-text">Этаж</div>
+      </div>
+    </div>
+
+    <h2 class="sec-title zh">功能定位</h2>
+    <h2 class="sec-title ru-text">Назначение</h2>
+    <div class="desc-card">
+      <p class="zh">投资最大的核心实训室，配备AI教学服务器（双路48核）、大数据管理平台、VR/AR可视化套装（Pico4+HoloLens+Apple Vision Pro）及自动驾驶小车，覆盖机器学习全链路实训。</p>
+      <p class="ru-text">Ключевая лаборатория с наибольшим бюджетом: AI-сервер (двух 48-ядерный), платформа big data, VR/AR (Pico4+HoloLens+Apple Vision Pro) и автономные автомобили.</p>
+    </div>
+
+    <h2 class="sec-title zh">预算构成</h2>
+    <h2 class="sec-title ru-text">Структура бюджета</h2>
+    <div class="budget-grid">
+      <div class="bud-card total">
+        <div class="bval">58.68M ₸</div>
+        <div class="blbl zh">总建设预算</div><div class="blbl ru-text">Итого</div>
+      </div>
+      <div class="bud-card equip">
+        <div class="bval">51.81M ₸</div>
+        <div class="bpct">88%</div>
+        <div class="blbl zh">设备购置费</div><div class="blbl ru-text">Оборудование</div>
+      </div>
+      <div class="bud-card reno">
+        <div class="bval">6.87M ₸</div>
+        <div class="bpct">12%</div>
+        <div class="blbl zh">室内装修改造费</div><div class="blbl ru-text">Ремонт и отделка</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3 class="zh">预算构成可视化</h3><h3 class="ru-text">Визуализация бюджета</h3>
+        <div class="chart-wrap"><canvas id="barC"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 class="zh">装修 vs 设备</h3><h3 class="ru-text">Ремонт vs Оборуд.</h3>
+        <div class="chart-wrap"><canvas id="donutC"></canvas></div>
+      </div>
+    </div>
+
+    <h2 class="sec-title zh">楼层平面图</h2>
+    <h2 class="sec-title ru-text">План этажа</h2>
+    <div class="plan-img"><img src="../assets/images/plan_floor4_cad.jpg" alt="floor plan"></div>
+
+    <h2 class="sec-title zh">完整设备清单</h2>
+    <h2 class="sec-title ru-text">Полный перечень оборудования</h2>
+    <div class="eq-table-wrap">
+      <table>
+        <thead><tr>
+          <th class="idx">#</th>
+          <th class="zh">设备名称</th><th class="ru-text">Наименование</th>
+          <th class="zh">品牌</th><th class="ru-text">Бренд</th>
+          <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+          <th class="zh">单价(₸)</th><th class="ru-text">Цена/ед.(₸)</th>
+          <th class="zh">合计(₸)</th><th class="ru-text">Итого(₸)</th>
+        </tr></thead>
+        <tbody>
+                  <tr>
+          <td class="idx">1</td>
+          <td class="name-col">
+            <div class="eq-name zh">AI 教学专用存储服务器</div><div class="eq-name ru-text">Выделенный сервер хранения данных для обучения искусственному интеллекту</div>
+            <div class="eq-spec zh">配置：2U 机架式服务器，CPU 不低于 Intel Xeon 银牌 24 核（双路共 48 核），内存不低于 DDR4 256GB，存储不低于 2×480GB SSD（系统盘）+ 2×4TB SATA HDD（数据盘）；网络：不低于 千兆…</div><div class="eq-spec ru-text">Конфигурация: сервер высотой 2U, ЦП не менее 24 ядер Intel Xeon Silver (всего 48 ядер в двухканальном режиме), память не менее 256 ГБ DDR4, хранилище не менее 2 твердотельных накопителей по 480 ГБ (системный диск) + 2 жестких диска SATA по 4 ТБ (диск данных); сеть: не менее Гигабитной…</div>
+          </td>
+          <td class="brand-col">Dell poweredge T560</td>
+          <td class="num-col">1</td>
+          <td class="price-col">6.39M ₸</td>
+          <td class="price-col total-price">6.39M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">2</td>
+          <td class="name-col">
+            <div class="eq-name zh">AI 数据管理教学平台</div><div class="eq-name ru-text">Платформа обучения управлению данными искусственного интеллекта</div>
+            <div class="eq-spec zh">核心功能：① 数据集管理（分类 / 标注 / 版本控制，支持图片、文本、视频格式）；② 数据预处理（清洗 / 脱敏 / 格式转换）；③ 模型训练数据分发；④ 可视化报表（数据集分布、训练进度展示）；兼容性：适配主流 AI 框架，支持 100…</div><div class="eq-spec ru-text">Основные функции: ① Управление наборами данных (классификация/аннотации/контроль версий, поддержка форматов изображений, текста и видео); ② Предварительная обработка данных (очистка/десенсибилизация/преобразование формата); ③ Распределение данных обучения модели; ④ Визуальные отчеты (распределение набора данных, отображение прогресса обучения); Совместимость: адаптируется к основным платформам искусственного интеллекта, поддерживает 100…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">7.84M ₸</td>
+          <td class="price-col total-price">7.84M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">3</td>
+          <td class="name-col">
+            <div class="eq-name zh">AI 虚拟仿真教学套装</div><div class="eq-name ru-text">Пакет обучения виртуальному моделированию искусственного интеллекта</div>
+            <div class="eq-spec zh">1. VR 设备：Pico 4（8GB+128GB，双眼 4K 分辨率，90Hz 刷新率，续航 2.5 小时）×4 套；>2. AR 设备：Microsoft HoloLens 2或Apple vision pro或Meagic leap（…</div><div class="eq-spec ru-text">1. Устройство VR: Pico 4 (8 ГБ+128 ГБ, разрешение 4K для обоих глаз, частота обновления 90 Гц, время автономной работы 2,5 часа) × 4 комплекта; >2. Устройство дополненной реальности: Microsoft HoloLens 2, Apple Vision Pro или Meagic jump (…</div>
+          </td>
+          <td class="brand-col">Pico *4+ Hololens*1+Apple vision pro *1</td>
+          <td class="num-col">1</td>
+          <td class="price-col">9.41M ₸</td>
+          <td class="price-col total-price">9.41M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">4</td>
+          <td class="name-col">
+            <div class="eq-name zh">机器人视觉检测综合实验平台</div><div class="eq-name ru-text">Комплексная экспериментальная платформа для визуального контроля роботов</div>
+            <div class="eq-spec zh">产品以 AI 核心开发板、高精度的视觉系统和高灵活度的六轴机器人为核心组件， 致力于帮助学生深入理解并实践机器视觉识别、定位、检测、抓取等关键技术。
+1.平台配置40TOPS算力AI核心开发板，搭载工业级机器视觉套件、六轴机械臂及传送装置等…</div><div class="eq-spec ru-text">В качестве основных компонентов в продукте используется плата разработки ядра искусственного интеллекта, высокоточная система машинного зрения и очень гибкий шестиосевой робот. Цель продукта – помочь студентам глубоко понять и применить на практике ключевые технологии, такие как распознавание машинного зрения, позиционирование, обнаружение и захват.
+1. Платформа оснащена платой разработки ядра искусственного интеллекта с вычислительной мощностью 40TOPS, оснащенной комплектами машинного зрения промышленного уровня, шестиосными роботизированными манипуляторами, передающими устройствами и т. д.</div>
+          </td>
+          <td class="brand-col">Newland</td>
+          <td class="num-col">1</td>
+          <td class="price-col">5.40M ₸</td>
+          <td class="price-col total-price">5.40M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">5</td>
+          <td class="name-col">
+            <div class="eq-name zh">AROS自动驾驶小车综合实验平台（机械臂版）</div><div class="eq-name ru-text">Комплексная экспериментальная платформа AROS для автомобилей с автономным управлением (версия с роботизированной рукой)</div>
+            <div class="eq-spec zh">是一款融合ROS系统应用开发、运动规划控制及人工智能深度学习等核心技术的智能小车教学平台。套件搭载NVIDIA Jeston orin Nano、激光雷达、深度相机等高性能传感器配置。可在配套的专业沙盘中快速建立多场景教学和测试，实现精确的…</div><div class="eq-spec ru-text">Это интеллектуальная платформа для обучения автомобилей, которая объединяет основные технологии, такие как разработка приложений системы ROS, управление планированием движения и глубокое обучение искусственного интеллекта. Комплект оснащен высокопроизводительными конфигурациями датчиков, такими как NVIDIA Jeston или Nano, лидаром и камерами глубины. Многосценарное обучение и тестирование можно быстро организовать в поддерживающей профессиональной «песочнице» для достижения точных результатов...</div>
+          </td>
+          <td class="brand-col">Newland</td>
+          <td class="num-col">1</td>
+          <td class="price-col">2.88M ₸</td>
+          <td class="price-col total-price">2.88M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">6</td>
+          <td class="name-col">
+            <div class="eq-name zh">人工智能前端设备应用实训平台</div><div class="eq-name ru-text">Платформа для обучения применению внешнего оборудования искусственного интеллекта</div>
+            <div class="eq-spec zh">是一款融合ROS系统应用开发、运动规划控制及人工智能深度学习等核心技术的智能小车教学平台。套件搭载NVIDIA Jetson Orin Nano、激光雷达、深度相机等高性能传感器配置。可在配套的专业沙盘中快速建立多场景教学和测试，实现精确的…</div><div class="eq-spec ru-text">Это интеллектуальная платформа для обучения автомобилей, которая объединяет основные технологии, такие как разработка приложений системы ROS, управление планированием движения и глубокое обучение искусственного интеллекта. Комплект оснащен высокопроизводительными конфигурациями датчиков, такими как NVIDIA Jetson Orin Nano, лидар и камеры глубины. Многосценарное обучение и тестирование можно быстро организовать в поддерживающей профессиональной «песочнице» для достижения точных результатов...</div>
+          </td>
+          <td class="brand-col">Newland</td>
+          <td class="num-col">1</td>
+          <td class="price-col">3.16M ₸</td>
+          <td class="price-col total-price">3.16M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">7</td>
+          <td class="name-col">
+            <div class="eq-name zh">86 寸纳米触控智慧黑板</div><div class="eq-name ru-text">Умная доска с экраном Nano Touch 86 дюймов</div>
+            <div class="eq-spec zh">4K 分辨率 (3840×2160)，20 点触控，安卓 11.0+Windows 双系统，内置教学白板软件，支持 4K 投屏 / 分屏，防蓝光护眼认证，带推拉绿板。
+
+★关键参数（不低于以下标准）：
+- 屏幕尺寸：不低于 86 寸
+- 分…</div><div class="eq-spec ru-text">Разрешение 4K (3840×2160), 20-точечное касание, двойная система Android 11.0+Windows, встроенное программное обеспечение для обучающей доски, поддержка проецирования экрана 4K/разделенного экрана, сертификация защиты глаз от синего света, выдвижная зеленая доска.
+
+★Основные параметры (не ниже следующих стандартов):
+-Размер экрана: не менее 86 дюймов
+- баллы…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">1.27M ₸</td>
+          <td class="price-col total-price">1.27M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">8</td>
+          <td class="name-col">
+            <div class="eq-name">Лазерный 3D-сканер на базе LiDAR (пром. уровня)</div>
+            <div class="eq-spec zh">参数项	典型值 / 规格	说明
+扫描技术	蓝光高速高精度扫描	抗环境光干扰能力强，适合扫描黑色/反光件
+扫描模式	手持式 + 无线版（可选）	无线版摆脱线缆束缚，移动更方便
+单帧精度	最高 0.02 mm	满足工业逆向设计、检测需求
+体积精…</div><div class="eq-spec ru-text">Параметр Типичное значение/Спецификация Описание
+Технология сканирования: высокоскоростное и высокоточное сканирование синим светом, высокая устойчивость к помехам окружающего света, подходит для сканирования черных/отражающих деталей.
+Режим сканирования: портативная + беспроводная версия (опция). Беспроводная версия избавляется от ограничений, связанных с кабелями, и ее удобнее перемещать.
+Точность единичного кадра до 0,02 мм, отвечающая требованиям промышленного обратного проектирования и обнаружения.
+Громкость хорошая…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">1.68M ₸</td>
+          <td class="price-col total-price">1.68M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">9</td>
+          <td class="name-col">
+            <div class="eq-name">Haptic-костюм полного погружения</div>
+            <div class="eq-spec zh">设备类型为穿戴式VR触觉反馈系统，包含触觉反馈背心及触觉反馈手套；采用ERM偏心振动电机触觉反馈技术；整体触觉反馈点数量不少于40个，其中背心部分支持胸部、背部区域触觉反馈，手套部分支持手部及手指区域触觉反馈；系统反馈延迟≤20ms，支持多…</div><div class="eq-spec ru-text">Тип устройства представляет собой носимую систему тактильной обратной связи VR, включающую жилет с тактильной обратной связью и перчатки с тактильной обратной связью; использование технологии тактильной обратной связи эксцентрикового вибрационного двигателя ERM; общее количество точек тактильной обратной связи – не менее 40, из них жилетная часть поддерживает тактильную обратную связь в области груди и спины, а перчаточная часть поддерживает тактильную обратную связь в области рук и пальцев; задержка обратной связи системы составляет ≤20 мс, поддерживает несколько...</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">840,000 ₸</td>
+          <td class="price-col total-price">840,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">10</td>
+          <td class="name-col">
+            <div class="eq-name">Мобильный кластер ИИ-вычислений</div>
+            <div class="eq-spec zh">核心项 指标要求
+AI算力 提供至少 2000 TFLOPS（FP8精度）或等效的INT8/FP16算力。
+GPU架构 NVIDIA Blackwell 架构，配备 新一代Tensor Cores 及 Transformer Engine。…</div><div class="eq-spec ru-text">Требования к индикаторам основного элемента
+Вычислительная мощность ИИ обеспечивает не менее 2000 терафлопс (точность FP8) или эквивалентную вычислительную мощность INT8/FP16.
+Архитектура графического процессора Архитектура NVIDIA Blackwell, оснащенная тензорными ядрами нового поколения и Transformer Engine. …</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">4</td>
+          <td class="price-col">3.23M ₸</td>
+          <td class="price-col total-price">12.94M ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">11</td>
+          <td class="name-col">
+            <div class="eq-name">Лицензия на AI-Worldbuilder (Enterprise):NVIDIA Omniverse</div>
+            <div class="eq-spec">Пакет ПО для процедурной генерации 3D-миров по текстовому описанию (Text-to-3D-Scene). Поддержка экспорта в USDZ (Apple)…</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">0</td>
+          <td class="price-col">—</td>
+          <td class="price-col total-price">—</td>
+        </tr>
+          <tr class="eq-total-row">
+            <td colspan="5" class="zh" style="color:var(--text2)">设备合计</td>
+            <td colspan="5" class="ru-text" style="color:var(--text2)">Итого по оборудованию</td>
+            <td class="total-price price-col">51.81M ₸</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="nav-arrow prev" href="industrial_robot.html">← <span class="zh">工业机器人</span><span class="ru-text">Промышленная робототехника</span></a>
+    <a class="nav-arrow" href="../index.html" style="text-align:center">
+      <span class="zh">🏠 返回总览</span><span class="ru-text">🏠 На главную</span>
+    </a>
+    <a class="nav-arrow next" href="prototype.html"><span class="zh">原型制作</span><span class="ru-text">Центр прототипирования</span> →</a>
+  </div>
+</div>
+
+<script>
+let lang='zh';
+
+function openModal(src){
+  document.getElementById('modalImg').src = src;
+  document.getElementById('imgModal').classList.add('open');
+}
+
+function toggleLang(){
+  lang=lang==='zh'?'ru':'zh';
+  document.body.classList.toggle('ru',lang==='ru');
+  document.getElementById('lang-btn').textContent=lang==='zh'?'РУС / 中文':'中文 / РУС';
+  if(window.barChart){
+    window.barChart.data.labels=lang==='ru'?['Оборудование','Ремонт']:['设备费','装修费'];
+    window.barChart.update();
+  }
+}
+window.barChart=new Chart(document.getElementById('barC'),{
+  type:'bar',
+  data:{labels: document.body.classList.contains('ru') ? ['Оборудование','Ремонт'] : ['设备费','装修费'],
+    datasets:[
+      {label:'设备 / Оборудование',data:[51.81,0],backgroundColor:'#10b981',borderRadius:6},
+      {label:'装修 / Ремонт',data:[0,6.87],backgroundColor:'#f0a500',borderRadius:6},
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#94a3b8',font:{size:12}}},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label.split('/')[0].trim()}: ${c.parsed.y.toFixed(2)}M ₸`}}},
+    scales:{x:{grid:{display:false},ticks:{color:'#94a3b8'}},
+      y:{grid:{color:'rgba(30,58,95,.4)'},ticks:{color:'#64748b',callback:v=>v+'M'}}}}
+});
+new Chart(document.getElementById('donutC'),{
+  type:'doughnut',
+  data:{labels:['设备 / Оборудование','装修 / Ремонт'],
+    datasets:[{data:[88,12],backgroundColor:['#10b981','#f0a500'],borderWidth:0,hoverOffset:6}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+    plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:12}}}}}
+});
+</script>
+</body>
+</html>
