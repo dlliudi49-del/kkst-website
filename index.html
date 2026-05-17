@@ -323,6 +323,7 @@ body.ru .ru-text{display:inherit}
 <script>
 // ── LANG TOGGLE ─────────────────────────────────
 const INFRA_TOTAL_KZT = 108986282;
+const FACADE_TOTAL_KZT = 100000000;
 let lang = 'zh';
 function toggleLang() {
   lang = lang === 'zh' ? 'ru' : 'zh';
@@ -381,7 +382,7 @@ function renderStats() {
   const items = [
     { num: s.labs_count, zh: '个实训室', ru: 'Лабораторий' },
     { num: s.floors, zh: '层楼', ru: 'Этажей' },
-    { num: fmtM(s.total_kzt + INFRA_TOTAL_KZT), zh: '总投资预算', ru: 'Общий бюджет' },
+    { num: fmtM(s.total_kzt + INFRA_TOTAL_KZT + FACADE_TOTAL_KZT), zh: '总投资预算', ru: 'Общий бюджет' },
     { num: '4', zh: '基础设施子系统', ru: 'Подсистемы' },
   ];
   document.getElementById('stats-row').innerHTML = items.map(i => `
@@ -414,6 +415,10 @@ function renderFloors() {
     `<button class="floor-tab infra-tab" onclick="switchFloor('infra')" id="tab-infra">
       <span class="zh">⚡ 基础设施</span>
       <span class="ru-text">⚡ Инфраструктура</span>
+    </button>
+    <button class="floor-tab facade-tab" onclick="switchFloor('facade')" id="tab-facade">
+      <span class="zh">🏢 外立面</span>
+      <span class="ru-text">🏢 Фасад</span>
     </button>`;
 
   // Panels
@@ -469,6 +474,46 @@ function renderFloors() {
           <a class="detail-link" href="labs/infrastructure.html" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff">
             <span class="zh">查看基础设施方案 →</span>
             <span class="ru-text">Просмотр инфраструктуры →</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="floor-section" id="floor-facade">
+    <div class="floor-header" style="border-left-color:#00d4ff">
+      <div class="floor-badge" style="background:#00d4ff;font-size:22px;width:52px;height:52px">🏢</div>
+      <div>
+        <h3 class="zh">建筑外立面装修方案</h3>
+        <h3 class="ru-text">Фасадные отделочные работы</h3>
+        <p class="zh">建筑外立面整体翻新 · 干挂铝板 + 玻璃幕墙 + 节能门窗 + 立面照明 · 总展开面积 ~1,706 ㎡</p>
+        <p class="ru-text">Комплексная реновация фасада · алюминий + стекло + энергоокна + подсветка · ~1 706 м²</p>
+      </div>
+    </div>
+    <div class="labs-grid" style="grid-template-columns:1fr">
+      <div class="lab-card" style="display:flex;flex-direction:row" id="card-facade">
+        <div class="lab-card-img" style="width:320px;min-width:280px;flex-shrink:0">
+          <img src="assets/images/render_facade_day.jpg" alt="外立面装修方案" loading="lazy"
+               onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#0e1829,#162340)'">
+          <span class="lab-floor-badge zh">外立面</span>
+          <span class="lab-floor-badge ru-text">Фасад</span>
+          <span class="lab-budget-badge">100.00M ₸</span>
+        </div>
+        <div class="lab-card-body" style="flex:1">
+          <h3 class="zh" style="color:#00d4ff">外立面装修方案</h3>
+          <h3 class="ru-text" style="color:#00d4ff">Фасадные отделочные работы</h3>
+          <p class="lab-ru zh">Фасадные отделочные работы · 建筑立面整体翻新</p>
+          <p class="lab-ru ru-text">建筑立面整体翻新 · Фасадные отделочные работы</p>
+          <div class="lab-meta-row">
+            <div class="lab-meta">📐 <span class="zh">~1,706 ㎡ 展开</span><span class="ru-text">~1 706 м²</span></div>
+            <div class="lab-meta">📏 <span class="zh">高 16.6 m</span><span class="ru-text">Высота 16,6 м</span></div>
+            <div class="lab-meta">🧱 <span class="zh">铝板 1,554 ㎡</span><span class="ru-text">Алюминий 1 554 м²</span></div>
+            <div class="lab-meta">⏱️ <span class="zh">工期 2 个月</span><span class="ru-text">Срок 2 мес.</span></div>
+          </div>
+          <p class="lab-desc zh">干挂白色铝板（PE 涂层 600×600 与 900×1200 菱形拼接）+ 小尺寸彩色铝板装饰点缀 + 入口单银 Low-E 中空玻璃幕墙 + 山墙菱形铝格栅 + 固定冷白 LED 洗墙灯，经价值工程优化 8 大分项预算 100M ₸。</p>
+          <p class="lab-desc ru-text">Навесной фасад из белого PE-алюминия (600×600 и 900×1200) с цветными акцентными вставками, стеклянный фасад Low-E (1Ag) у входа, ромбовидные алюминиевые решётки торцов, постоянная LED-подсветка. После value-engineering — 100M ₸ по 8 разделам.</p>
+          <a class="detail-link" href="facade.html" style="background:linear-gradient(135deg,#0090cc,#00d4ff);color:#fff">
+            <span class="zh">查看外立面方案 →</span>
+            <span class="ru-text">Просмотр фасада →</span>
           </a>
         </div>
       </div>
@@ -531,12 +576,15 @@ function renderBarChart() {
   const labs = window.KKST_DATA.labs;
   const sorted = [...labs].sort((a,b) => b.budget.total_kzt - a.budget.total_kzt);
   const infraM = +(INFRA_TOTAL_KZT/1000000).toFixed(2);
+  const facadeM = +(FACADE_TOTAL_KZT/1000000).toFixed(2);
 
+  const facadeLabel = lang==='zh' ? '🏢 外立面' : '🏢 Фасад';
   const infraLabel = lang==='zh' ? '⚡ 基础设施' : '⚡ Инфраструктура';
-  const labels = [infraLabel, ...sorted.map(l => l.name[lang])];
-  const eqData  = [0,        ...sorted.map(l => +(l.budget.equipment_kzt/1000000).toFixed(2))];
-  const rData   = [0,        ...sorted.map(l => +(l.budget.renovation_kzt/1000000).toFixed(2))];
-  const infraData = [infraM, ...sorted.map(() => 0)];
+  const labels = [facadeLabel, infraLabel, ...sorted.map(l => l.name[lang])];
+  const eqData  = [0,        0,         ...sorted.map(l => +(l.budget.equipment_kzt/1000000).toFixed(2))];
+  const rData   = [0,        0,         ...sorted.map(l => +(l.budget.renovation_kzt/1000000).toFixed(2))];
+  const infraData  = [0,       infraM,    ...sorted.map(() => 0)];
+  const facadeData = [facadeM, 0,         ...sorted.map(() => 0)];
 
   const ctx = document.getElementById('barChart').getContext('2d');
   if (barChartInst) barChartInst.destroy();
@@ -551,6 +599,8 @@ function renderBarChart() {
           backgroundColor: '#f0a500', borderRadius: 4, stack: 'a' },
         { label: lang==='zh' ? '基础设施' : 'Инфраструктура', data: infraData,
           backgroundColor: '#a855f7', borderRadius: 4, stack: 'a' },
+        { label: lang==='zh' ? '外立面' : 'Фасад', data: facadeData,
+          backgroundColor: '#00d4ff', borderRadius: 4, stack: 'a' },
       ]
     },
     options: {
@@ -578,11 +628,12 @@ function renderDonutChart() {
       labels: [
         lang==='zh'?'实训室设备':'Оборудование лаб.',
         lang==='zh'?'实训室装修':'Ремонт лаб.',
-        lang==='zh'?'基础设施':'Инфраструктура'
+        lang==='zh'?'基础设施':'Инфраструктура',
+        lang==='zh'?'外立面':'Фасад'
       ],
       datasets: [{
-        data: [s.equipment_kzt, s.renovation_kzt, INFRA_TOTAL_KZT],
-        backgroundColor: ['#10b981','#f0a500','#a855f7'],
+        data: [s.equipment_kzt, s.renovation_kzt, INFRA_TOTAL_KZT, FACADE_TOTAL_KZT],
+        backgroundColor: ['#10b981','#f0a500','#a855f7','#00d4ff'],
         borderWidth: 0, hoverOffset: 8
       }]
     },
@@ -596,10 +647,11 @@ function renderDonutChart() {
 function renderTotalSummary() {
   const s = window.KKST_DATA.summary;
   const items = [
-    { zh:'总投资额（含基础设施）', ru:'Общий бюджет (с инфр.)', val: fmtM(s.total_kzt + INFRA_TOTAL_KZT), color:'var(--accent)' },
+    { zh:'总投资额（含外立面+基础设施）', ru:'Общий бюджет (фасад+инфр.)', val: fmtM(s.total_kzt + INFRA_TOTAL_KZT + FACADE_TOTAL_KZT), color:'var(--accent)' },
     { zh:'实训室设备购置费', ru:'Оборудование лабораторий', val: fmtM(s.equipment_kzt), color:'var(--green)' },
     { zh:'实训室装修改造费', ru:'Ремонт лабораторий', val: fmtM(s.renovation_kzt), color:'var(--gold)' },
     { zh:'弱电基础设施', ru:'Слаботочная инфраструктура', val: fmtM(INFRA_TOTAL_KZT), color:'#a855f7' },
+    { zh:'外立面装修', ru:'Фасадные работы', val: fmtM(FACADE_TOTAL_KZT), color:'#00d4ff' },
   ];
   document.getElementById('total-summary').innerHTML = items.map(i => `
     <div class="sum-item">

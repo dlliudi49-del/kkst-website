@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>外立面装修方案 · KKST 建设方案</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#070d1a;--bg2:#0e1829;--card:#111e33;--card2:#162340;
+  --border:#1e3a5f;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --a1:#00d4ff;--a2:#0066aa;--gold:#f0a500;--green:#10b981;--violet:#a855f7;
+  --red:#ef4444;--orange:#f97316;--teal:#14b8a6;--pink:#ec4899;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.6}
+body.ru{font-family:'Segoe UI','Arial',sans-serif}
+#topbar{position:sticky;top:0;z-index:100;background:rgba(7,13,26,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;gap:16px}
+#topbar .back{color:var(--a1);text-decoration:none;font-size:13px;
+  font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap}
+#topbar .back:hover{opacity:.8}
+#topbar .crumb{font-size:13px;color:var(--text3)}
+#topbar .crumb span{color:var(--text2)}
+#lang-btn{background:var(--card2);border:1px solid var(--border);
+  color:var(--text);padding:5px 14px;border-radius:20px;cursor:pointer;
+  font-size:13px;white-space:nowrap;transition:all .2s}
+#lang-btn:hover{border-color:var(--a1);color:var(--a1)}
+#hero{position:relative;height:520px;overflow:hidden;background:var(--bg2)}
+#hero-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.6)}
+#hero-overlay{position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(7,13,26,.88) 30%,rgba(7,13,26,.25) 100%)}
+#hero-content{position:absolute;inset:0;display:flex;align-items:center;
+  padding:0 64px;max-width:760px}
+.hero-inner .floor-badge{display:inline-block;background:rgba(255,255,255,.1);
+  border:1px solid var(--a1);color:var(--a1);font-size:12px;padding:3px 14px;
+  border-radius:20px;margin-bottom:18px;letter-spacing:1px}
+.hero-inner h1{font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.2;margin-bottom:8px}
+.hero-inner .ru-name{font-size:clamp(14px,2vw,20px);color:rgba(255,255,255,.6);font-style:italic;margin-bottom:20px}
+.hero-inner .tag-row{display:flex;gap:10px;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:var(--text2);font-size:12px;padding:4px 12px;border-radius:8px}
+.tag b{color:#fff}
+.page-wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+section{padding:56px 0}
+section+section{padding-top:0}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
+.ov-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 20px;text-align:center;position:relative;overflow:hidden}
+.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--a1),var(--a2))}
+.ov-card .val{font-size:30px;font-weight:800;color:var(--a1);font-family:'Courier New',monospace}
+.ov-card .lbl{font-size:12px;color:var(--text3);margin-top:4px}
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.desc-card{background:var(--card);border-radius:14px;padding:28px;
+  border-left:4px solid var(--a1);margin-bottom:32px}
+.desc-card p{font-size:15px;color:var(--text2);line-height:1.9}
+/* 1 total card + 8 category cards = 9 slots, arranged in 3 rows of 3 cols on desktop */
+.budget-grid-9{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:40px}
+@media(max-width:900px){.budget-grid-9{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.budget-grid-9{grid-template-columns:1fr}}
+.bud-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 18px;text-align:center;position:relative}
+.bud-card.total{border-color:var(--a1);grid-column:span 3}
+@media(max-width:900px){.bud-card.total{grid-column:span 2}}
+@media(max-width:520px){.bud-card.total{grid-column:span 1}}
+.bud-card .bcat{position:absolute;top:8px;left:12px;font-size:11px;color:var(--text3);font-weight:700;letter-spacing:1px}
+.bud-card .bval{font-size:22px;font-weight:800;margin-bottom:4px;font-family:'Courier New',monospace}
+.bud-card.total .bval{color:var(--a1);font-size:30px}
+.bud-card.A .bval{color:var(--orange)}
+.bud-card.B .bval{color:var(--a1)}
+.bud-card.C .bval{color:var(--teal)}
+.bud-card.D .bval{color:var(--gold)}
+.bud-card.E .bval{color:var(--violet)}
+.bud-card.F .bval{color:var(--pink)}
+.bud-card.G .bval{color:var(--green)}
+.bud-card.H .bval{color:var(--text2)}
+.bud-card.A{border-left:3px solid var(--orange)}
+.bud-card.B{border-left:3px solid var(--a1)}
+.bud-card.C{border-left:3px solid var(--teal)}
+.bud-card.D{border-left:3px solid var(--gold)}
+.bud-card.E{border-left:3px solid var(--violet)}
+.bud-card.F{border-left:3px solid var(--pink)}
+.bud-card.G{border-left:3px solid var(--green)}
+.bud-card.H{border-left:3px solid var(--text2)}
+.bud-card .bpct{font-size:13px;color:var(--text3);margin-top:2px}
+.bud-card .blbl{font-size:12px;color:var(--text3);margin-top:6px;line-height:1.4}
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:40px}
+@media(max-width:800px){.chart-row{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px}
+.chart-card h3{font-size:14px;color:var(--text2);margin-bottom:16px}
+.chart-wrap{position:relative;height:280px}
+.eq-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--card2);color:var(--a1);font-weight:600;padding:12px 14px;
+  text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:1px solid rgba(30,58,95,.4);color:var(--text2);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(0,212,255,.04);color:var(--text)}
+.idx{color:var(--text3);text-align:center;width:36px}
+.name-col{min-width:220px}
+.eq-name{color:var(--text);font-weight:500}
+.eq-spec{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5}
+.unit-col{color:var(--text3);white-space:nowrap;font-size:12px}
+.num-col{text-align:center;white-space:nowrap}
+.price-col{text-align:right;font-family:monospace;white-space:nowrap}
+.total-price{color:var(--gold);font-weight:600}
+.eq-total-row td{background:var(--card2);font-weight:700;border-top:2px solid var(--border)}
+.eq-total-row .total-price{color:var(--a1);font-size:16px}
+.section-group-row td{background:rgba(0,212,255,.05);color:var(--a1);
+  font-weight:700;font-size:12.5px;letter-spacing:.5px;padding:10px 14px;
+  border-bottom:1px solid rgba(0,212,255,.15)}
+.section-group-row:hover td{background:rgba(0,212,255,.05) !important}
+.sub-total-row td{background:rgba(255,255,255,.02);color:var(--text2);font-weight:600;font-size:12px}
+.sub-total-row .total-price{color:var(--text);font-weight:700}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-bottom:40px}
+.gallery-item{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border);cursor:zoom-in}
+.gallery-item img{width:100%;display:block;transition:transform .4s}
+.gallery-item:hover img{transform:scale(1.04)}
+.gallery-item .gcap{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);
+  color:#fff;font-size:13px;padding:18px 14px 12px;font-weight:600}
+.elev-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px}
+@media(max-width:800px){.elev-grid{grid-template-columns:1fr}}
+.elev-item{background:#fff;border-radius:10px;overflow:hidden;border:1px solid var(--border);cursor:zoom-in;padding:6px}
+.elev-item img{width:100%;display:block}
+.elev-cap{font-size:12px;color:var(--text3);text-align:center;padding:6px 0 2px;background:#fff;color:#444}
+.img-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;
+  align-items:center;justify-content:center;cursor:zoom-out;padding:24px}
+.img-modal.open{display:flex}
+.img-modal img{max-width:96vw;max-height:96vh;object-fit:contain;border-radius:6px}
+#bottom-nav{padding:40px 0;border-top:1px solid var(--border)}
+.bottom-nav-inner{max-width:1180px;margin:0 auto;padding:0 24px;
+  display:flex;justify-content:center;align-items:center}
+.nav-arrow{color:var(--a1);text-decoration:none;font-size:14px;
+  font-weight:600;padding:10px 28px;border:1px solid var(--border);
+  border-radius:10px;transition:all .2s;display:block}
+.nav-arrow:hover{border-color:var(--a1);background:rgba(0,212,255,.08)}
+.ru-text{display:none}
+body.ru .zh{display:none}
+body.ru .ru-text{display:revert}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <a class="back" href="index.html">← <span class="zh">返回总览</span><span class="ru-text">На главную</span></a>
+  <span class="crumb zh">建筑外立面 / <span>装修方案</span></span>
+  <span class="crumb ru-text">Внешний фасад / <span>Отделочные работы</span></span>
+  <button id="lang-btn" onclick="toggleLang()">РУС / 中文</button>
+</div>
+
+<section id="hero">
+  <img id="hero-img" src="assets/images/render_facade_day.jpg" alt="外立面装修方案"
+       onerror="this.style.display='none';document.getElementById('hero').style.background='linear-gradient(135deg,#0e1829,#162340)'">
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <div class="hero-inner">
+      <div class="floor-badge">
+        <span class="zh">建筑外立面 · 5 层全包</span>
+        <span class="ru-text">Внешний фасад · 5 этажей</span>
+      </div>
+      <h1 class="zh">外立面装修方案</h1>
+      <h1 class="ru-text">Фасадные отделочные работы</h1>
+      <p class="ru-name zh">Фасадные отделочные работы</p>
+      <p class="ru-name ru-text">外立面装修方案</p>
+      <div class="tag-row">
+        <span class="tag zh"><b>高度</b> 16.6 m</span>
+        <span class="tag ru-text"><b>Высота</b> 16.6 м</span>
+        <span class="tag zh"><b>展开面积</b> ~1,706 ㎡</span>
+        <span class="tag ru-text"><b>Площадь</b> ~1,706 м²</span>
+        <span class="tag zh"><b>工期</b> 2 个月</span>
+        <span class="tag ru-text"><b>Срок</b> 2 мес.</span>
+        <span class="tag"><b>₸</b> 100.00M ₸</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrap">
+  <section>
+
+    <!-- Overview cards -->
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="val">100.00M ₸</div>
+        <div class="lbl zh">外立面工程总预算</div><div class="lbl ru-text">Итого по фасаду</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">~1,706 ㎡</div>
+        <div class="lbl zh">立面总展开面积</div><div class="lbl ru-text">Общая площадь фасада</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">~1,554 ㎡</div>
+        <div class="lbl zh">铝板净面积（扣窗洞）</div><div class="lbl ru-text">Алюминиевые панели (нетто)</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">~86 ㎡</div>
+        <div class="lbl zh">玻璃幕墙面积</div><div class="lbl ru-text">Стеклянный фасад</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">2</div>
+        <div class="lbl zh">施工周期（月）</div><div class="lbl ru-text">Срок (мес.)</div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <h2 class="sec-title zh">方案概述</h2>
+    <h2 class="sec-title ru-text">Описание решения</h2>
+    <div class="desc-card">
+      <p class="zh">本方案依据原建筑施工图（《科研楼项目设计内容5-13》立面图）对 KKST 哈萨克斯坦创新科技中心科研楼（地上 5 层、檐高 16.6 m、长 32.64 m、宽 18.73 m）进行外立面整体翻新。主体采用<b>干挂白色铝板系统</b>（600×600 与 900×1200 菱形拼接，PE 涂层经济型），并以<b>小尺寸彩色铝板</b>（红/蓝/橙/紫/黄等）作菱形撒落式装饰点缀，营造科技与活力并存的视觉效果。中部入口为<b>干挂中空 Low-E 玻璃幕墙</b>（单银）形成视觉焦点，两侧山墙保留菱形铝格栅作为标志性装饰图案。门窗采用 K 值≤2.4 W/(㎡·K) 的断桥铝合金 5+9A+5 标配中空窗。配套立面照明采用 LED 线性洗墙灯（固定冷白），夜间形成统一冷白光带与入口品牌灯效。<br><span style="color:var(--green)">★ 经价值工程优化：通过 PVDF→PE 涂层、单银 Low-E、标配中空玻璃、装饰面积合理收缩、取消 DMX 智能调光等取舍，在保证立面观感与节能性能不下降的前提下，将原方案 135M ₸ 优化至 100M ₸（节省 25.9%）。</span></p>
+      <p class="ru-text">Согласно исходным архитектурным чертежам (фасадные виды из проекта «Научный корпус, май 2026») предусмотрена комплексная реновация внешнего фасада научного корпуса ККСТ (5 надземных этажей, высота 16,6 м, длина 32,64 м, ширина 18,73 м). Основная отделка — <b>навесная фасадная система из белых алюминиевых панелей</b> формата 600×600 и 900×1200 мм с ромбовидным рисунком (экономичное PE-покрытие), дополненная <b>цветными акцентными вставками</b> (красный/синий/оранжевый/фиолетовый/жёлтый) в виде разбросанных ромбов для динамичного декоративного эффекта. Главный вход акцентирован <b>навесной системой Low-E стекла</b> (одинарное серебряное покрытие). Боковые торцы сохраняют декоративные ромбовидные алюминиевые решётки. Окна — алюминиевые с термомостом, стеклопакет 5+9А+5, K ≤ 2,4 Вт/м²·К. Архитектурная подсветка — линейные LED-светильники постоянного холодного свечения.<br><span style="color:var(--green)">★ Бюджет оптимизирован посредством value-engineering: замена PVDF на PE, одинарное серебро Low-E, стандартный стеклопакет, корректировка декоративной площади, отказ от DMX-управления — с сохранением визуального качества и энергоэффективности. Стоимость снижена с 135 M ₸ до 100 M ₸ (-25,9%).</span></p>
+    </div>
+
+    <!-- Budget structure -->
+    <h2 class="sec-title zh">预算构成（按材料分项）</h2>
+    <h2 class="sec-title ru-text">Структура бюджета (по разделам)</h2>
+    <div class="budget-grid-9">
+      <div class="bud-card total">
+        <div class="bval">100.00M ₸</div>
+        <div class="blbl zh">外立面工程总预算 · 8 大分项（优化版）</div>
+        <div class="blbl ru-text">Общий бюджет фасада · 8 разделов (оптимизировано)</div>
+      </div>
+      <div class="bud-card A">
+        <span class="bcat">A</span>
+        <div class="bval">9.00M ₸</div>
+        <div class="bpct">9.0%</div>
+        <div class="blbl zh">前置工程<br>拆除/脚手架/防水</div>
+        <div class="blbl ru-text">Подготовка<br>демонтаж/леса/гидроизол.</div>
+      </div>
+      <div class="bud-card B">
+        <span class="bcat">B</span>
+        <div class="bval">55.00M ₸</div>
+        <div class="bpct">55.0%</div>
+        <div class="blbl zh">干挂铝板幕墙系统<br>白色+彩色铝板（PE 涂层）</div>
+        <div class="blbl ru-text">Алюминиевый фасад<br>бел.+цветные (PE)</div>
+      </div>
+      <div class="bud-card C">
+        <span class="bcat">C</span>
+        <div class="bval">11.00M ₸</div>
+        <div class="bpct">11.0%</div>
+        <div class="blbl zh">入口玻璃幕墙<br>单银 Low-E 中空玻璃</div>
+        <div class="blbl ru-text">Стеклянный фасад<br>Low-E (1Ag)</div>
+      </div>
+      <div class="bud-card D">
+        <span class="bcat">D</span>
+        <div class="bval">14.00M ₸</div>
+        <div class="bpct">14.0%</div>
+        <div class="blbl zh">门窗系统<br>断桥铝窗 5+9A+5</div>
+        <div class="blbl ru-text">Окна и двери<br>термомост + 5+9A+5</div>
+      </div>
+      <div class="bud-card E">
+        <span class="bcat">E</span>
+        <div class="bval">3.50M ₸</div>
+        <div class="bpct">3.5%</div>
+        <div class="blbl zh">山墙菱形装饰<br>铝格栅+钢骨架</div>
+        <div class="blbl ru-text">Ромб. решётки торцов<br>алюминий+сталь</div>
+      </div>
+      <div class="bud-card F">
+        <span class="bcat">F</span>
+        <div class="bval">2.50M ₸</div>
+        <div class="bpct">2.5%</div>
+        <div class="blbl zh">立面照明<br>固定冷白 LED 洗墙灯</div>
+        <div class="blbl ru-text">Архитектурный свет<br>LED холодный белый</div>
+      </div>
+      <div class="bud-card G">
+        <span class="bcat">G</span>
+        <div class="bval">2.00M ₸</div>
+        <div class="bpct">2.0%</div>
+        <div class="blbl zh">屋面收口+雨落系统<br>压顶+落水管</div>
+        <div class="blbl ru-text">Парапет и водосток<br>обшивка+трубы</div>
+      </div>
+      <div class="bud-card H">
+        <span class="bcat">H</span>
+        <div class="bval">3.00M ₸</div>
+        <div class="bpct">3.0%</div>
+        <div class="blbl zh">设计深化+项目管理<br>加工图+现场监理</div>
+        <div class="blbl ru-text">Проект+управление<br>раб.чертежи+надзор</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3 class="zh">8 大分项预算对比（M ₸）</h3><h3 class="ru-text">Сравнение бюджетов 8 разделов (М ₸)</h3>
+        <div class="chart-wrap"><canvas id="barC"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 class="zh">分项占比分布</h3><h3 class="ru-text">Распределение долей</h3>
+        <div class="chart-wrap"><canvas id="donutC"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Visual renderings -->
+    <h2 class="sec-title zh">效果图展示</h2>
+    <h2 class="sec-title ru-text">Визуализации</h2>
+    <div class="gallery-grid">
+      <div class="gallery-item" onclick="openModal('assets/images/render_facade_day.jpg')">
+        <img src="assets/images/render_facade_day.jpg" alt="主立面效果图" loading="lazy">
+        <div class="gcap zh">主立面透视 · 白色铝板 + 彩色铝板点缀 + 玻璃幕墙</div>
+        <div class="gcap ru-text">Перспектива фасада · бел.+цветные панели + стекло</div>
+      </div>
+      <div class="gallery-item" onclick="openModal('assets/images/render_facade_entrance.jpg')">
+        <img src="assets/images/render_facade_entrance.jpg" alt="入口透视" loading="lazy">
+        <div class="gcap zh">入口透视 · 双层玻璃幕墙 + 铝合金雨篷</div>
+        <div class="gcap ru-text">Перспектива входа · стекло + козырёк</div>
+      </div>
+    </div>
+
+    <!-- Original CAD elevation drawings from PDF -->
+    <h2 class="sec-title zh">原始立面图（甲方提供）</h2>
+    <h2 class="sec-title ru-text">Исходные фасадные чертежи</h2>
+    <div class="elev-grid">
+      <div class="elev-item" onclick="openModal('assets/images/facade_elev_main.jpg')">
+        <img src="assets/images/facade_elev_main.jpg" alt="主立面 ①~⑨ 轴">
+        <div class="elev-cap zh">主立面 ①~⑨ 轴 · 长 32.64 m / 高 16.6 m</div>
+        <div class="elev-cap ru-text">Главный фасад ①~⑨ · 32,64 × 16,6 м</div>
+      </div>
+      <div class="elev-item" onclick="openModal('assets/images/facade_elev_back.jpg')">
+        <img src="assets/images/facade_elev_back.jpg" alt="背立面 ⑨~① 轴">
+        <div class="elev-cap zh">背立面 ⑨~① 轴 · 长 32.64 m / 高 16.6 m</div>
+        <div class="elev-cap ru-text">Задний фасад ⑨~① · 32,64 × 16,6 м</div>
+      </div>
+      <div class="elev-item" onclick="openModal('assets/images/facade_elev_gable.jpg')" style="grid-column:span 2">
+        <img src="assets/images/facade_elev_gable.jpg" alt="山墙立面 Д~A 轴">
+        <div class="elev-cap zh">山墙立面 Д~A 轴（含菱形铝格栅装饰）· 宽 18.73 m / 高 16.6 m</div>
+        <div class="elev-cap ru-text">Торцевой фасад Д~A · 18,73 × 16,6 м (с ромбовидной решёткой)</div>
+      </div>
+    </div>
+
+    <!-- Detailed budget table -->
+    <h2 class="sec-title zh">完整工程量清单</h2>
+    <h2 class="sec-title ru-text">Полная смета (BOQ)</h2>
+    <div class="eq-table-wrap">
+      <table>
+        <thead><tr>
+          <th class="idx">#</th>
+          <th class="zh">项目名称</th><th class="ru-text">Наименование</th>
+          <th class="zh">单位</th><th class="ru-text">Ед.</th>
+          <th class="zh">工程量</th><th class="ru-text">Объём</th>
+          <th class="zh">单价(₸)</th><th class="ru-text">Цена/ед.(₸)</th>
+          <th class="zh">合计(₸)</th><th class="ru-text">Итого(₸)</th>
+        </tr></thead>
+        <tbody>
+
+          <!-- A. 前置工程 -->
+          <tr class="section-group-row">
+            <td colspan="5" class="zh">A. 前置工程（拆除·脚手架·防水）</td>
+            <td colspan="5" class="ru-text">A. Подготовительные работы (демонтаж · леса · гидроизоляция)</td>
+            <td class="price-col total-price">9,000,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">1</td>
+            <td class="name-col">
+              <div class="eq-name zh">旧外饰面拆除</div>
+              <div class="eq-name ru-text">Демонтаж старой отделки</div>
+              <div class="eq-spec zh">含表面腻子层/旧涂料层剥离，机械+人工</div>
+              <div class="eq-spec ru-text">Шпатлёвка/краска; механизация + ручной труд</div>
+            </td>
+            <td class="unit-col zh">㎡</td><td class="unit-col ru-text">м²</td>
+            <td class="num-col">1,700</td>
+            <td class="price-col">2,400 ₸</td>
+            <td class="price-col total-price">4,080,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">2</td>
+            <td class="name-col">
+              <div class="eq-name zh">外脚手架搭拆+租赁（2 个月）</div>
+              <div class="eq-name ru-text">Монтаж/демонтаж + аренда строительных лесов (2 мес.)</div>
+              <div class="eq-spec zh">双排扣件式，含安全网/挡脚板/上人通道</div>
+              <div class="eq-spec ru-text">Двухрядные хомутовые; сетка/отбойная доска/трапы</div>
+            </td>
+            <td class="unit-col zh">㎡</td><td class="unit-col ru-text">м²</td>
+            <td class="num-col">1,700</td>
+            <td class="price-col">1,500 ₸</td>
+            <td class="price-col total-price">2,550,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">3</td>
+            <td class="name-col">
+              <div class="eq-name zh">建筑垃圾清运</div>
+              <div class="eq-name ru-text">Вывоз строительного мусора</div>
+              <div class="eq-spec zh">含装载、运输至指定垃圾场、处理费</div>
+              <div class="eq-spec ru-text">Погрузка, транспорт, утилизация на полигоне</div>
+            </td>
+            <td class="unit-col zh">项</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">1</td>
+            <td class="price-col">1,500,000 ₸</td>
+            <td class="price-col total-price">1,500,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">4</td>
+            <td class="name-col">
+              <div class="eq-name zh">SBS 改性沥青防水卷材</div>
+              <div class="eq-name ru-text">SBS-битумная гидроизоляция</div>
+              <div class="eq-spec zh">3mm 厚，含女儿墙、屋面交接处、裙脚返水</div>
+              <div class="eq-spec ru-text">3 мм; парапет, кровля-стена, цоколь</div>
+            </td>
+            <td class="unit-col zh">㎡</td><td class="unit-col ru-text">м²</td>
+            <td class="num-col">300</td>
+            <td class="price-col">2,900 ₸</td>
+            <td class="price-col total-price">870,000 ₸</td>
+          </tr>
+
+          <!-- B. 干挂铝板幕墙系统 -->
+          <tr class="section-group-row">
+            <td colspan="5" class="zh">B. 干挂铝板幕墙系统（白色+彩色铝板 · PE 涂层）</td>
+            <td colspan="5" class="ru-text">B. Навесной алюминиевый фасад (бел. + цветные, PE-покрытие)</td>
+            <td class="price-col total-price">55,000,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">5</td>
+            <td class="name-col">
+              <div class="eq-name zh">干挂白色铝板 600×600（2.5 mm · PE 涂层）</div>
+              <div class="eq-name ru-text">Алюминиевая панель белая 600×600 (2,5 мм · PE)</div>
+              <div class="eq-spec zh">PE 聚酯涂层；色卡 RAL 9003；折边收口；含彩色装饰板 80㎡</div>
+              <div class="eq-spec ru-text">Полиэстеровое покрытие, RAL 9003, с загибом; включая 80 м² цветных декор. панелей</div>
+            </td>
+            <td class="unit-col zh">㎡</td><td class="unit-col ru-text">м²</td>
+            <td class="num-col">800</td>
+            <td class="price-col">26,000 ₸</td>
+            <td class="price-col total-price">20,800,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">6</td>
+            <td class="name-col">
+              <div class="eq-name zh">干挂白色铝板 900×1200（2.5 mm · PE 涂层）</div>
+              <div class="eq-name ru-text">Алюминиевая панель белая 900×1200 (2,5 мм · PE)</div>
+              <div class="eq-spec zh">同 B-5 工艺；用于主立面大面积区与背立面</div>
+              <div class="eq-spec ru-text">Та же технология; крупные поля главного/заднего фасадов</div>
+            </td>
+            <td class="unit-col zh">㎡</td><td class="unit-col ru-text">м²</td>
+            <td class="num-col">754</td>
+            <td class="price-col">24,000 ₸</td>
+            <td class="price-col total-price">18,096,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">7</td>
+            <td class="name-col">
+              <div class="eq-name zh">钢龙骨副框结构</div>
+              <div class="eq-name ru-text">Стальной подсистемный каркас</div>
+              <div class="eq-spec zh">热镀锌方钢管 40×40×2.5 横竖龙骨；含化学锚栓</div>
+              <div class="eq-spec ru-text">Оцинкованные трубы 40×40×2,5; хим. анкеры</div>
+            </td>
+            <td class="unit-col zh">㎡</td><td class="unit-col ru-text">м²</td>
+            <td class="num-col">1,554</td>
+            <td class="price-col">6,500 ₸</td>
+            <td class="price-col total-price">10,101,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">8</td>
+            <td class="name-col">
+              <div class="eq-name zh">A 级岩棉防火背衬</div>
+              <div class="eq-name ru-text">Огнестойкая каменная вата НГ</div>
+              <div class="eq-spec zh">50 mm 厚，铝板腔体内填充，A 级不燃</div>
+              <div class="eq-spec ru-text">50 мм, заполнение полости панелей, класс А (НГ)</div>
+            </td>
+            <td class="unit-col zh">㎡</td><td class="unit-col ru-text">м²</td>
+            <td class="num-col">1,554</td>
+            <td class="price-col">1,500 ₸</td>
+            <td class="price-col total-price">2,331,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">9</td>
+            <td class="name-col">
+              <div class="eq-name zh">不锈钢挂件+密封胶+收边铝型材</div>
+              <div class="eq-name ru-text">Кронштейны SS304 + герметик + окантовка</div>
+              <div class="eq-spec zh">SS304 挂件，硅酮密封胶，阳角/阴角/窗洞铝收边</div>
+              <div class="eq-spec ru-text">SS304, силиконовый герметик, угловые/оконные профили</div>
+            </td>
+            <td class="unit-col zh">项</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">1</td>
+            <td class="price-col">3,672,000 ₸</td>
+            <td class="price-col total-price">3,672,000 ₸</td>
+          </tr>
+
+          <!-- C. 入口玻璃幕墙 -->
+          <tr class="section-group-row">
+            <td colspan="5" class="zh">C. 入口玻璃幕墙（单银 Low-E）</td>
+            <td colspan="5" class="ru-text">C. Стеклянный фасад входной группы (1Ag Low-E)</td>
+            <td class="price-col total-price">11,000,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">10</td>
+            <td class="name-col">
+              <div class="eq-name zh">中空单银 Low-E 玻璃幕墙（6+12A+6）</div>
+              <div class="eq-name ru-text">Стеклянный фасад Low-E 1Ag (6+12А+6)</div>
+              <div class="eq-spec zh">U≤1.9 W/㎡·K；SC≤0.45；钢化；明框构造（经济型）</div>
+              <div class="eq-spec ru-text">U≤1,9; SC≤0,45; закалённое; видимый импост (эконом)</div>
+            </td>
+            <td class="unit-col zh">㎡</td><td class="unit-col ru-text">м²</td>
+            <td class="num-col">80</td>
+            <td class="price-col">70,000 ₸</td>
+            <td class="price-col total-price">5,600,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">11</td>
+            <td class="name-col">
+              <div class="eq-name zh">铝合金幕墙型材+龙骨</div>
+              <div class="eq-name ru-text">Алюминиевые профили + каркас фасада</div>
+              <div class="eq-spec zh">6063-T5 阳极氧化；含立柱、横梁、转接件</div>
+              <div class="eq-spec ru-text">6063-T5 анодир.; стойки/ригели/крепления</div>
+            </td>
+            <td class="unit-col zh">㎡</td><td class="unit-col ru-text">м²</td>
+            <td class="num-col">80</td>
+            <td class="price-col">28,000 ₸</td>
+            <td class="price-col total-price">2,240,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">12</td>
+            <td class="name-col">
+              <div class="eq-name zh">入口电动钢化玻璃自动门</div>
+              <div class="eq-name ru-text">Автоматические закалённые стеклянные двери входа</div>
+              <div class="eq-spec zh">双开 12mm 单层钢化，含电动驱动器、感应、闭门器</div>
+              <div class="eq-spec ru-text">Двустворчатые 12 мм закалёные, привод/датчики/доводчики</div>
+            </td>
+            <td class="unit-col zh">樘</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">2</td>
+            <td class="price-col">1,200,000 ₸</td>
+            <td class="price-col total-price">2,400,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">13</td>
+            <td class="name-col">
+              <div class="eq-name zh">五金件+驱动器+控制系统</div>
+              <div class="eq-name ru-text">Фурнитура + приводы + система управления</div>
+              <div class="eq-spec zh">含锁具、合页、地弹簧、刷卡门禁接入</div>
+              <div class="eq-spec ru-text">Замки, петли, доводчики, СКД-интеграция</div>
+            </td>
+            <td class="unit-col zh">项</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">1</td>
+            <td class="price-col">760,000 ₸</td>
+            <td class="price-col total-price">760,000 ₸</td>
+          </tr>
+
+          <!-- D. 门窗 -->
+          <tr class="section-group-row">
+            <td colspan="5" class="zh">D. 门窗系统（标配 5+9A+5 中空）</td>
+            <td colspan="5" class="ru-text">D. Окна и двери (станд. 5+9А+5)</td>
+            <td class="price-col total-price">14,000,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">14</td>
+            <td class="name-col">
+              <div class="eq-name zh">断桥铝合金中悬窗 900×1600</div>
+              <div class="eq-name ru-text">Алюм. окно с термомостом, среднеподвесное 900×1600</div>
+              <div class="eq-spec zh">5+9A+5 标配中空玻璃；K≤2.4；含纱网、五金</div>
+              <div class="eq-spec ru-text">Стеклопакет 5+9А+5; K≤2,4; москит. сетка + фурнитура</div>
+            </td>
+            <td class="unit-col zh">樘</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">60</td>
+            <td class="price-col">145,000 ₸</td>
+            <td class="price-col total-price">8,700,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">15</td>
+            <td class="name-col">
+              <div class="eq-name zh">断桥铝合金中悬窗 900×1200</div>
+              <div class="eq-name ru-text">Алюм. окно с термомостом, среднеподвесное 900×1200</div>
+              <div class="eq-spec zh">5+9A+5 标配中空玻璃；K≤2.4；含纱网、五金</div>
+              <div class="eq-spec ru-text">Стеклопакет 5+9А+5; K≤2,4; москит. сетка + фурнитура</div>
+            </td>
+            <td class="unit-col zh">樘</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">30</td>
+            <td class="price-col">105,000 ₸</td>
+            <td class="price-col total-price">3,150,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">16</td>
+            <td class="name-col">
+              <div class="eq-name zh">入口铝合金大门（带 LOGO）</div>
+              <div class="eq-name ru-text">Главные входные алюминиевые двери (с логотипом)</div>
+              <div class="eq-spec zh">2100×3000 双开；钢化玻璃；含 LOGO 亚克力发光字</div>
+              <div class="eq-spec ru-text">2100×3000 двустворчатые; закалёное; светящиеся акрил. буквы</div>
+            </td>
+            <td class="unit-col zh">樘</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">1</td>
+            <td class="price-col">2,150,000 ₸</td>
+            <td class="price-col total-price">2,150,000 ₸</td>
+          </tr>
+
+          <!-- E. 山墙菱形装饰 -->
+          <tr class="section-group-row">
+            <td colspan="5" class="zh">E. 山墙菱形铝格栅装饰（合理收缩覆盖）</td>
+            <td colspan="5" class="ru-text">E. Декоративные ромбовидные решётки (оптим. площадь)</td>
+            <td class="price-col total-price">3,500,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">17</td>
+            <td class="name-col">
+              <div class="eq-name zh">1.5 mm 厚菱形铝格栅</div>
+              <div class="eq-name ru-text">Ромбовидная алюминиевая решётка 1,5 мм</div>
+              <div class="eq-spec zh">A 级防火；白色 PE 涂层；菱形 600×800 拼接</div>
+              <div class="eq-spec ru-text">НГ; PE покрытие, белый; модуль 600×800</div>
+            </td>
+            <td class="unit-col zh">㎡</td><td class="unit-col ru-text">м²</td>
+            <td class="num-col">200</td>
+            <td class="price-col">14,400 ₸</td>
+            <td class="price-col total-price">2,880,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">18</td>
+            <td class="name-col">
+              <div class="eq-name zh">格栅钢结构骨架</div>
+              <div class="eq-name ru-text">Стальной каркас под решётку</div>
+              <div class="eq-spec zh">热镀锌方钢 40×40×2.5；化学锚栓固定</div>
+              <div class="eq-spec ru-text">Оцинк. труба 40×40×2,5; хим. анкера</div>
+            </td>
+            <td class="unit-col zh">㎡</td><td class="unit-col ru-text">м²</td>
+            <td class="num-col">200</td>
+            <td class="price-col">3,100 ₸</td>
+            <td class="price-col total-price">620,000 ₸</td>
+          </tr>
+
+          <!-- F. 立面照明 -->
+          <tr class="section-group-row">
+            <td colspan="5" class="zh">F. 立面照明系统（固定冷白 LED）</td>
+            <td colspan="5" class="ru-text">F. Архитектурное освещение фасада (LED холод. белый)</td>
+            <td class="price-col total-price">2,500,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">19</td>
+            <td class="name-col">
+              <div class="eq-name zh">LED 线性洗墙灯（固定冷白）</div>
+              <div class="eq-name ru-text">Линейные LED-светильники (постоянный белый)</div>
+              <div class="eq-spec zh">24W/m，4000K 冷白；IP66；铝合金外壳；非调光</div>
+              <div class="eq-spec ru-text">24 Вт/м, 4000К; IP66; алюм. корпус; без диммирования</div>
+            </td>
+            <td class="unit-col zh">m</td><td class="unit-col ru-text">м</td>
+            <td class="num-col">100</td>
+            <td class="price-col">12,000 ₸</td>
+            <td class="price-col total-price">1,200,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">20</td>
+            <td class="name-col">
+              <div class="eq-name zh">LED 入口 LOGO 灯+装饰投光灯</div>
+              <div class="eq-name ru-text">LED-логотип входа + декоративная подсветка</div>
+              <div class="eq-spec zh">亚克力发光字定制；窄光束投光灯 4 套</div>
+              <div class="eq-spec ru-text">Акрил. буквы; 4 узколучевых прожектора</div>
+            </td>
+            <td class="unit-col zh">项</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">1</td>
+            <td class="price-col">700,000 ₸</td>
+            <td class="price-col total-price">700,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">21</td>
+            <td class="name-col">
+              <div class="eq-name zh">电气配管+时控开关</div>
+              <div class="eq-name ru-text">Кабелепрокладка + таймер</div>
+              <div class="eq-spec zh">JDG 镀锌管暗敷；时控/光控开关；取消 DMX 控制台</div>
+              <div class="eq-spec ru-text">Оцинк. JDG скрытая; таймер/фотодатчик; без DMX</div>
+            </td>
+            <td class="unit-col zh">项</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">1</td>
+            <td class="price-col">600,000 ₸</td>
+            <td class="price-col total-price">600,000 ₸</td>
+          </tr>
+
+          <!-- G. 屋面收口 -->
+          <tr class="section-group-row">
+            <td colspan="5" class="zh">G. 屋面女儿墙+雨落系统</td>
+            <td colspan="5" class="ru-text">G. Парапет и система водоотвода</td>
+            <td class="price-col total-price">2,000,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">22</td>
+            <td class="name-col">
+              <div class="eq-name zh">女儿墙铝板压顶+收口</div>
+              <div class="eq-name ru-text">Алюминиевая обшивка парапета</div>
+              <div class="eq-spec zh">2.5 mm 折弯铝板，宽 400 mm，含滴水线</div>
+              <div class="eq-spec ru-text">2,5 мм гнутый алюминий, шир. 400 мм, с капельником</div>
+            </td>
+            <td class="unit-col zh">m</td><td class="unit-col ru-text">м</td>
+            <td class="num-col">100</td>
+            <td class="price-col">11,000 ₸</td>
+            <td class="price-col total-price">1,100,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">23</td>
+            <td class="name-col">
+              <div class="eq-name zh">隐蔽式落水管+雨水斗</div>
+              <div class="eq-name ru-text">Скрытые водосточные трубы + воронки</div>
+              <div class="eq-spec zh">UPVC Ø110；含弯头、检查口、雨水斗（8 处）</div>
+              <div class="eq-spec ru-text">UPVC Ø110; колена, ревизии, 8 воронок</div>
+            </td>
+            <td class="unit-col zh">项</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">1</td>
+            <td class="price-col">900,000 ₸</td>
+            <td class="price-col total-price">900,000 ₸</td>
+          </tr>
+
+          <!-- H. 设计+管理 -->
+          <tr class="section-group-row">
+            <td colspan="5" class="zh">H. 设计深化与项目管理</td>
+            <td colspan="5" class="ru-text">H. Проектирование и управление проектом</td>
+            <td class="price-col total-price">3,000,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">24</td>
+            <td class="name-col">
+              <div class="eq-name zh">深化设计+加工图纸</div>
+              <div class="eq-name ru-text">Рабочие чертежи + раскладка панелей</div>
+              <div class="eq-spec zh">含立面分缝排版、节点详图、铝板编号加工图</div>
+              <div class="eq-spec ru-text">Раскладка, узлы, маркировка панелей для производства</div>
+            </td>
+            <td class="unit-col zh">项</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">1</td>
+            <td class="price-col">1,500,000 ₸</td>
+            <td class="price-col total-price">1,500,000 ₸</td>
+          </tr>
+          <tr>
+            <td class="idx">25</td>
+            <td class="name-col">
+              <div class="eq-name zh">项目管理+现场监理</div>
+              <div class="eq-name ru-text">Управление проектом + строит. надзор</div>
+              <div class="eq-spec zh">驻场项目经理；含进度/质量/安全/验收</div>
+              <div class="eq-spec ru-text">Резидентный ПМ; график/качество/безопасность/приёмка</div>
+            </td>
+            <td class="unit-col zh">项</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">1</td>
+            <td class="price-col">1,500,000 ₸</td>
+            <td class="price-col total-price">1,500,000 ₸</td>
+          </tr>
+
+          <!-- Grand total -->
+          <tr class="eq-total-row">
+            <td colspan="5" class="zh" style="color:var(--text2);font-size:14px">外立面工程总报价</td>
+            <td colspan="5" class="ru-text" style="color:var(--text2);font-size:14px">Итого по фасадным работам</td>
+            <td class="total-price price-col">100,000,000 ₸</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-size:12px;color:var(--text3);margin-top:14px;line-height:1.7">
+      <span class="zh">注：本报价基于《科研楼项目设计内容5-13（改）》立面图纸编制，立面总展开面积 1,706 ㎡（毛）/ 1,554 ㎡（铝板净面积），含 5% 措施费、3% 不可预见费及 18% NDS 增值税。质保期：铝板 10 年、玻璃幕墙 10 年、密封胶 5 年、五金 2 年。</span>
+      <span class="ru-text">Прим.: смета составлена согласно фасадным чертежам проекта «Научный корпус, май 2026». Общая площадь фасада 1 706 м² (брутто) / 1 554 м² (нетто алюминий). В стоимость включены 5% временных мер, 3% непредвиденных расходов и НДС 18%. Гарантия: алюминиевые панели — 10 лет, стеклянный фасад — 10 лет, герметик — 5 лет, фурнитура — 2 года.</span>
+    </p>
+  </section>
+</div>
+
+<div id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="nav-arrow" href="index.html">
+      <span class="zh">🏠 返回总览</span><span class="ru-text">🏠 На главную</span>
+    </a>
+  </div>
+</div>
+
+<!-- Image modal -->
+<div id="imgModal" class="img-modal" onclick="closeModal()">
+  <img id="modalImg" src="" alt="">
+</div>
+
+<script>
+let lang='zh';
+const CAT_LABELS_ZH=['A 前置工程','B 干挂铝板','C 玻璃幕墙','D 门窗','E 山墙装饰','F 立面照明','G 屋面收口','H 设计管理'];
+const CAT_LABELS_RU=['A Подготовка','B Алюминий','C Стекло','D Окна/двери','E Решётки','F Свет','G Парапет','H Проект'];
+const CAT_VALUES=[9.0,55.0,11.0,14.0,3.5,2.5,2.0,3.0];
+const TOTAL_M=100;
+const CAT_COLORS=['#f97316','#00d4ff','#14b8a6','#f0a500','#a855f7','#ec4899','#10b981','#94a3b8'];
+
+function openModal(src){
+  document.getElementById('modalImg').src=src;
+  document.getElementById('imgModal').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('imgModal').classList.remove('open');
+}
+
+function toggleLang(){
+  lang=lang==='zh'?'ru':'zh';
+  document.body.classList.toggle('ru',lang==='ru');
+  document.getElementById('lang-btn').textContent=lang==='zh'?'РУС / 中文':'中文 / РУС';
+  if(window.barChart){
+    window.barChart.data.labels=lang==='ru'?CAT_LABELS_RU:CAT_LABELS_ZH;
+    window.barChart.update();
+  }
+  if(window.donutChart){
+    window.donutChart.data.labels=lang==='ru'?CAT_LABELS_RU:CAT_LABELS_ZH;
+    window.donutChart.update();
+  }
+}
+
+window.barChart=new Chart(document.getElementById('barC'),{
+  type:'bar',
+  data:{labels:CAT_LABELS_ZH,
+    datasets:[{
+      label:'M ₸',
+      data:CAT_VALUES,
+      backgroundColor:CAT_COLORS,
+      borderRadius:6,
+      borderWidth:0
+    }]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>` ${c.parsed.y.toFixed(2)} M ₸ (${(c.parsed.y/TOTAL_M*100).toFixed(1)}%)`}}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:10},maxRotation:30,minRotation:0}},
+      y:{grid:{color:'rgba(30,58,95,.4)'},ticks:{color:'#64748b',callback:v=>v+'M'}}
+    }}
+});
+
+window.donutChart=new Chart(document.getElementById('donutC'),{
+  type:'doughnut',
+  data:{labels:CAT_LABELS_ZH,
+    datasets:[{data:CAT_VALUES,backgroundColor:CAT_COLORS,borderWidth:0,hoverOffset:6}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+    plugins:{
+      legend:{position:'right',labels:{color:'#94a3b8',font:{size:11},boxWidth:10}},
+      tooltip:{callbacks:{label:c=>` ${c.parsed.toFixed(2)} M ₸ (${(c.parsed/TOTAL_M*100).toFixed(1)}%)`}}
+    }}
+});
+</script>
+</body>
+</html>
