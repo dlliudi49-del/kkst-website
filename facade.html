@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -144,13 +144,13 @@ body.ru .zh{display:none}
 body.ru .ru-text{display:revert}
 </style>
 </head>
-<body>
+<body class="ru">
 
 <div id="topbar">
   <a class="back" href="index.html">← <span class="zh">返回总览</span><span class="ru-text">На главную</span></a>
   <span class="crumb zh">建筑外立面 / <span>装修方案</span></span>
   <span class="crumb ru-text">Внешний фасад / <span>Отделочные работы</span></span>
-  <button id="lang-btn" onclick="toggleLang()">РУС / 中文</button>
+  <button id="lang-btn" onclick="toggleLang()">中文 / РУС</button>
 </div>
 
 <section id="hero">
@@ -758,7 +758,7 @@ body.ru .ru-text{display:revert}
 </div>
 
 <script>
-let lang='zh';
+let lang='ru';
 const CAT_LABELS_ZH=['A 前置工程','B 干挂铝板','C 玻璃幕墙','D 门窗','E 山墙装饰','F 立面照明','G 屋面收口','H 设计管理'];
 const CAT_LABELS_RU=['A Подготовка','B Алюминий','C Стекло','D Окна/двери','E Решётки','F Свет','G Парапет','H Проект'];
 const CAT_VALUES=[9.0,55.0,11.0,14.0,3.5,2.5,2.0,3.0];

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>配套免费服务 · Сопутствующие бесплатные услуги · KKST</title>
+<style>
+:root{
+  --bg:#070d1a;--bg2:#0e1829;--card:#111e33;--card2:#162340;
+  --border:#1e3a5f;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --a1:#00d4ff;--a2:#0066aa;--gold:#f0a500;--green:#10b981;--violet:#a855f7;
+  --orange:#f97316;--teal:#14b8a6;--pink:#ec4899;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.6}
+body.ru{font-family:'Segoe UI','Arial',sans-serif}
+
+#topbar{position:sticky;top:0;z-index:100;background:rgba(7,13,26,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;gap:16px}
+#topbar .back{color:var(--a1);text-decoration:none;font-size:13px;
+  font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap}
+#topbar .back:hover{opacity:.8}
+#topbar .crumb{font-size:13px;color:var(--text3)}
+#topbar .crumb span{color:var(--text2)}
+#lang-btn{background:var(--card2);border:1px solid var(--border);
+  color:var(--text);padding:5px 14px;border-radius:20px;cursor:pointer;
+  font-size:13px;white-space:nowrap;transition:all .2s}
+#lang-btn:hover{border-color:var(--a1);color:var(--a1)}
+
+#hero{position:relative;height:420px;overflow:hidden;
+  background:linear-gradient(135deg,#0e1829 0%,#162340 50%,#0e2a4a 100%)}
+#hero::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top right,rgba(240,165,0,.18) 0%,transparent 60%),
+             radial-gradient(ellipse at bottom left,rgba(0,212,255,.15) 0%,transparent 60%)}
+#hero-content{position:absolute;inset:0;display:flex;align-items:center;
+  padding:0 64px;max-width:900px}
+.hero-inner .floor-badge{display:inline-block;background:rgba(255,255,255,.1);
+  border:1px solid var(--gold);color:var(--gold);font-size:12px;padding:3px 14px;
+  border-radius:20px;margin-bottom:18px;letter-spacing:1px}
+.hero-inner h1{font-size:clamp(28px,4vw,46px);font-weight:800;line-height:1.2;margin-bottom:10px}
+.hero-inner .subtitle{font-size:clamp(14px,2vw,18px);color:rgba(255,255,255,.65);margin-bottom:20px;line-height:1.6}
+.hero-inner .tag-row{display:flex;gap:10px;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:var(--text2);font-size:12px;padding:4px 12px;border-radius:8px}
+.tag b{color:var(--gold)}
+@media(max-width:720px){#hero{height:auto;min-height:380px}
+  #hero-content{padding:60px 24px;position:relative}}
+
+.page-wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+section{padding:56px 0}
+section+section{padding-top:0}
+
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
+.ov-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 20px;text-align:center;position:relative;overflow:hidden}
+.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--a1))}
+.ov-card .val{font-size:34px;font-weight:800;color:var(--gold);font-family:'Courier New',monospace;line-height:1}
+.ov-card .lbl{font-size:12px;color:var(--text3);margin-top:8px;line-height:1.4}
+
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px;
+  display:flex;align-items:center;gap:12px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-cat{display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:50%;font-size:14px;font-weight:800;
+  font-family:'Courier New',monospace;color:#fff;flex-shrink:0}
+.sec-sub{font-size:13px;color:var(--text3);margin-bottom:24px;margin-left:44px}
+
+.cat-A .sec-cat{background:var(--a1)}
+.cat-B .sec-cat{background:var(--violet)}
+.cat-C .sec-cat{background:var(--gold);color:#1a1a1a}
+
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:40px}
+.svc-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:22px 22px 22px 26px;position:relative;transition:all .25s}
+.svc-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,212,255,.12)}
+.cat-A .svc-card{border-left:4px solid var(--a1)}
+.cat-B .svc-card{border-left:4px solid var(--violet)}
+.cat-C .svc-card{border-left:4px solid var(--gold)}
+.svc-card .svc-num{position:absolute;top:14px;right:18px;font-size:36px;
+  font-weight:800;font-family:'Courier New',monospace;color:rgba(255,255,255,.06);line-height:1}
+.svc-card .svc-text{font-size:14.5px;color:var(--text);line-height:1.75;padding-right:30px}
+
+.highlight-card{background:linear-gradient(135deg,rgba(240,165,0,.08),rgba(0,212,255,.06));
+  border:1px solid rgba(240,165,0,.3);border-radius:14px;padding:24px 28px;margin-bottom:40px}
+.highlight-card .htitle{color:var(--gold);font-size:14px;font-weight:700;margin-bottom:10px;letter-spacing:1px}
+.highlight-card .htext{color:var(--text2);font-size:14px;line-height:1.8}
+.highlight-card b{color:var(--text)}
+
+#bottom-nav{padding:40px 0;border-top:1px solid var(--border)}
+.bottom-nav-inner{max-width:1180px;margin:0 auto;padding:0 24px;
+  display:flex;justify-content:center;align-items:center}
+.nav-arrow{color:var(--a1);text-decoration:none;font-size:14px;
+  font-weight:600;padding:10px 28px;border:1px solid var(--border);
+  border-radius:10px;transition:all .2s;display:block}
+.nav-arrow:hover{border-color:var(--a1);background:rgba(0,212,255,.08)}
+
+.ru-text{display:none}
+body.ru .zh{display:none}
+body.ru .ru-text{display:revert}
+</style>
+</head>
+<body class="ru">
+
+<div id="topbar">
+  <a class="back" href="index.html">← <span class="zh">返回总览</span><span class="ru-text">На главную</span></a>
+  <span class="crumb zh">配套服务 / <span>免费承诺</span></span>
+  <span class="crumb ru-text">Сопутствующие услуги / <span>Бесплатные обязательства</span></span>
+  <button id="lang-btn" onclick="toggleLang()">中文 / РУС</button>
+</div>
+
+<section id="hero">
+  <div id="hero-content">
+    <div class="hero-inner">
+      <div class="floor-badge">
+        <span class="zh">🎁 方案配套 · 免费承诺</span>
+        <span class="ru-text">🎁 Сопутствующее предложение · Бесплатно</span>
+      </div>
+      <h1 class="zh">配套免费服务</h1>
+      <h1 class="ru-text">Сопутствующие бесплатные услуги</h1>
+      <p class="subtitle zh">11 项免费承诺 · 覆盖设备 / 师资培训 / 国际合作 · 作为整体设计方案的组成部分</p>
+      <p class="subtitle ru-text">11 бесплатных обязательств · Оборудование / Обучение / Международное сотрудничество · Как часть комплексного проекта</p>
+      <div class="tag-row">
+        <span class="tag zh"><b>11</b> 项承诺</span>
+        <span class="tag ru-text"><b>11</b> обязательств</span>
+        <span class="tag zh"><b>3</b> 大类目</span>
+        <span class="tag ru-text"><b>3</b> категории</span>
+        <span class="tag zh"><b>0 ₸</b> 额外费用</span>
+        <span class="tag ru-text"><b>0 ₸</b> доп. расходов</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrap">
+
+  <section>
+    <!-- Overview cards -->
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="val">11</div>
+        <div class="lbl zh">免费承诺条款</div><div class="lbl ru-text">Бесплатных обязательств</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">3</div>
+        <div class="lbl zh">服务类目</div><div class="lbl ru-text">Категории услуг</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">1 <span style="font-size:18px">год</span></div>
+        <div class="lbl zh">远程技术支持</div><div class="lbl ru-text">Удалённой поддержки</div>
+      </div>
+      <div class="ov-card">
+        <div class="val">5</div>
+        <div class="lbl zh">教师赴华培训名额</div><div class="lbl ru-text">Преподавателей на стажировку в Китай</div>
+      </div>
+    </div>
+
+    <!-- Intro highlight -->
+    <div class="highlight-card">
+      <div class="htitle zh">▸ 方案承诺概述</div>
+      <div class="htitle ru-text">▸ Описание обязательств</div>
+      <div class="htext zh">
+        本承诺为 <b>KKST 哈萨克斯坦创新科技中心</b> 16 个实训室建设方案的<b>配套免费服务</b>，不计入合同造价。涵盖设备质量、本地化语言适配、安装调试、师资培训、远程运维、国际办学合作与国际认证引进等全周期保障，旨在让校方从签约到运营长期受益。
+      </div>
+      <div class="htext ru-text">
+        Настоящие обязательства являются <b>сопутствующими бесплатными услугами</b> к проекту строительства 16 лабораторий <b>Инновационного технологического центра Казахстана (ККСТ)</b> и не включаются в стоимость договора. Охватывают качество оборудования, локализацию языка ПО, монтаж и пусконаладку, обучение преподавателей, удалённое сопровождение, международное образовательное сотрудничество и внедрение международных сертификаций — обеспечивая школе долгосрочную выгоду от подписания договора до эксплуатации.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Category A: Equipment ═══ -->
+  <section class="cat-A">
+    <h2 class="sec-title">
+      <span class="sec-cat">A</span>
+      <span class="zh">设备</span>
+      <span class="ru-text">Оборудование</span>
+    </h2>
+    <p class="sec-sub zh">设备质量、语言适配、物流与安装调试的 4 项基础承诺</p>
+    <p class="sec-sub ru-text">4 базовых обязательства по качеству, локализации, логистике и пусконаладке оборудования</p>
+
+    <div class="svc-grid">
+      <div class="svc-card">
+        <div class="svc-num">01</div>
+        <div class="svc-text zh">所有产品须为全新未使用品；特殊情况须与业主协商确认。</div>
+        <div class="svc-text ru-text">Все продукты должны быть новыми, не бывшими в употреблении; специальные случаи необходимо согласовать с заказчиком.</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">02</div>
+        <div class="svc-text zh">所有产品的软件界面须至少包含英语、俄语或哈萨克语之一。</div>
+        <div class="svc-text ru-text">Интерфейс программного обеспечения всех продуктов должен включать хотя бы один язык: английский, русский или казахский.</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">03</div>
+        <div class="svc-text zh">所有产品免费送达学校（或合同签订前约定的指定地点）。</div>
+        <div class="svc-text ru-text">Все продукты должны быть бесплатно доставлены в школу (или в указанное место, оговорённое до подписания договора).</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">04</div>
+        <div class="svc-text zh">派遣技术工程师与校方共同完成设备安装与调试。</div>
+        <div class="svc-text ru-text">Отправка технических специалистов для совместной с школой установки и наладки оборудования.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Category B: Training ═══ -->
+  <section class="cat-B">
+    <h2 class="sec-title">
+      <span class="sec-cat">B</span>
+      <span class="zh">师资培训</span>
+      <span class="ru-text">Повышение квалификации</span>
+    </h2>
+    <p class="sec-sub zh">运维培训、教学资源、双学历合作与赴华培训的 4 项师资保障</p>
+    <p class="sec-sub ru-text">4 обязательства по обучению персонала, учебным ресурсам, программе «двойной диплом» и стажировкам в Китае</p>
+
+    <div class="svc-grid">
+      <div class="svc-card">
+        <div class="svc-num">01</div>
+        <div class="svc-text zh">为学校人员提供培训以实现自主运维，并提供 1 年远程技术支持。</div>
+        <div class="svc-text ru-text">Обеспечение обучения школьного персонала для самостоятельного обслуживания, предоставление 1 года дистанционного сопровождения.</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">02</div>
+        <div class="svc-text zh">配套教学资源须至少包含英语、俄语或哈萨克语之一。</div>
+        <div class="svc-text ru-text">Сопутствующие учебные ресурсы должны включать хотя бы один язык: английский, русский или казахский.</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">03</div>
+        <div class="svc-text zh">与中国职业院校合作完成至少一个专业的「双学历」联合培养项目。</div>
+        <div class="svc-text ru-text">Завершить не менее одной специальности в сотрудничестве с китайскими профессиональными учебными заведениями для реализации программы «двойной диплома».</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">04</div>
+        <div class="svc-text zh">「人工智能」专业：免费组织 5 名教师赴华培训（含机票、食宿、培训费用）。</div>
+        <div class="svc-text ru-text">По специальности «Искусственный интеллект»: бесплатное обучение 5 преподавателей в Китае (включая авиабилеты, проживание и расходы на обучение).</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Category C: International Cooperation ═══ -->
+  <section class="cat-C">
+    <h2 class="sec-title">
+      <span class="sec-cat">C</span>
+      <span class="zh">国际合作</span>
+      <span class="ru-text">Международное сотрудничество</span>
+    </h2>
+    <p class="sec-sub zh">国际院校战略合作、企业赞助与国际职业认证的 3 项资源对接</p>
+    <p class="sec-sub ru-text">3 обязательства по партнёрству с зарубежными учебными заведениями, спонсорству и внедрению международных сертификаций</p>
+
+    <div class="svc-grid">
+      <div class="svc-card">
+        <div class="svc-num">01</div>
+        <div class="svc-text zh">协助与至少 2 所国际院校建立战略合作关系。</div>
+        <div class="svc-text ru-text">Помочь наладить стратегическое сотрудничество не менее чем с 2 международными учебными заведениями.</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">02</div>
+        <div class="svc-text zh">协助获得至少 1 家国际企业的免费产品赞助。</div>
+        <div class="svc-text ru-text">Помочь получить бесплатную спонсорскую поддержку продукции от не менее 1 международной компании.</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">03</div>
+        <div class="svc-text zh">协助引入至少 2 项国际职业认证。</div>
+        <div class="svc-text ru-text">Помочь внедрить не менее 2 международных профессиональных сертификаций.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="nav-arrow" href="index.html">
+      <span class="zh">🏠 返回总览</span><span class="ru-text">🏠 На главную</span>
+    </a>
+  </div>
+</div>
+
+<script>
+let lang='ru';
+function toggleLang(){
+  lang=lang==='zh'?'ru':'zh';
+  document.body.classList.toggle('ru',lang==='ru');
+  document.getElementById('lang-btn').textContent=lang==='zh'?'РУС / 中文':'中文 / РУС';
+}
+</script>
+</body>
+</html>

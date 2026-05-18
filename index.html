@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -159,6 +159,8 @@ body.ru{font-family:var(--font-ru)}
 .infra-tab:hover{background:rgba(168,85,247,.1) !important}
 .infra-tab.active{background:linear-gradient(135deg,#7c3aed,#a855f7) !important;
   border-color:#a855f7 !important;color:#fff !important}
+.services-tab{border-color:#f0a500 !important;color:#f0a500 !important}
+.services-tab:hover{background:rgba(240,165,0,.1) !important}
 @media(max-width:600px){
   #card-infrastructure{flex-direction:column !important}
   #card-infrastructure .lab-card-img{width:100% !important;min-width:0 !important;height:200px}
@@ -195,7 +197,7 @@ body.ru .ru-text{display:inherit}
   color:var(--accent);font-size:11px;padding:2px 8px;border-radius:6px;margin-right:4px}
 </style>
 </head>
-<body>
+<body class="ru">
 
 <!-- ══ NAVIGATION ══════════════════════════════════════ -->
 <nav id="nav">
@@ -210,7 +212,9 @@ body.ru .ru-text{display:inherit}
     <a href="#floors" class="ru-text">Лаборатории</a>
     <a href="#investment" class="zh">投资概览</a>
     <a href="#investment" class="ru-text">Инвестиции</a>
-    <button id="lang-btn" onclick="toggleLang()">РУС / 中文</button>
+    <a href="services.html" class="zh">🎁 配套服务</a>
+    <a href="services.html" class="ru-text">🎁 Услуги</a>
+    <button id="lang-btn" onclick="toggleLang()">中文 / РУС</button>
   </div>
 </nav>
 
@@ -324,7 +328,7 @@ body.ru .ru-text{display:inherit}
 // ── LANG TOGGLE ─────────────────────────────────
 const INFRA_TOTAL_KZT = 108986282;
 const FACADE_TOTAL_KZT = 100000000;
-let lang = 'zh';
+let lang = 'ru';
 function toggleLang() {
   lang = lang === 'zh' ? 'ru' : 'zh';
   document.body.classList.toggle('ru', lang === 'ru');
@@ -419,6 +423,10 @@ function renderFloors() {
     <button class="floor-tab facade-tab" onclick="switchFloor('facade')" id="tab-facade">
       <span class="zh">🏢 外立面</span>
       <span class="ru-text">🏢 Фасад</span>
+    </button>
+    <button class="floor-tab services-tab" onclick="location.href='services.html'" id="tab-services">
+      <span class="zh">🎁 配套服务</span>
+      <span class="ru-text">🎁 Услуги</span>
     </button>`;
 
   // Panels

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -116,12 +116,12 @@ body.ru .ru-text{display:revert}
 .img-modal img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px}
 </style>
 </head>
-<body>
+<body class="ru">
 <div id="topbar">
   <a class="back" href="../index.html">← <span class="zh">返回总览</span><span class="ru-text">На главную</span></a>
   <span class="crumb zh">五层 / <span>数字创新</span></span>
   <span class="crumb ru-text">5-й эт. / <span>Центр цифровых инноваций</span></span>
-  <button id="lang-btn" onclick="toggleLang()">РУС / 中文</button>
+  <button id="lang-btn" onclick="toggleLang()">中文 / РУС</button>
 </div>
 
 <section id="hero">
@@ -328,7 +328,7 @@ body.ru .ru-text{display:revert}
 </div>
 
 <script>
-let lang='zh';
+let lang='ru';
 
 function openModal(src){
   document.getElementById('modalImg').src = src;
