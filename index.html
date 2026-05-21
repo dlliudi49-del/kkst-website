@@ -162,11 +162,17 @@ body.ru{font-family:var(--font-ru)}
 .infra-tab:hover{background:rgba(168,85,247,.1) !important}
 .infra-tab.active{background:linear-gradient(135deg,#7c3aed,#a855f7) !important;
   border-color:#a855f7 !important;color:#fff !important}
+.smart-tab{border-color:#00d4ff !important;color:#00d4ff !important}
+.smart-tab:hover{background:rgba(0,212,255,.1) !important}
+.smart-tab.active{background:linear-gradient(135deg,#0066aa,#00d4ff) !important;
+  border-color:#00d4ff !important;color:#fff !important}
 .services-tab{border-color:#f0a500 !important;color:#f0a500 !important}
 .services-tab:hover{background:rgba(240,165,0,.1) !important}
 @media(max-width:600px){
   #card-infrastructure{flex-direction:column !important}
   #card-infrastructure .lab-card-img{width:100% !important;min-width:0 !important;height:200px}
+  #card-smart{flex-direction:column !important}
+  #card-smart .lab-card-img{width:100% !important;min-width:0 !important;height:200px}
 }
 
 /* ── INVESTMENT SECTION ─────────────────────────── */
@@ -423,6 +429,10 @@ function renderFloors() {
       <span class="zh">⚡ 基础设施</span>
       <span class="ru-text">⚡ Инфраструктура</span>
     </button>
+    <button class="floor-tab smart-tab" onclick="switchFloor('smart')" id="tab-smart">
+      <span class="zh">🏙 智慧楼宇</span>
+      <span class="ru-text">🏙 Умное здание</span>
+    </button>
     <button class="floor-tab facade-tab" onclick="switchFloor('facade')" id="tab-facade">
       <span class="zh">🏢 外立面</span>
       <span class="ru-text">🏢 Фасад</span>
@@ -485,6 +495,45 @@ function renderFloors() {
           <a class="detail-link" href="labs/infrastructure.html" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff">
             <span class="zh">查看基础设施方案 →</span>
             <span class="ru-text">Просмотр инфраструктуры →</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="floor-section" id="floor-smart">
+    <div class="floor-header" style="border-left-color:#00d4ff">
+      <div class="floor-badge" style="background:linear-gradient(135deg,#0066aa,#00d4ff);font-size:22px;width:52px;height:52px">🏙</div>
+      <div>
+        <h3 class="zh">智慧楼宇管理系统（IBMS）</h3>
+        <h3 class="ru-text">Система умного здания (IBMS)</h3>
+        <p class="zh">全楼 5 层智能化方案 · 安防 + 环境监测 + 能耗管理 · 27 类新增智能设备 · 统一综合管理平台</p>
+        <p class="ru-text">Интеллектуализация всего здания (5 этажей) · Безопасность + Среда + Энергетика · 27 видов нового оборудования · Единая платформа IBMS</p>
+      </div>
+    </div>
+    <div class="labs-grid" style="grid-template-columns:1fr">
+      <div class="lab-card" style="display:flex;flex-direction:row" id="card-smart">
+        <div class="lab-card-img" style="width:320px;min-width:280px;flex-shrink:0">
+          <img src="assets/images/render_exterior.jpg" alt="智慧楼宇系统" loading="lazy"
+               onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#0e1829,#162340)'">
+          <span class="lab-floor-badge zh">智慧楼宇</span>
+          <span class="lab-floor-badge ru-text">Умное здание</span>
+        </div>
+        <div class="lab-card-body" style="flex:1">
+          <h3 class="zh" style="color:#00d4ff">智慧楼宇管理系统（IBMS）</h3>
+          <h3 class="ru-text" style="color:#00d4ff">Система умного здания (IBMS)</h3>
+          <p class="lab-ru zh">Intelligent Building Management System · 智能楼宇综合管理</p>
+          <p class="lab-ru ru-text">智能楼宇综合管理 · Интегрированная система управления</p>
+          <div class="lab-meta-row">
+            <div class="lab-meta">🏙 <span class="zh">5 层全覆盖</span><span class="ru-text">5 этажей</span></div>
+            <div class="lab-meta">📐 <span class="zh">2708.8 m²</span><span class="ru-text">2708.8 м²</span></div>
+            <div class="lab-meta">🔧 <span class="zh">4 大子系统</span><span class="ru-text">4 подсистемы</span></div>
+            <div class="lab-meta">📦 <span class="zh">27 类新增设备</span><span class="ru-text">27 видов оборудования</span></div>
+          </div>
+          <p class="lab-desc zh">在已有弱电基础设施（网络/Wi-Fi/视频监控/机房）基础上，新增智能安防（门禁/访客/入侵）、环境监测（温湿度/空气质量/智能照明/传感）、能耗管理（分项计量/智能断路器/可视化）三大子系统，通过 IBMS 统一平台实现全楼智能化管理。</p>
+          <p class="lab-desc ru-text">На основе существующей инфраструктуры (сеть/Wi-Fi/камеры/серверная) добавляются три подсистемы: интеллектуальная безопасность (СКУД/посетители/охрана), мониторинг среды (т/в, воздух, свет, датчики) и управление энергетикой (учёт/автоматы/визуализация) — всё под управлением единой платформы IBMS.</p>
+          <a class="detail-link" href="labs/smart_building.html" style="background:linear-gradient(135deg,#0066aa,#00d4ff);color:#fff">
+            <span class="zh">查看智慧楼宇方案 →</span>
+            <span class="ru-text">Подробнее об умном здании →</span>
           </a>
         </div>
       </div>

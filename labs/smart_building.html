@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>智慧楼宇系统 · KKST 建设方案</title>
+<style>
+:root{
+  --bg:#070d1a;--bg2:#0e1829;--card:#111e33;--card2:#162340;
+  --border:#1e3a5f;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --a1:#00d4ff;--a2:#0066aa;--gold:#f0a500;--green:#10b981;
+  --violet:#a855f7;--teal:#14b8a6;--orange:#f97316;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.6}
+body.ru{font-family:'Segoe UI','Arial',sans-serif}
+
+/* ── TOPBAR ── */
+#topbar{position:sticky;top:0;z-index:100;background:rgba(7,13,26,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;gap:16px}
+#topbar .back{color:var(--a1);text-decoration:none;font-size:13px;
+  font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap}
+#topbar .back:hover{opacity:.8}
+#topbar .crumb{font-size:13px;color:var(--text3)}
+#topbar .crumb span{color:var(--text2)}
+#lang-btn{background:var(--card2);border:1px solid var(--border);
+  color:var(--text);padding:5px 14px;border-radius:20px;cursor:pointer;
+  font-size:13px;white-space:nowrap;transition:all .2s}
+#lang-btn:hover{border-color:var(--a1);color:var(--a1)}
+
+/* ── HERO ── */
+#hero{position:relative;height:480px;overflow:hidden;background:var(--bg2)}
+#hero-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.6)}
+#hero-overlay{position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(7,13,26,.9) 35%,rgba(7,13,26,.2) 100%)}
+#hero-content{position:absolute;inset:0;display:flex;align-items:center;
+  padding:0 64px;max-width:760px}
+.hero-inner .floor-badge{display:inline-block;background:rgba(0,212,255,.15);
+  border:1px solid var(--a1);color:var(--a1);font-size:12px;padding:3px 14px;
+  border-radius:20px;margin-bottom:18px;letter-spacing:1px}
+.hero-inner h1{font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.2;margin-bottom:8px}
+.hero-inner .ru-name{font-size:clamp(14px,2vw,20px);color:rgba(255,255,255,.6);font-style:italic;margin-bottom:20px}
+.hero-inner .tag-row{display:flex;gap:10px;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:var(--text2);font-size:12px;padding:4px 12px;border-radius:8px}
+.tag b{color:#fff}
+
+/* ── LAYOUT ── */
+.page-wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+section{padding:56px 0}
+section+section{padding-top:0}
+
+/* ── OVERVIEW CARDS ── */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:40px}
+.ov-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 20px;text-align:center;position:relative;overflow:hidden}
+.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--a1),var(--a2))}
+.ov-card .val{font-size:30px;font-weight:800;color:var(--a1);font-family:'Courier New',monospace}
+.ov-card .lbl{font-size:12px;color:var(--text3);margin-top:4px}
+
+/* ── SECTION TITLES ── */
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.desc-card{background:var(--card);border-radius:14px;padding:28px;
+  border-left:4px solid var(--a1);margin-bottom:32px}
+.desc-card p{font-size:15px;color:var(--text2);line-height:1.9}
+
+/* ── ARCHITECTURE SVG ── */
+.arch-wrap{background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:32px 24px;margin-bottom:40px;overflow-x:auto}
+.arch-svg{width:100%;max-width:960px;display:block;margin:0 auto}
+
+/* ── SYSTEM SECTIONS ── */
+.sys-section{margin-bottom:48px}
+.sys-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.sys-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.sys-title-text{font-size:18px;font-weight:700;color:#fff}
+.sys-count{font-size:13px;color:var(--text3);margin-left:auto;white-space:nowrap}
+
+/* ── TABLES ── */
+.eq-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--card2);color:var(--a1);font-weight:600;padding:12px 14px;
+  text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:1px solid rgba(30,58,95,.4);color:var(--text2);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(0,212,255,.04);color:var(--text)}
+.idx{color:var(--text3);text-align:center;width:36px}
+.name-col{min-width:200px}
+.eq-name{color:var(--text);font-weight:500}
+.eq-spec{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5}
+.unit-col{color:var(--text3);white-space:nowrap;font-size:12px}
+.num-col{text-align:center;white-space:nowrap}
+.badge-new{display:inline-block;background:rgba(16,185,129,.15);border:1px solid var(--green);
+  color:var(--green);font-size:10px;padding:1px 8px;border-radius:10px;margin-left:6px;vertical-align:middle}
+.eq-total-row td{background:var(--card2);font-weight:700;border-top:2px solid var(--border)}
+
+/* ── BOTTOM NAV ── */
+#bottom-nav{padding:40px 0;border-top:1px solid var(--border)}
+.bottom-nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;
+  display:flex;justify-content:center;align-items:center}
+.nav-arrow{color:var(--a1);text-decoration:none;font-size:14px;
+  font-weight:600;padding:10px 28px;border:1px solid var(--border);
+  border-radius:10px;transition:all .2s;display:block}
+.nav-arrow:hover{border-color:var(--a1);background:rgba(0,212,255,.08)}
+
+/* ── BILINGUAL ── */
+.ru-text{display:none}
+body.ru .zh{display:none}
+body.ru .ru-text{display:revert}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  #hero-content{padding:0 24px}
+  .hero-inner h1{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <a class="back" href="../index.html">← <span class="zh">返回总览</span><span class="ru-text">На главную</span></a>
+  <span class="crumb zh">全楼 / <span>智慧楼宇系统</span></span>
+  <span class="crumb ru-text">Весь корпус / <span>Система умного здания</span></span>
+  <button id="lang-btn" onclick="toggleLang()">中文 / РУС</button>
+</div>
+
+<section id="hero">
+  <img id="hero-img" src="../assets/images/render_exterior.jpg" alt="智慧楼宇"
+       onerror="this.src='../assets/images/render_iot_center.jpg';this.onerror=function(){this.style.display='none';document.getElementById('hero').style.background='linear-gradient(135deg,#0e1829,#162340)'}">
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <div class="hero-inner">
+      <div class="floor-badge">
+        <span class="zh">全楼覆盖 · 1–5层 · IBMS</span>
+        <span class="ru-text">Весь корпус · 1–5 этаж · IBMS</span>
+      </div>
+      <h1 class="zh">智慧楼宇系统</h1>
+      <h1 class="ru-text">Система умного здания</h1>
+      <p class="ru-name zh">Intelligent Building Management System</p>
+      <p class="ru-name ru-text">智能楼宇管理系统</p>
+      <div class="tag-row">
+        <span class="tag zh"><b>面积</b> 2708.8 m²</span>
+        <span class="tag ru-text"><b>Площадь</b> 2708.8 m²</span>
+        <span class="tag zh"><b>楼层</b> 5 层</span>
+        <span class="tag ru-text"><b>Этажей</b> 5</span>
+        <span class="tag zh"><b>子系统</b> 4 套</span>
+        <span class="tag ru-text"><b>Подсистем</b> 4</span>
+        <span class="tag zh"><b>新增设备</b> 27 类</span>
+        <span class="tag ru-text"><b>Новых устройств</b> 27 видов</span>
+        <span class="tag zh"><b>实训室</b> 16 间</span>
+        <span class="tag ru-text"><b>Лаборатории</b> 16</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrap">
+<section>
+
+  <!-- Overview Cards -->
+  <div class="overview-grid">
+    <div class="ov-card">
+      <div class="val">2708</div>
+      <div class="lbl zh">建筑面积 (m²)</div><div class="lbl ru-text">Площадь (м²)</div>
+    </div>
+    <div class="ov-card">
+      <div class="val">5F</div>
+      <div class="lbl zh">楼层覆盖</div><div class="lbl ru-text">Охват этажей</div>
+    </div>
+    <div class="ov-card">
+      <div class="val">4</div>
+      <div class="lbl zh">智慧子系统</div><div class="lbl ru-text">Подсистемы</div>
+    </div>
+    <div class="ov-card">
+      <div class="val">27</div>
+      <div class="lbl zh">新增设备类</div><div class="lbl ru-text">Новых видов оборудования</div>
+    </div>
+    <div class="ov-card">
+      <div class="val">16</div>
+      <div class="lbl zh">实训室接入</div><div class="lbl ru-text">Лабораторий подключено</div>
+    </div>
+    <div class="ov-card">
+      <div class="val">IBMS</div>
+      <div class="lbl zh">统一管理平台</div><div class="lbl ru-text">Единая платформа</div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <h2 class="sec-title zh">系统概述</h2>
+  <h2 class="sec-title ru-text">Описание системы</h2>
+  <div class="desc-card">
+    <p class="zh">KKST哈萨克斯坦创新科技中心智慧楼宇系统（IBMS）基于已有弱电基础设施（千兆网络、Wi-Fi 6、55路视频、模块化机房），叠加建设智能安防、环境监测、能耗管理三大子系统，并通过统一综合管理平台进行集中控制与数据可视化。系统采用物联网网关实现多协议融合（Zigbee/RS485/MQTT/Modbus），打造智能化、节能化、安全化的现代职教实训楼宇。</p>
+    <p class="ru-text">Система управления умным зданием KKST (IBMS) опирается на уже установленную слаботочную инфраструктуру (гигабитная сеть, Wi-Fi 6, 55 камер, модульный ИБП) и дополняет её тремя подсистемами: интеллектуальная безопасность, мониторинг окружающей среды и управление энергопотреблением. Единая платформа управления обеспечивает централизованный контроль и визуализацию данных. IoT-шлюзы обеспечивают интеграцию протоколов Zigbee/RS485/MQTT/Modbus.</p>
+  </div>
+
+  <!-- Architecture Diagram -->
+  <h2 class="sec-title zh">功能模块架构</h2>
+  <h2 class="sec-title ru-text">Архитектура функциональных модулей</h2>
+  <div class="arch-wrap">
+    <svg class="arch-svg" viewBox="0 0 960 560" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC','Segoe UI',sans-serif">
+      <defs>
+        <linearGradient id="gPlatform" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#0066aa"/><stop offset="100%" stop-color="#00d4ff"/>
+        </linearGradient>
+        <linearGradient id="gSec" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#a855f7"/>
+        </linearGradient>
+        <linearGradient id="gEnv" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#0d9488"/><stop offset="100%" stop-color="#14b8a6"/>
+        </linearGradient>
+        <linearGradient id="gEnergy" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#d97706"/><stop offset="100%" stop-color="#f59e0b"/>
+        </linearGradient>
+        <linearGradient id="gInfra" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1e3a5f"/><stop offset="100%" stop-color="#2d5a8e"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Background -->
+      <rect width="960" height="560" fill="#0e1829" rx="12"/>
+
+      <!-- ── 综合管理平台 (top) ── -->
+      <rect x="280" y="20" width="400" height="68" rx="10" fill="url(#gPlatform)" opacity=".9"/>
+      <text x="480" y="49" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">综合管理平台 · IBMS</text>
+      <text x="480" y="68" text-anchor="middle" fill="rgba(255,255,255,.75)" font-size="11">Интегрированная система управления зданием</text>
+
+      <!-- Vertical connector from platform -->
+      <line x1="480" y1="88" x2="480" y2="118" stroke="#00d4ff" stroke-width="2" stroke-dasharray="4,3" opacity=".6"/>
+      <!-- Horizontal connector -->
+      <line x1="160" y1="118" x2="800" y2="118" stroke="#1e3a5f" stroke-width="1.5" opacity=".8"/>
+      <!-- Vertical down to each system -->
+      <line x1="160" y1="118" x2="160" y2="148" stroke="#a855f7" stroke-width="2" opacity=".7"/>
+      <line x1="480" y1="118" x2="480" y2="148" stroke="#14b8a6" stroke-width="2" opacity=".7"/>
+      <line x1="800" y1="118" x2="800" y2="148" stroke="#f59e0b" stroke-width="2" opacity=".7"/>
+
+      <!-- IoT Gateway boxes (small, between platform and subsystems) -->
+      <rect x="400" y="104" width="160" height="28" rx="6" fill="#111e33" stroke="#00d4ff" stroke-width="1"/>
+      <text x="480" y="122" text-anchor="middle" fill="#00d4ff" font-size="11">IoT 协议网关 · IoT-шлюз</text>
+
+      <!-- ── 智能安防系统 ── -->
+      <rect x="40" y="148" width="240" height="52" rx="8" fill="url(#gSec)" opacity=".85"/>
+      <text x="160" y="170" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">智能安防系统</text>
+      <text x="160" y="187" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="10">Интеллектуальная безопасность</text>
+
+      <!-- Security sub-modules -->
+      <line x1="90" y1="200" x2="90" y2="222" stroke="#a855f7" stroke-width="1.5" opacity=".6"/>
+      <line x1="140" y1="200" x2="140" y2="222" stroke="#a855f7" stroke-width="1.5" opacity=".6"/>
+      <line x1="190" y1="200" x2="190" y2="222" stroke="#a855f7" stroke-width="1.5" opacity=".6"/>
+      <line x1="240" y1="200" x2="240" y2="222" stroke="#a855f7" stroke-width="1.5" opacity=".6"/>
+
+      <rect x="46" y="222" width="84" height="42" rx="6" fill="#1a1040" stroke="#a855f7" stroke-width="1"/>
+      <text x="88" y="239" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="600">视频监控</text>
+      <text x="88" y="252" text-anchor="middle" fill="#94a3b8" font-size="9">集成管理</text>
+
+      <rect x="98" y="222" width="84" height="42" rx="6" fill="#1a1040" stroke="#a855f7" stroke-width="1"/>
+      <text x="140" y="239" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="600">门禁控制</text>
+      <text x="140" y="252" text-anchor="middle" fill="#94a3b8" font-size="9">人脸+刷卡</text>
+
+      <rect x="150" y="222" width="84" height="42" rx="6" fill="#1a1040" stroke="#a855f7" stroke-width="1"/>
+      <text x="192" y="239" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="600">访客管理</text>
+      <text x="192" y="252" text-anchor="middle" fill="#94a3b8" font-size="9">前台一体机</text>
+
+      <rect x="202" y="222" width="78" height="42" rx="6" fill="#1a1040" stroke="#a855f7" stroke-width="1"/>
+      <text x="241" y="239" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="600">入侵报警</text>
+      <text x="241" y="252" text-anchor="middle" fill="#94a3b8" font-size="9">红外探测</text>
+
+      <!-- ── 环境监测系统 ── -->
+      <rect x="360" y="148" width="240" height="52" rx="8" fill="url(#gEnv)" opacity=".85"/>
+      <text x="480" y="170" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">环境监测系统</text>
+      <text x="480" y="187" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="10">Мониторинг окружающей среды</text>
+
+      <!-- Env sub-modules -->
+      <line x1="406" y1="200" x2="406" y2="222" stroke="#14b8a6" stroke-width="1.5" opacity=".6"/>
+      <line x1="453" y1="200" x2="453" y2="222" stroke="#14b8a6" stroke-width="1.5" opacity=".6"/>
+      <line x1="507" y1="200" x2="507" y2="222" stroke="#14b8a6" stroke-width="1.5" opacity=".6"/>
+      <line x1="556" y1="200" x2="556" y2="222" stroke="#14b8a6" stroke-width="1.5" opacity=".6"/>
+
+      <rect x="364" y="222" width="84" height="42" rx="6" fill="#0a2420" stroke="#14b8a6" stroke-width="1"/>
+      <text x="406" y="239" text-anchor="middle" fill="#2dd4bf" font-size="10" font-weight="600">温湿度监测</text>
+      <text x="406" y="252" text-anchor="middle" fill="#94a3b8" font-size="9">各楼层传感</text>
+
+      <rect x="416" y="222" width="74" height="42" rx="6" fill="#0a2420" stroke="#14b8a6" stroke-width="1"/>
+      <text x="453" y="239" text-anchor="middle" fill="#2dd4bf" font-size="10" font-weight="600">空气质量</text>
+      <text x="453" y="252" text-anchor="middle" fill="#94a3b8" font-size="9">CO₂/PM2.5</text>
+
+      <rect x="482" y="222" width="74" height="42" rx="6" fill="#0a2420" stroke="#14b8a6" stroke-width="1"/>
+      <text x="519" y="239" text-anchor="middle" fill="#2dd4bf" font-size="10" font-weight="600">智能照明</text>
+      <text x="519" y="252" text-anchor="middle" fill="#94a3b8" font-size="9">分区控制</text>
+
+      <rect x="532" y="222" width="68" height="42" rx="6" fill="#0a2420" stroke="#14b8a6" stroke-width="1"/>
+      <text x="566" y="239" text-anchor="middle" fill="#2dd4bf" font-size="10" font-weight="600">安全传感</text>
+      <text x="566" y="252" text-anchor="middle" fill="#94a3b8" font-size="9">烟感/应急</text>
+
+      <!-- ── 能耗管理系统 ── -->
+      <rect x="680" y="148" width="240" height="52" rx="8" fill="url(#gEnergy)" opacity=".85"/>
+      <text x="800" y="170" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">能耗管理系统</text>
+      <text x="800" y="187" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="10">Управление энергопотреблением</text>
+
+      <!-- Energy sub-modules -->
+      <line x1="726" y1="200" x2="726" y2="222" stroke="#f59e0b" stroke-width="1.5" opacity=".6"/>
+      <line x1="800" y1="200" x2="800" y2="222" stroke="#f59e0b" stroke-width="1.5" opacity=".6"/>
+      <line x1="870" y1="200" x2="870" y2="222" stroke="#f59e0b" stroke-width="1.5" opacity=".6"/>
+
+      <rect x="686" y="222" width="80" height="42" rx="6" fill="#1a1005" stroke="#f59e0b" stroke-width="1"/>
+      <text x="726" y="239" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="600">分项计量</text>
+      <text x="726" y="252" text-anchor="middle" fill="#94a3b8" font-size="9">多功能电表</text>
+
+      <rect x="762" y="222" width="76" height="42" rx="6" fill="#1a1005" stroke="#f59e0b" stroke-width="1"/>
+      <text x="800" y="239" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="600">供配电监控</text>
+      <text x="800" y="252" text-anchor="middle" fill="#94a3b8" font-size="9">实时监测</text>
+
+      <rect x="834" y="222" width="76" height="42" rx="6" fill="#1a1005" stroke="#f59e0b" stroke-width="1"/>
+      <text x="872" y="239" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="600">节能优化</text>
+      <text x="872" y="252" text-anchor="middle" fill="#94a3b8" font-size="9">智能断路器</text>
+
+      <!-- ── 基础设施层 (bottom) ── -->
+      <!-- Connector lines from subsystems down -->
+      <line x1="160" y1="264" x2="160" y2="310" stroke="#1e3a5f" stroke-width="1.5" stroke-dasharray="4,3" opacity=".5"/>
+      <line x1="480" y1="264" x2="480" y2="310" stroke="#1e3a5f" stroke-width="1.5" stroke-dasharray="4,3" opacity=".5"/>
+      <line x1="800" y1="264" x2="800" y2="310" stroke="#1e3a5f" stroke-width="1.5" stroke-dasharray="4,3" opacity=".5"/>
+      <line x1="160" y1="310" x2="800" y2="310" stroke="#1e3a5f" stroke-width="1.5" opacity=".4"/>
+      <line x1="480" y1="310" x2="480" y2="334" stroke="#1e3a5f" stroke-width="1.5" opacity=".4"/>
+
+      <rect x="180" y="334" width="600" height="58" rx="8" fill="url(#gInfra)" opacity=".9"/>
+      <text x="480" y="358" text-anchor="middle" fill="#94a3b8" font-size="13" font-weight="700">基础设施层（已规划）· Существующая инфраструктура</text>
+      <text x="480" y="378" text-anchor="middle" fill="#64748b" font-size="10">OLT/ONU光纤网络 · Wi-Fi 6 (27AP) · 55路视频监控 · 模块化UPS机房</text>
+
+      <!-- Floor indicators -->
+      <rect x="40" y="420" width="880" height="120" rx="10" fill="#070d1a" stroke="#1e3a5f" stroke-width="1"/>
+      <text x="480" y="445" text-anchor="middle" fill="#64748b" font-size="12" font-weight="600">楼层覆盖分布 · Распределение по этажам</text>
+
+      <!-- Floor bars -->
+      <g transform="translate(80,460)">
+        <rect x="0" y="0" width="152" height="62" rx="6" fill="#111e33" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="76" y="18" text-anchor="middle" fill="#a855f7" font-size="11" font-weight="700">1F 一层</text>
+        <text x="76" y="34" text-anchor="middle" fill="#64748b" font-size="9">前台·展厅·配电房</text>
+        <text x="76" y="48" text-anchor="middle" fill="#64748b" font-size="9">访客管理·能耗总表</text>
+      </g>
+      <g transform="translate(252,460)">
+        <rect x="0" y="0" width="152" height="62" rx="6" fill="#111e33" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="76" y="18" text-anchor="middle" fill="#a855f7" font-size="11" font-weight="700">2F 二层</text>
+        <text x="76" y="34" text-anchor="middle" fill="#64748b" font-size="9">物联网·智能家居</text>
+        <text x="76" y="48" text-anchor="middle" fill="#64748b" font-size="9">环境传感·智能照明</text>
+      </g>
+      <g transform="translate(424,460)">
+        <rect x="0" y="0" width="152" height="62" rx="6" fill="#111e33" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="76" y="18" text-anchor="middle" fill="#14b8a6" font-size="11" font-weight="700">3F 三层</text>
+        <text x="76" y="34" text-anchor="middle" fill="#64748b" font-size="9">AI·无人机·图形设计</text>
+        <text x="76" y="48" text-anchor="middle" fill="#64748b" font-size="9">门禁·空气质量监测</text>
+      </g>
+      <g transform="translate(596,460)">
+        <rect x="0" y="0" width="152" height="62" rx="6" fill="#111e33" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="76" y="18" text-anchor="middle" fill="#14b8a6" font-size="11" font-weight="700">4F 四层</text>
+        <text x="76" y="34" text-anchor="middle" fill="#64748b" font-size="9">工业机器人·移动机器人</text>
+        <text x="76" y="48" text-anchor="middle" fill="#64748b" font-size="9">门禁·分项计量</text>
+      </g>
+      <g transform="translate(768,460)">
+        <rect x="0" y="0" width="152" height="62" rx="6" fill="#111e33" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="76" y="18" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="700">5F 五层</text>
+        <text x="76" y="34" text-anchor="middle" fill="#64748b" font-size="9">媒体·会议·机房</text>
+        <text x="76" y="48" text-anchor="middle" fill="#64748b" font-size="9">服务器·能耗管理</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ═══════════════════════════════ SYSTEM 1: 综合管理平台 ═══════════════════ -->
+  <div class="sys-section">
+    <div class="sys-header">
+      <div class="sys-dot" style="background:var(--a1)"></div>
+      <span class="sys-title-text zh">一、综合管理平台（IBMS）</span>
+      <span class="sys-title-text ru-text">I. Интегрированная платформа управления (IBMS)</span>
+      <span class="sys-count zh">4 类设备</span>
+      <span class="sys-count ru-text">4 вида оборудования</span>
+    </div>
+    <div class="eq-table-wrap">
+      <table>
+        <thead><tr>
+          <th class="idx">#</th>
+          <th class="zh">名称 / 规格</th><th class="ru-text">Наименование / Характеристики</th>
+          <th class="zh">单位</th><th class="ru-text">Ед.</th>
+          <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+          <th class="zh">备注</th><th class="ru-text">Примечание</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td class="idx">1</td>
+            <td class="name-col">
+              <div class="eq-name zh">IBMS综合管理平台软件 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">ПО интегрированной платформы управления зданием <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">Web+Client双模 / 支持安防/环境/能耗三大模块 / 数据可视化大屏 / 多协议接入</div>
+              <div class="eq-spec ru-text">Web+Client; модули безопасности/среды/энергетики; визуализация; мультипротокол</div>
+            </td>
+            <td class="unit-col zh">套</td><td class="unit-col ru-text">комп.</td>
+            <td class="num-col">1</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">统一管理入口</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Единый портал управления</td>
+          </tr>
+          <tr>
+            <td class="idx">2</td>
+            <td class="name-col">
+              <div class="eq-name zh">IBMS管理服务器 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Сервер платформы IBMS <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">双路CPU / ≥64GB RAM / ≥2TB SSD RAID / 双千兆网口 / 机架式2U</div>
+              <div class="eq-spec ru-text">Dual CPU; ≥64GB RAM; ≥2TB SSD RAID; 2×GbE; стоечный 2U</div>
+            </td>
+            <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">1</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">部署于5F机房</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Размещение в серверной 5Ф</td>
+          </tr>
+          <tr>
+            <td class="idx">3</td>
+            <td class="name-col">
+              <div class="eq-name zh">IBMS管理工作站 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Рабочая станция IBMS <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">i7 / 32GB RAM / 512GB SSD / 双屏27寸 / 配键鼠</div>
+              <div class="eq-spec ru-text">i7; 32GB; SSD 512GB; 2×27" монитора; клавиатура, мышь</div>
+            </td>
+            <td class="unit-col zh">套</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">1</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">1F管理中心</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Центр управления 1Ф</td>
+          </tr>
+          <tr>
+            <td class="idx">4</td>
+            <td class="name-col">
+              <div class="eq-name zh">IoT协议网关 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">IoT-шлюз (многопротокольный) <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">支持Zigbee 3.0 / Z-Wave / RS485 / MQTT / Modbus RTU/TCP / 以太网上行</div>
+              <div class="eq-spec ru-text">Zigbee 3.0, Z-Wave, RS485, MQTT, Modbus RTU/TCP; Ethernet uplink</div>
+            </td>
+            <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">5</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">每层1台</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">По 1 на этаж</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ SYSTEM 2: 智能安防 ═══════════════════════ -->
+  <div class="sys-section">
+    <div class="sys-header">
+      <div class="sys-dot" style="background:var(--violet)"></div>
+      <span class="sys-title-text zh">二、智能安防系统</span>
+      <span class="sys-title-text ru-text">II. Интеллектуальная система безопасности</span>
+      <span class="sys-count zh">8 类设备</span>
+      <span class="sys-count ru-text">8 видов оборудования</span>
+    </div>
+    <div class="eq-table-wrap">
+      <table>
+        <thead><tr>
+          <th class="idx">#</th>
+          <th class="zh">名称 / 规格</th><th class="ru-text">Наименование / Характеристики</th>
+          <th class="zh">单位</th><th class="ru-text">Ед.</th>
+          <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+          <th class="zh">备注</th><th class="ru-text">Примечание</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td class="idx">5</td>
+            <td class="name-col">
+              <div class="eq-name zh">人脸识别门禁控制器 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Контроллер СКУД с распознаванием лиц <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">人脸+刷卡双模 / ≥50,000人脸库 / 离线工作 / TCP/IP联网 / 可与IBMS对接</div>
+              <div class="eq-spec ru-text">Лицо+карта; ≥50000 лиц; автономная работа; TCP/IP; интеграция IBMS</div>
+            </td>
+            <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">16</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">各实训室门口</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Вход в каждую лабораторию</td>
+          </tr>
+          <tr>
+            <td class="idx">6</td>
+            <td class="name-col">
+              <div class="eq-name zh">壁挂式读卡器（出门按钮端）<span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Считыватель карт (настенный, кнопка выхода) <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">IC/ID双频 / Wiegand 26/34 / PoE供电</div>
+              <div class="eq-spec ru-text">IC/ID двойная частота; Wiegand 26/34; питание PoE</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">16</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">门内出口侧</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Внутренняя сторона двери</td>
+          </tr>
+          <tr>
+            <td class="idx">7</td>
+            <td class="name-col">
+              <div class="eq-name zh">电磁锁（180kg）<span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Электромагнитный замок (180 кг) <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">DC12V / 断电开锁（安全型）/ 含门磁反馈信号</div>
+              <div class="eq-spec ru-text">DC12V; открытие при обесточивании (безопасный тип); датчик двери</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">16</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">配套门禁</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">В комплекте со СКУД</td>
+          </tr>
+          <tr>
+            <td class="idx">8</td>
+            <td class="name-col">
+              <div class="eq-name zh">访客管理一体机 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Терминал управления посетителями <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">21.5寸触屏 / 人脸抓拍 / 身份证读取 / 电子预约 / 访客通行证打印</div>
+              <div class="eq-spec ru-text">21,5" сенсор; фото; чтение ID; эл. запись; печать пропуска</div>
+            </td>
+            <td class="unit-col zh">套</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">1</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">1F大厅前台</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Стойка ресепшн 1Ф</td>
+          </tr>
+          <tr>
+            <td class="idx">9</td>
+            <td class="name-col">
+              <div class="eq-name zh">楼栋出入口道闸 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Турникет на входе в здание <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">三辊闸 / 人脸识别联动 / 进出双向 / 消防联动强制开启</div>
+              <div class="eq-spec ru-text">Трёхруннерный турникет; интеграция с лицом; двустороннее; связь с пожарной сигн.</div>
+            </td>
+            <td class="unit-col zh">套</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">2</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">主入口+侧入口</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Главный + боковой вход</td>
+          </tr>
+          <tr>
+            <td class="idx">10</td>
+            <td class="name-col">
+              <div class="eq-name zh">入侵报警主机 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Центральный блок охранной сигнализации <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">≥128防区 / TCP/IP联网 / 支持IBMS集成 / 含键盘操作面板</div>
+              <div class="eq-spec ru-text">≥128 зон; TCP/IP; интеграция IBMS; клавиатурная панель</div>
+            </td>
+            <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">1</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">1F管理中心</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Центр управления 1Ф</td>
+          </tr>
+          <tr>
+            <td class="idx">11</td>
+            <td class="name-col">
+              <div class="eq-name zh">红外对射探测器 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Инфракрасный барьерный извещатель <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">双光束 / 室内型 / 防遮挡 / NO+NC输出 / DC12V</div>
+              <div class="eq-spec ru-text">Двойной луч; внутренний; защита от перекрытия; NO+NC; DC12V</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">10</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">走廊·楼梯间</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Коридоры и лестничные пролёты</td>
+          </tr>
+          <tr>
+            <td class="idx">12</td>
+            <td class="name-col">
+              <div class="eq-name zh">紧急报警按钮 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Кнопка экстренного вызова <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">壁装 / 防误触保护罩 / 有线 / DC12V / 联动报警主机</div>
+              <div class="eq-spec ru-text">Настенный; защитный колпак; проводной; DC12V; подключение к ОПС</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">16</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">各实训室内部</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">В каждой лаборатории</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ SYSTEM 3: 环境监测 ════════════════════════ -->
+  <div class="sys-section">
+    <div class="sys-header">
+      <div class="sys-dot" style="background:var(--teal)"></div>
+      <span class="sys-title-text zh">三、环境监测系统</span>
+      <span class="sys-title-text ru-text">III. Система мониторинга окружающей среды</span>
+      <span class="sys-count zh">8 类设备</span>
+      <span class="sys-count ru-text">8 видов оборудования</span>
+    </div>
+    <div class="eq-table-wrap">
+      <table>
+        <thead><tr>
+          <th class="idx">#</th>
+          <th class="zh">名称 / 规格</th><th class="ru-text">Наименование / Характеристики</th>
+          <th class="zh">单位</th><th class="ru-text">Ед.</th>
+          <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+          <th class="zh">备注</th><th class="ru-text">Примечание</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td class="idx">13</td>
+            <td class="name-col">
+              <div class="eq-name zh">温湿度传感器 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Датчик температуры и влажности <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">壁装 / RS485(Modbus) / 精度±0.3℃/±2%RH / 带液晶显示 / DC12~24V</div>
+              <div class="eq-spec ru-text">Настенный; RS485 Modbus; ±0,3°C/±2%RH; ЖК-дисплей; DC12-24V</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">20</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">每层4个</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">По 4 на этаж</td>
+          </tr>
+          <tr>
+            <td class="idx">14</td>
+            <td class="name-col">
+              <div class="eq-name zh">CO₂/TVOC空气质量传感器 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Датчик CO₂/TVOC качества воздуха <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">NDIR/电化学双传感 / 量程0-5000ppm / RS485输出 / 三色指示灯 / 壁装</div>
+              <div class="eq-spec ru-text">NDIR/электрохимия; 0-5000 ppm; RS485; трёхцветный индикатор; настенный</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">16</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">各实训室1个</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">По 1 в каждой лаборатории</td>
+          </tr>
+          <tr>
+            <td class="idx">15</td>
+            <td class="name-col">
+              <div class="eq-name zh">PM2.5空气质量传感器 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Датчик PM2.5 <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">激光散射原理 / 量程0-999μg/m³ / RS485 / 低功耗 / 走廊安装</div>
+              <div class="eq-spec ru-text">Лазерное рассеяние; 0-999 мкг/м³; RS485; малое энергопотребление</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">10</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">各层公共区域</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Общественные зоны этажей</td>
+          </tr>
+          <tr>
+            <td class="idx">16</td>
+            <td class="name-col">
+              <div class="eq-name zh">智能照明控制器（楼层级）<span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Контроллер умного освещения (поэтажный) <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">≥16路 / 0-10V/PWM调光 / Modbus TCP / Din导轨安装 / 与传感器联动</div>
+              <div class="eq-spec ru-text">≥16 каналов; 0-10V/ШИМ; Modbus TCP; DIN-рейка; связь с датчиками</div>
+            </td>
+            <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">5</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">每层弱电间</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Слаботочный шкаф на каждом этаже</td>
+          </tr>
+          <tr>
+            <td class="idx">17</td>
+            <td class="name-col">
+              <div class="eq-name zh">智能照明控制面板 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Сенсорная панель управления освещением <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">4~8键触控 / 场景模式切换 / RS485联网 / 86型暗装 / 含指示灯</div>
+              <div class="eq-spec ru-text">4-8 кнопок; сценарные режимы; RS485; скрытый монтаж 86H; индикаторы</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">30</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">各室入口处</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">При входе в каждое помещение</td>
+          </tr>
+          <tr>
+            <td class="idx">18</td>
+            <td class="name-col">
+              <div class="eq-name zh">光照度传感器 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Датчик освещённости <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">量程1-65535Lux / RS485 / 吊装或壁装 / 恒照度控制</div>
+              <div class="eq-spec ru-text">1-65535 лк; RS485; потолочный или настенный; управление постоянной освещённостью</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">20</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">教室/走廊</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Аудитории и коридоры</td>
+          </tr>
+          <tr>
+            <td class="idx">19</td>
+            <td class="name-col">
+              <div class="eq-name zh">感烟火灾探测器 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Дымовой пожарный извещатель <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">光电式 / 吸顶安装 / 两总线接口 / 与消防主机联动 / GB4715标准</div>
+              <div class="eq-spec ru-text">Оптический; потолочный; двухпроводная шина; связь с ОПС; стандарт GB4715</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">40</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">各层均布</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Равномерно по этажам</td>
+          </tr>
+          <tr>
+            <td class="idx">20</td>
+            <td class="name-col">
+              <div class="eq-name zh">环境监测数据网关 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Шлюз данных мониторинга среды <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">≥8路RS485汇聚 / MQTT上报 / 本地存储SD卡 / 以太网+4G双链路 / Din导轨</div>
+              <div class="eq-spec ru-text">≥8×RS485; MQTT; SD-карта; Ethernet+4G резервирование; DIN-рейка</div>
+            </td>
+            <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">5</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">每层弱电间1台</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">По 1 в слаботочном шкафу этажа</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ SYSTEM 4: 能耗管理 ════════════════════════ -->
+  <div class="sys-section">
+    <div class="sys-header">
+      <div class="sys-dot" style="background:var(--gold)"></div>
+      <span class="sys-title-text zh">四、能耗管理系统</span>
+      <span class="sys-title-text ru-text">IV. Система управления энергопотреблением</span>
+      <span class="sys-count zh">7 类设备</span>
+      <span class="sys-count ru-text">7 видов оборудования</span>
+    </div>
+    <div class="eq-table-wrap">
+      <table>
+        <thead><tr>
+          <th class="idx">#</th>
+          <th class="zh">名称 / 规格</th><th class="ru-text">Наименование / Характеристики</th>
+          <th class="zh">单位</th><th class="ru-text">Ед.</th>
+          <th class="zh">数量</th><th class="ru-text">Кол-во</th>
+          <th class="zh">备注</th><th class="ru-text">Примечание</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td class="idx">21</td>
+            <td class="name-col">
+              <div class="eq-name zh">多功能电力仪表 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Многофункциональный счётчик электроэнергии <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">三相四线 / 测量V/I/P/Q/S/PF/f/kWh / RS485(Modbus) / DIN导轨 / ±0.5级</div>
+              <div class="eq-spec ru-text">3Ф4П; V/A/Вт/вар/ВА/cos/Гц/кВтч; RS485 Modbus; DIN; класс ±0,5</div>
+            </td>
+            <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">20</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">各层配电箱回路</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Цепи распределительных щитов</td>
+          </tr>
+          <tr>
+            <td class="idx">22</td>
+            <td class="name-col">
+              <div class="eq-name zh">分项计量模块 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Модуль подраздельного учёта <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">照明/插座/空调/动力分项 / 4路CT输入 / RS485 / 导轨安装</div>
+              <div class="eq-spec ru-text">Освещение/розетки/кондиционер/нагрузка; 4×CT; RS485; DIN-монтаж</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">10</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">楼层配电间</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Распределительные помещения этажей</td>
+          </tr>
+          <tr>
+            <td class="idx">23</td>
+            <td class="name-col">
+              <div class="eq-name zh">能耗管理软件平台 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Программная платформа управления энергетикой <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">Web端 / 实时监测+历史报表+峰谷分析+告警 / 对接IBMS主平台 / B/S架构</div>
+              <div class="eq-spec ru-text">Web; реальное время + отчёты + анализ пиков + оповещения; интеграция IBMS; B/S</div>
+            </td>
+            <td class="unit-col zh">套</td><td class="unit-col ru-text">компл.</td>
+            <td class="num-col">1</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">集成于IBMS</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Интегрировано в IBMS</td>
+          </tr>
+          <tr>
+            <td class="idx">24</td>
+            <td class="name-col">
+              <div class="eq-name zh">智能断路器 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Интеллектуальный автоматический выключатель <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">单极/三极可选 / 远程遥控分合闸 / RS485 / 过流/欠压/漏电保护</div>
+              <div class="eq-spec ru-text">1Р/3Р; дистанционное управление; RS485; защита от перегрузки/утечки</div>
+            </td>
+            <td class="unit-col zh">个</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">30</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">各层主要回路</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Основные цепи каждого этажа</td>
+          </tr>
+          <tr>
+            <td class="idx">25</td>
+            <td class="name-col">
+              <div class="eq-name zh">无功补偿控制器 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Контроллер компенсации реактивной мощности <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">≥12路电容投切 / 液晶显示 / RS485 / 功率因数优化 / 配套配电房</div>
+              <div class="eq-spec ru-text">≥12 ступеней конденсаторов; ЖК; RS485; оптимизация cos φ; для ГРЩ</div>
+            </td>
+            <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">1</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">1F配电房</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Электрощитовая 1Ф</td>
+          </tr>
+          <tr>
+            <td class="idx">26</td>
+            <td class="name-col">
+              <div class="eq-name zh">供配电监控主机 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Контроллер мониторинга систем электроснабжения <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">工业级 / 支持≥32路RS485 / 以太网上传 / 本地触屏操作 / 7×24运行</div>
+              <div class="eq-spec ru-text">Промышленный; ≥32×RS485; Ethernet; локальный сенсорный экран; 24/7</div>
+            </td>
+            <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">1</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">1F配电房</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Электрощитовая 1Ф</td>
+          </tr>
+          <tr>
+            <td class="idx">27</td>
+            <td class="name-col">
+              <div class="eq-name zh">能耗可视化大屏 <span class="badge-new">新增</span></div>
+              <div class="eq-name ru-text">Видеостена визуализации энергопотребления <span class="badge-new">Новое</span></div>
+              <div class="eq-spec zh">55寸4K / 壁挂 / 与能耗平台联动 / 实时展示楼层能耗 / 展厅/大厅安装</div>
+              <div class="eq-spec ru-text">55" 4K; настенный; интеграция с платформой; отображение потребления; холл</div>
+            </td>
+            <td class="unit-col zh">台</td><td class="unit-col ru-text">шт.</td>
+            <td class="num-col">1</td>
+            <td class="zh" style="color:var(--text3);font-size:12px">1F大厅展示</td>
+            <td class="ru-text" style="color:var(--text3);font-size:12px">Холл 1Ф (витрина)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Infrastructure note -->
+  <div class="desc-card" style="border-left-color:#64748b">
+    <p class="zh" style="color:var(--text3)">
+      <strong style="color:var(--text2)">基础设施层（已规划）</strong>：千兆有线网络（OLT×2 / ONU×42 / 241个信息点）· Wi-Fi 6（AC控制器 + 27个AP）· 视频监控（NVR 64路 + 55个4MP摄像头）· 模块化机房（300KVA UPS + 5P精密空调 + 七氟丙烷灭火）。以上设备已纳入弱电基础设施方案，详见
+      <a href="infrastructure.html" style="color:var(--a1)">基础设施系统页面 →</a>
+    </p>
+    <p class="ru-text" style="color:var(--text3)">
+      <strong style="color:var(--text2)">Существующая инфраструктура (уже запланирована)</strong>: Гигабитная сеть (OLT×2/ONU×42/241 точка) · Wi-Fi 6 (AC + 27 AP) · Видеонаблюдение (NVR 64-канал + 55 камер 4Мп) · Серверная (ИБП 300кВА + прецизионный кондиционер 5л.с. + газовое пожаротушение). Подробнее:
+      <a href="infrastructure.html" style="color:var(--a1)">страница инфраструктуры →</a>
+    </p>
+  </div>
+
+</section>
+</div>
+
+<div id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="nav-arrow" href="../index.html">
+      <span class="zh">← 返回总览</span>
+      <span class="ru-text">← На главную</span>
+    </a>
+  </div>
+</div>
+
+<script>
+function toggleLang(){
+  document.body.classList.toggle('ru');
+  localStorage.setItem('kkst_lang', document.body.classList.contains('ru')?'ru':'zh');
+}
+(function(){
+  const saved = localStorage.getItem('kkst_lang');
+  if(saved==='zh') document.body.classList.remove('ru');
+  else document.body.classList.add('ru');
+})();
+</script>
+</body>
+</html>
