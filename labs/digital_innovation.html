@@ -146,7 +146,7 @@ body.ru .ru-text{display:revert}
         <span class="tag zh"><b>座位</b> 10 位</span><span class="tag ru-text"><b>Мест</b> 10</span>
         <span class="tag zh"><b>设备</b> 5 种</span>
         <span class="tag ru-text"><b>Обор.</b> 5 поз.</span>
-        <span class="tag"><b>₸</b> 12.54M ₸</span>
+        <span class="tag"><b>₸</b> 18.58M ₸</span>
       </div>
     </div>
   </div>
@@ -156,13 +156,13 @@ body.ru .ru-text{display:revert}
   <section>
     <div class="overview-grid">
       <div class="ov-card">
-        <div class="val">12.54M ₸</div>
+        <div class="val">18.58M ₸</div>
         <div class="lbl zh">总建设预算</div><div class="lbl ru-text">Общий бюджет</div>
       </div>
       <div class="ov-card"><div class="val">约60㎡</div><div class="lbl zh">建筑面积</div><div class="lbl ru-text">Площадь</div></div>
       <div class="ov-card"><div class="val">10</div><div class="lbl zh">座位数</div><div class="lbl ru-text">Мест</div></div>
       <div class="ov-card">
-        <div class="val">5</div>
+        <div class="val">7</div>
         <div class="lbl zh">设备种类</div><div class="lbl ru-text">Видов оборуд.</div>
       </div>
       <div class="ov-card">
@@ -182,17 +182,17 @@ body.ru .ru-text{display:revert}
     <h2 class="sec-title ru-text">Структура бюджета</h2>
     <div class="budget-grid">
       <div class="bud-card total">
-        <div class="bval">12.54M ₸</div>
+        <div class="bval">18.58M ₸</div>
         <div class="blbl zh">总建设预算</div><div class="blbl ru-text">Итого</div>
       </div>
       <div class="bud-card equip">
-        <div class="bval">6.02M ₸</div>
-        <div class="bpct">48%</div>
+        <div class="bval">12.06M ₸</div>
+        <div class="bpct">65%</div>
         <div class="blbl zh">设备购置费</div><div class="blbl ru-text">Оборудование</div>
       </div>
       <div class="bud-card reno">
         <div class="bval">6.52M ₸</div>
-        <div class="bpct">52%</div>
+        <div class="bpct">35%</div>
         <div class="blbl zh">室内装修改造费</div><div class="blbl ru-text">Ремонт и отделка</div>
       </div>
     </div>
@@ -309,10 +309,32 @@ body.ru .ru-text{display:revert}
           <td class="price-col">1.36M ₸</td>
           <td class="price-col total-price">1.27M ₸</td>
         </tr>
+        <tr>
+          <td class="idx">6</td>
+          <td class="name-col">
+            <div class="eq-name zh">VR创作绘画套件</div><div class="eq-name ru-text">VR-комплект для творческого рисования</div>
+            <div class="eq-spec zh">VR绘画创作套件，用于沉浸式数字艺术创作教学</div><div class="eq-spec ru-text">VR-комплект для иммерсивного цифрового арт-творчества</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">5</td>
+          <td class="price-col">210,000 ₸</td>
+          <td class="price-col total-price">1,050,000 ₸</td>
+        </tr>
+        <tr>
+          <td class="idx">7</td>
+          <td class="name-col">
+            <div class="eq-name zh">VR Sport 体感运动系统</div><div class="eq-name ru-text">Система физических упражнений VR Sport</div>
+            <div class="eq-spec zh">沉浸式VR体感运动训练系统，用于虚拟现实交互应用教学</div><div class="eq-spec ru-text">Иммерсивная система тренировок VR Sport для интерактивных приложений виртуальной реальности</div>
+          </td>
+          <td class="brand-col">—</td>
+          <td class="num-col">1</td>
+          <td class="price-col">4.99M ₸</td>
+          <td class="price-col total-price">4.99M ₸</td>
+        </tr>
           <tr class="eq-total-row">
             <td colspan="5" class="zh" style="color:var(--text2)">设备合计</td>
             <td colspan="5" class="ru-text" style="color:var(--text2)">Итого по оборудованию</td>
-            <td class="total-price price-col">6.02M ₸</td>
+            <td class="total-price price-col">12.06M ₸</td>
           </tr>
         </tbody>
       </table>
@@ -351,7 +373,7 @@ window.barChart=new Chart(document.getElementById('barC'),{
   type:'bar',
   data:{labels: document.body.classList.contains('ru') ? ['Оборудование','Ремонт'] : ['设备费','装修费'],
     datasets:[
-      {label:'设备 / Оборудование',data:[6.02,0],backgroundColor:'#10b981',borderRadius:6},
+      {label:'设备 / Оборудование',data:[12.06,0],backgroundColor:'#10b981',borderRadius:6},
       {label:'装修 / Ремонт',data:[0,6.52],backgroundColor:'#f0a500',borderRadius:6},
     ]},
   options:{responsive:true,maintainAspectRatio:false,
@@ -363,7 +385,7 @@ window.barChart=new Chart(document.getElementById('barC'),{
 new Chart(document.getElementById('donutC'),{
   type:'doughnut',
   data:{labels:['设备 / Оборудование','装修 / Ремонт'],
-    datasets:[{data:[48,52],backgroundColor:['#10b981','#f0a500'],borderWidth:0,hoverOffset:6}]},
+    datasets:[{data:[65,35],backgroundColor:['#10b981','#f0a500'],borderWidth:0,hoverOffset:6}]},
   options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
     plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:12}}}}}
 });

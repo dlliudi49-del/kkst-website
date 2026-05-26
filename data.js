@@ -1,8 +1,8 @@
 window.KKST_DATA = {
   "summary": {
-    "total_kzt": 454362240,
+    "total_kzt": 438056600,
     "renovation_kzt": 109576950,
-    "equipment_kzt": 344785290,
+    "equipment_kzt": 328479650,
     "labs_count": 16,
     "floors": 5
   },
@@ -617,9 +617,9 @@ window.KKST_DATA = {
         "ru": "Лаборатория электроники и встраиваемых систем: осциллографы RIGOL, ПЛК Siemens, 3D-принтер, платы разработки — полный цикл от схемотехники до PLC."
       },
       "budget": {
-        "total_kzt": 18011350,
+        "total_kzt": 17129350,
         "renovation_kzt": 7238700,
-        "equipment_kzt": 10772650
+        "equipment_kzt": 9890650
       },
       "equipment": [
         {
@@ -711,14 +711,6 @@ window.KKST_DATA = {
           "spec": "Дисплей \nТип: Dynamic AMOLED 2X с поддержкой HDR10+ и технологией Anti Reflection (антибликовое покрытие).\n\nДиагональ: 14.6 дюйма (369.9 мм).\n\nРазрешение: 2960 x 1848 (WQXGA+).\n\nЧастота обновления: Ад"
         },
         {
-          "name": "激光雕刻机/3D打印机",
-          "qty": 1,
-          "unit_kzt": 882000,
-          "total_kzt": 882000,
-          "brand": "拓竹 H2D",
-          "spec": "激光类型：半导体激光\n激光功率：10W 或 40W 可选\n最大雕刻速度：≥400 mm/s\n最大切割能力：≥5–15 mm木板（视功率而定）   \n3D打印系统\n打印技术：FDM熔融沉积\n喷嘴最高温度：≥350℃\n热床最高温度：≥120℃\n最大移动速度：≥1000 mm/s\n支持材料：PLA、PETG、ABS、TPU等多种材料   \n\n 控制与软件\n\t•\t配备触摸显示屏\n\t•\t支持电脑及APP控制"
-        },
-        {
           "name": "86 寸纳米触控智慧黑板",
           "qty": 1,
           "unit_kzt": 1274000,
@@ -800,9 +792,9 @@ window.KKST_DATA = {
         "ru": "Специализированная лаборатория БПЛА: зона внутренних полётов, симулятор, мультимедийная демонстрация — безопасное обучение пилотированию и планированию маршрутов."
       },
       "budget": {
-        "total_kzt": 14301600,
+        "total_kzt": 16174600,
         "renovation_kzt": 6690600,
-        "equipment_kzt": 7611000
+        "equipment_kzt": 9484000
       },
       "equipment": [
         {
@@ -850,6 +842,38 @@ window.KKST_DATA = {
           "unit_kzt": 500000,
           "total_kzt": 500000,
           "brand": ""
+        },
+        {
+          "name": "BetaFPV Cetus X Whoop Racing Kit (ELRS 2.4G)",
+          "qty": 5,
+          "unit_kzt": 32200,
+          "total_kzt": 161000,
+          "brand": "BetaFPV",
+          "spec": ""
+        },
+        {
+          "name": "AOYUE INT702A+ 防静电焊接站",
+          "qty": 2,
+          "unit_kzt": 156000,
+          "total_kzt": 312000,
+          "brand": "AOYUE",
+          "spec": ""
+        },
+        {
+          "name": "ASUS Vivobook Pro 16X 笔记本",
+          "qty": 1,
+          "unit_kzt": 900000,
+          "total_kzt": 900000,
+          "brand": "ASUS",
+          "spec": ""
+        },
+        {
+          "name": "AOC 41.5\" OLED 显示器",
+          "qty": 1,
+          "unit_kzt": 500000,
+          "total_kzt": 500000,
+          "brand": "AOC",
+          "spec": ""
         }
       ]
     },
@@ -869,26 +893,18 @@ window.KKST_DATA = {
         "ru": "Передовая платформа мобильной робототехники: гуманоид Unitree G1, четырёхногий робот, ROS-шасси, шестиногий робот и комплект WorldSkills."
       },
       "budget": {
-        "total_kzt": 35232568,
+        "total_kzt": 24958568,
         "renovation_kzt": 3638250,
-        "equipment_kzt": 31594318
+        "equipment_kzt": 21320318
       },
       "equipment": [
         {
           "name": "2026 上海世賽套件",
-          "qty": 1,
-          "unit_kzt": 12600000,
-          "total_kzt": 12600000,
+          "qty": 2,
+          "unit_kzt": 9048000,
+          "total_kzt": 18096000,
           "brand": "",
           "spec": "IR红外测距传感器2个、IR传感器支架2个、超声波传感器支架2个、蓝色扎带100根1包、12V 3000mAh NiMH电池2个、电池充电器1个、高电流电源分配板1个、机器人工具箱2个、USB/Bluetooth遥控器1个、LED灯塔1个、灯塔PCB安装板1个、保险丝包1个、8mm扳手1个、2.5mm六角螺丝刀1个、六角扳手套装1套、5.5mm扳手1个、Parsec距离传感器2个、Cobra V3"
-        },
-        {
-          "name": "宇树 G1 EDU",
-          "qty": 1,
-          "unit_kzt": 17290000,
-          "total_kzt": 17290000,
-          "brand": "Unitree 宇树",
-          "spec": "产品型号：Unitree/宇树 G1 EDU 人形机器人；站立尺寸 1320×450×200mm，折叠尺寸 690×450×300mm，带电池重量约 35kg+；总自由度 23-43，自由度配置含单腿 6、单臂 5、腰部 1+可选 2、单手 7（可选力控三指灵巧手 Dex3-1）+可选 2 个腕部自由度；膝关节最大扭矩 120N.m，手臂最大负载约 3kg；感知系统含深度相机 + 3D LiDAR"
         },
         {
           "name": "ROS智能小车",
@@ -921,6 +937,22 @@ window.KKST_DATA = {
           "total_kzt": 392000,
           "brand": "亚博智能Ros2 六足仿生",
           "spec": "产品名称：ROS2六足仿生机器人（SLAM导航版）\n控制平台：支持树莓派5（本配置不含主板）\n运动结构：六足仿生结构，约18自由度舵机驱动，支持多步态运动控制\n感知系统：A1激光雷达，支持SLAM建图、环境感知与自主导航\n视觉系统：AI视觉摄像头，支持目标识别与视觉跟踪\n软件平台：支持ROS2机器人操作系统开发\nAI能力：支持多AI模型应用、语音交互与智能控制\n扩展接口：USB、GPIO、WiFi"
+        },
+        {
+          "name": "Creality K1 Max 3D打印机",
+          "qty": 2,
+          "unit_kzt": 310000,
+          "total_kzt": 620000,
+          "brand": "Creality",
+          "spec": ""
+        },
+        {
+          "name": "笔记本电脑",
+          "qty": 1,
+          "unit_kzt": 900000,
+          "total_kzt": 900000,
+          "brand": "",
+          "spec": ""
         }
       ]
     },
@@ -940,16 +972,16 @@ window.KKST_DATA = {
         "ru": "Комплексный центр промышленной робототехники: 6-осные манипуляторы, система технического зрения, модули автоматизации — стандарт WorldSkills."
       },
       "budget": {
-        "total_kzt": 52712700,
+        "total_kzt": 46212700,
         "renovation_kzt": 7238700,
-        "equipment_kzt": 45474000
+        "equipment_kzt": 38974000
       },
       "equipment": [
         {
           "name": "工业机器人教育包或同等功能",
-          "qty": 2,
+          "qty": 1,
           "unit_kzt": 22100000,
-          "total_kzt": 44200000,
+          "total_kzt": 22100000,
           "brand": "教育软件包功能模块",
           "spec": "（1）采用工业铝合金型材框架，控制屏上方为两层结构。其中第一层可放置焊机工具；第二层为方孔挂板，可放置图纸、导线、物料盒和工具等。\n（2）顶部设有高档条形LED照明，照明开关独立控制。\n（3）实训桌面板采用E1级三聚氰胺复合板，台面厚度为25mm。\n（4）采用四个工业铝型材立柱为支撑，主体结构通过左、右各2个C字形铝压成型构件联接，台面高度800mm，桌面板下设支撑框架，截面尺寸为30×30mm，"
         },
@@ -960,6 +992,22 @@ window.KKST_DATA = {
           "total_kzt": 1274000,
           "brand": "DaHua",
           "spec": "4K 分辨率 (3840×2160)，20 点触控，安卓 11.0+Windows 双系统，内置教学白板软件，支持 4K 投屏/分屏，防蓝光护眼认证，带推拉绿板。\n\n★关键参数（不低于以下标准）：\n- 屏幕尺寸：不低于 86 寸\n- 分辨率：不低于 4K（3840×2160）\n- 触控点数：不低于 20 点\n- 操作系统：安卓 11.0 及以上，兼容 Windows 双系统\n- 亮度：不低于 40"
+        },
+        {
+          "name": "5轴工业协作臂 ufactory Lite 6",
+          "qty": 5,
+          "unit_kzt": 2940000,
+          "total_kzt": 14700000,
+          "brand": "ufactory",
+          "spec": "5轴工业协作机器人Lite 6，支持 WorldSkills 工业机器人竞赛项目"
+        },
+        {
+          "name": "笔记本电脑",
+          "qty": 1,
+          "unit_kzt": 900000,
+          "total_kzt": 900000,
+          "brand": "",
+          "spec": ""
         }
       ]
     },
@@ -1090,9 +1138,9 @@ window.KKST_DATA = {
         "ru": "Полный цикл быстрого прототипирования: 3D-сканер (0.02 мм), вакуумная формовка, УФ-отверждение, токарный станок с ЧПУ — от сканирования до готового изделия."
       },
       "budget": {
-        "total_kzt": 47365529,
+        "total_kzt": 36994529,
         "renovation_kzt": 7418250,
-        "equipment_kzt": 39947279
+        "equipment_kzt": 29576279
       },
       "equipment": [
         {
@@ -1128,12 +1176,28 @@ window.KKST_DATA = {
           "spec": "Тип оборудования:Полимеризационная УФ-камера\nТип материала:Фотополимеры\nРазмер камеры, мм: 228 x 128 x 260 (с платформой) / 228 x 128 x 250 мм (без платформы)\nИсточник света: УФ-светодиодная матрица\nД"
         },
         {
-          "name": "8L CNC Lathe",
-          "qty": 2,
-          "unit_kzt": 16800000,
-          "total_kzt": 33600000,
+          "name": "桌面式CNC铣削雕刻机（封闭式）",
+          "qty": 4,
+          "unit_kzt": 5250000,
+          "total_kzt": 21000000,
           "brand": "",
-          "spec": "Тип станка: Токарный, ЧПУ\nСистема управления:PathPilot (G-code, ISO)\nКоличество осей: 2 (X, Z)\nМощность шпинделя:1.5 HP (≈1.1 кВт)\nДиапазон оборотов: 180 – 5000 об/мин\nТип шпинделя: 5C\nСквозное отверс"
+          "spec": "桌面级CNC铣削雕刻机，封闭式结构，支持金属/木材/塑料加工"
+        },
+        {
+          "name": "Creality CR-Scan 3D扫描仪",
+          "qty": 3,
+          "unit_kzt": 720000,
+          "total_kzt": 2160000,
+          "brand": "Creality",
+          "spec": ""
+        },
+        {
+          "name": "Venera online 服务",
+          "qty": 3,
+          "unit_kzt": 23000,
+          "total_kzt": 69000,
+          "brand": "Venera",
+          "spec": ""
         }
       ]
     },
@@ -1153,9 +1217,9 @@ window.KKST_DATA = {
         "ru": "Профессиональная дизайн-студия: 11 рабочих мест iMac, профессиональный цветной принтер, полный пакет Adobe — брендинг, UI/UX и цифровые медиа."
       },
       "budget": {
-        "total_kzt": 19473260,
+        "total_kzt": 20612060,
         "renovation_kzt": 7418250,
-        "equipment_kzt": 12055010
+        "equipment_kzt": 13193810
       },
       "equipment": [
         {
@@ -1181,6 +1245,22 @@ window.KKST_DATA = {
           "total_kzt": 1274000,
           "brand": "Da Hua",
           "spec": "4K 分辨率 (3840×2160)，20 点触控，安卓 11.0+Windows 双系统，内置教学白板软件，支持 4K 投屏/分屏，防蓝光护眼认证，带推拉绿板。\n\n★关键参数（不低于以下标准）：\n- 屏幕尺寸：不低于 86 寸\n- 分辨率：不低于 4K（3840×2160）\n- 触控点数：不低于 20 点\n- 操作系统：安卓 11.0 及以上，兼容 Windows 双系统\n- 亮度：不低于 40"
+        },
+        {
+          "name": "专业绘图板（含屏）15.6–16寸",
+          "qty": 3,
+          "unit_kzt": 264600,
+          "total_kzt": 793800,
+          "brand": "",
+          "spec": "带显示屏专业绘图板，15.6–16英寸"
+        },
+        {
+          "name": "专业绘图板（无屏）16–19寸",
+          "qty": 3,
+          "unit_kzt": 115000,
+          "total_kzt": 345000,
+          "brand": "",
+          "spec": "无显示屏专业绘图板，16–19英寸"
         }
       ]
     },
@@ -1200,9 +1280,9 @@ window.KKST_DATA = {
         "ru": "VR/AR-пространство: 5 гарнитур Meta Quest 3S, система захвата движения, рабочие станции iMac — создание VR-контента и иммерсивных приложений."
       },
       "budget": {
-        "total_kzt": 12544295,
+        "total_kzt": 18584295,
         "renovation_kzt": 6520500,
-        "equipment_kzt": 6023795
+        "equipment_kzt": 12063795
       },
       "equipment": [
         {
@@ -1244,6 +1324,22 @@ window.KKST_DATA = {
           "total_kzt": 1274000,
           "brand": "Da Hua",
           "spec": "4K 分辨率 (3840×2160)，20 点触控，安卓 11.0+Windows 双系统，内置教学白板软件，支持 4K 投屏/分屏，防蓝光护眼认证，带推拉绿板。\n\n★关键参数（不低于以下标准）：\n- 屏幕尺寸：不低于 86 寸\n- 分辨率：不低于 4K（3840×2160）\n- 触控点数：不低于 20 点\n- 操作系统：安卓 11.0 及以上，兼容 Windows 双系统\n- 亮度：不低于 40"
+        },
+        {
+          "name": "VR创作绘画套件",
+          "qty": 5,
+          "unit_kzt": 210000,
+          "total_kzt": 1050000,
+          "brand": "",
+          "spec": ""
+        },
+        {
+          "name": "VR Sport 体感运动系统",
+          "qty": 1,
+          "unit_kzt": 4990000,
+          "total_kzt": 4990000,
+          "brand": "",
+          "spec": ""
         }
       ]
     },
@@ -1263,9 +1359,9 @@ window.KKST_DATA = {
         "ru": "Лаборатория сетевых технологий и ИБ: корпоративные коммутаторы, маршрутизаторы, серверная стойка, платформа кибербезопасности — подготовка CCNA/HCIA."
       },
       "budget": {
-        "total_kzt": 24223724,
+        "total_kzt": 21250324,
         "renovation_kzt": 7522200,
-        "equipment_kzt": 16701524
+        "equipment_kzt": 13728124
       },
       "equipment": [
         {
@@ -1293,12 +1389,60 @@ window.KKST_DATA = {
           "spec": "pieces. Заменить на стенд применяемый на соревнованиях Ворлд Скиллс по компетенции Информационные кабельные сети. Стенд включает в себя: 1 Имметация стены с кабельными лотками. 2. Монтажная стойка дву"
         },
         {
-          "name": "Fluke",
-          "qty": 2,
-          "unit_kzt": 5460000,
-          "total_kzt": 10920000,
-          "brand": "",
-          "spec": "提供Fluke Networks DSX-600 INTL铜缆认证测试仪一台，用于Cat6/Cat6A类双绞线布线系统的现场认证测试。设备需满足500MHz测试频率范围，符合TIA 1152 Level IIIe及以上精度等级。主机与远端机均配备6英寸触摸屏，Cat6A链路自动测试时间不超过10秒，具备时域故障定位诊断功能。内置存储可保存2000条以上测试记录，支持U盘导出数据及LinkWare管"
+          "name": "TREND Networks LanTek 7 铜缆认证测试仪",
+          "qty": 1,
+          "unit_kzt": 5057000,
+          "total_kzt": 5057000,
+          "brand": "TREND Networks",
+          "spec": ""
+        },
+        {
+          "name": "Noyafa NF-9816 网络电缆测试仪",
+          "qty": 4,
+          "unit_kzt": 270000,
+          "total_kzt": 1080000,
+          "brand": "Noyafa",
+          "spec": ""
+        },
+        {
+          "name": "Hikvision DS-3T0510HP-E/HS PoE交换机",
+          "qty": 8,
+          "unit_kzt": 137200,
+          "total_kzt": 1097600,
+          "brand": "Hikvision",
+          "spec": ""
+        },
+        {
+          "name": "Hikvision DS-2CD2023G2-IU(D) IP摄像机",
+          "qty": 4,
+          "unit_kzt": 40000,
+          "total_kzt": 160000,
+          "brand": "Hikvision",
+          "spec": ""
+        },
+        {
+          "name": "HiLook WB-0FC-2N/O 无线网桥",
+          "qty": 4,
+          "unit_kzt": 20000,
+          "total_kzt": 80000,
+          "brand": "HiLook",
+          "spec": ""
+        },
+        {
+          "name": "Ubiquiti LiteBeam 5AC Gen2 无线网桥",
+          "qty": 4,
+          "unit_kzt": 40000,
+          "total_kzt": 160000,
+          "brand": "Ubiquiti",
+          "spec": ""
+        },
+        {
+          "name": "SNR-FTS-200P 热剥器",
+          "qty": 4,
+          "unit_kzt": 78000,
+          "total_kzt": 312000,
+          "brand": "SNR",
+          "spec": ""
         }
       ]
     },
@@ -1318,9 +1462,9 @@ window.KKST_DATA = {
         "ru": "Серверная комната центра: коммутаторы MikroTik, маршрутизаторы, межсетевые экраны, ИБП APC — сетевая инфраструктура для всех 16 лабораторий."
       },
       "budget": {
-        "total_kzt": 25328380,
+        "total_kzt": 30971340,
         "renovation_kzt": 7427700,
-        "equipment_kzt": 17900680
+        "equipment_kzt": 23543640
       },
       "equipment": [
         {
@@ -1356,42 +1500,10 @@ window.KKST_DATA = {
           "spec": ""
         },
         {
-          "name": "PP-19-24-8P8C-C6-110D (Cat6 24口配线架)",
-          "qty": 1,
-          "unit_kzt": 39200,
-          "total_kzt": 39200,
-          "brand": "Hyperline",
-          "spec": ""
-        },
-        {
-          "name": "CM-1U-T-BL (理线器)",
-          "qty": 2,
-          "unit_kzt": 9800,
-          "total_kzt": 19600,
-          "brand": "Hyperline",
-          "spec": ""
-        },
-        {
-          "name": "PC-LPL-PC-RJ45-RJ45-C6-1M (Cat6 1m跟线)",
-          "qty": 24,
-          "unit_kzt": 2940,
-          "total_kzt": 70560,
-          "brand": "Hyperline",
-          "spec": ""
-        },
-        {
           "name": "Smart-UPS 1500VA RM 2U",
           "qty": 1,
           "unit_kzt": 392000,
           "total_kzt": 392000,
-          "brand": "APC",
-          "spec": ""
-        },
-        {
-          "name": "AP7920B Basic 1U (PDU插座排)",
-          "qty": 1,
-          "unit_kzt": 313600,
-          "total_kzt": 313600,
           "brand": "APC",
           "spec": ""
         },
@@ -1432,30 +1544,6 @@ window.KKST_DATA = {
           "qty": 1,
           "unit_kzt": 196000,
           "total_kzt": 196000,
-          "brand": "TP-Link",
-          "spec": ""
-        },
-        {
-          "name": "TL-SC1424H (Cat6 24口配线架)",
-          "qty": 1,
-          "unit_kzt": 39200,
-          "total_kzt": 39200,
-          "brand": "TP-Link",
-          "spec": ""
-        },
-        {
-          "name": "TL-CM15C (理线器)",
-          "qty": 2,
-          "unit_kzt": 9800,
-          "total_kzt": 19600,
-          "brand": "TP-Link",
-          "spec": ""
-        },
-        {
-          "name": "TL-EC610-1M (Cat6 1m跟线)",
-          "qty": 24,
-          "unit_kzt": 2940,
-          "total_kzt": 70560,
           "brand": "TP-Link",
           "spec": ""
         },
@@ -1516,30 +1604,6 @@ window.KKST_DATA = {
           "spec": ""
         },
         {
-          "name": "NPP-C61BLK24A (Cat6 24口配线架)",
-          "qty": 1,
-          "unit_kzt": 39200,
-          "total_kzt": 39200,
-          "brand": "D-Link",
-          "spec": ""
-        },
-        {
-          "name": "NMC-1U01 (理线器)",
-          "qty": 2,
-          "unit_kzt": 9800,
-          "total_kzt": 19600,
-          "brand": "D-Link",
-          "spec": ""
-        },
-        {
-          "name": "NCB-C6UYELR1-1 (Cat6 1m跟线)",
-          "qty": 24,
-          "unit_kzt": 2940,
-          "total_kzt": 70560,
-          "brand": "D-Link",
-          "spec": ""
-        },
-        {
           "name": "KIN-1500AP RM (UPS 1500VA)",
           "qty": 1,
           "unit_kzt": 245000,
@@ -1580,30 +1644,6 @@ window.KKST_DATA = {
           "spec": ""
         },
         {
-          "name": "PP-19-24-8P8C-C6-110D (Cat6 24口配线架)",
-          "qty": 1,
-          "unit_kzt": 39200,
-          "total_kzt": 39200,
-          "brand": "Hyperline",
-          "spec": ""
-        },
-        {
-          "name": "CM-1U-T-BL (理线器)",
-          "qty": 2,
-          "unit_kzt": 9800,
-          "total_kzt": 19600,
-          "brand": "Hyperline",
-          "spec": ""
-        },
-        {
-          "name": "PC-LPL-PC-RJ45-RJ45-C6-1M (Cat6 1m跟线)",
-          "qty": 24,
-          "unit_kzt": 2940,
-          "total_kzt": 70560,
-          "brand": "Hyperline",
-          "spec": ""
-        },
-        {
           "name": "5PX 2200i RT2U (UPS 2200VA)",
           "qty": 1,
           "unit_kzt": 352800,
@@ -1618,6 +1658,22 @@ window.KKST_DATA = {
           "total_kzt": 784000,
           "brand": "Huawei",
           "spec": ""
+        },
+        {
+          "name": "86 寸纳米触控智慧黑板",
+          "qty": 1,
+          "unit_kzt": 1274000,
+          "total_kzt": 1274000,
+          "brand": "Da Hua",
+          "spec": "4K 分辨率 (3840×2160)，20 点触控，安卓 11.0+Windows 双系统，内置教学白板软件，支持 4K 投屏/分屏，防蓝光护眼认证，带推拉绿板。"
+        },
+        {
+          "name": "Hyperline TTB-33U-600x800 标准机柜",
+          "qty": 4,
+          "unit_kzt": 1300000,
+          "total_kzt": 5200000,
+          "brand": "Hyperline",
+          "spec": "33U 标准19英寸机柜，600×800mm，含风扇、理线器、配电模块"
         }
       ]
     }
